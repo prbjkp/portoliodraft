@@ -1,88 +1,112 @@
+/* ===============================
+   RESET
+================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  background: #f8f8f8;
+html, body {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  font-family: Inter, sans-serif;
-}
-
-#canvas {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-}
-
-#start-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  border: none;
-  background: black;
+  font-family: Inter, system-ui, sans-serif;
+  background: #0d0d0d;
   color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  z-index: 10;
 }
 
-.orbit {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.item {
-  position: absolute;
-  width: 160px;
-  height: 100px;
-  overflow: hidden;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.4s ease;
-}
-
-.item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.item:hover {
-  transform: scale(1.1);
-}
-#lightbox {
+/* ===============================
+   CANVAS
+================================ */
+#canvas {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  perspective: 1200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
 }
 
-#overlay {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Safari */
+/* ===============================
+   3D SPHERE
+================================ */
+#sphere {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  cursor: grab;
 }
 
+#sphere:active {
+  cursor: grabbing;
+}
+
+.photo {
+  position: absolute;
+  width: 180px;
+  height: 120px;
+  transform-style: preserve-3d;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,0.45);
+  cursor: zoom-in;
+  transition: transform 0.25s ease;
+}
+
+.photo img:hover {
+  transform: scale(1.05);
+}
+
+/* ===============================
+   START BUTTON (3D)
+================================ */
+#start-btn {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, #2c2c2c, #000);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.6),
+    inset 0 -8px 12px rgba(0,0,0,0.8),
+    inset 0 8px 12px rgba(255,255,255,0.08);
+  transform-style: preserve-3d;
+  z-index: 10;
+}
+
+/* Floating orbit text (future ready) */
+#start-btn span {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+}
+
+/* ===============================
+   OVERLAY / ZOOM
+================================ */
 #overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0,0,0,0.85);
+  z-index: 999;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
-  z-index: 999;
 }
 
 #overlay.show {
@@ -108,99 +132,34 @@ body {
   opacity: 1;
 }
 
-/* Floating clone */
+/* ===============================
+   ZOOM CLONE
+================================ */
 .zoom-clone {
   position: fixed;
   z-index: 1000;
-  transition: 
-    top 0.45s ease,
-    left 0.45s ease,
-    width 0.45s ease,
-    height 0.45s ease;
-  border-radius: 8px;
-}
-.item img {
-  cursor: zoom-in;
-}
-
-body {
-  overscroll-behavior: none;
-}
-.zoom-clone {
-  position: fixed;
-  border-radius: 8px;
-  transition:
-    top 0.45s cubic-bezier(.4, 0, .2, 1),
-    left 0.45s cubic-bezier(.4, 0, .2, 1),
-    width 0.45s cubic-bezier(.4, 0, .2, 1),
-    height 0.45s cubic-bezier(.4, 0, .2, 1);
-}
-
-#start-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform-style: preserve-3d;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  cursor: pointer;
-}
-
-#start-sphere {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #555, #000);
-  position: absolute;
-  top: 40px;
-  left: 40px;
-  transform-style: preserve-3d;
+  border-radius: 12px;
   box-shadow:
-    inset -10px -10px 20px rgba(0,0,0,0.6),
-    0 30px 60px rgba(0,0,0,0.5);
+    0 40px 80px rgba(0,0,0,0.6);
+  transition:
+    top 0.45s cubic-bezier(.22,.61,.36,1),
+    left 0.45s cubic-bezier(.22,.61,.36,1),
+    width 0.45s cubic-bezier(.22,.61,.36,1),
+    height 0.45s cubic-bezier(.22,.61,.36,1);
 }
 
-#orbit-text {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  font-size: 18px;
-  color: white;
-  text-align: center;
-  line-height: 200px;
-  letter-spacing: 6px;
-  animation: orbit 10s linear infinite;
-}
+/* ===============================
+   MOBILE TWEAKS
+================================ */
+@media (max-width: 768px) {
+  .photo {
+    width: 140px;
+    height: 95px;
+  }
 
-@keyframes orbit {
-  from { transform: rotateZ(0deg); }
-  to   { transform: rotateZ(360deg); }
-}
-body {
-  perspective: 1200px;
-}
-
-#sphere {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 600px;
-  height: 600px;
-  transform-style: preserve-3d;
-  transform: translate(-50%, -50%);
-}
-
-.photo {
-  position: absolute;
-  width: 160px;
-  height: 100px;
-  transform-style: preserve-3d;
-}
-
-.photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
+  #start-btn {
+    width: 120px;
+    height: 120px;
+    font-size: 1.2rem;
+  }
 }

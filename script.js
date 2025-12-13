@@ -1,139 +1,171 @@
-document.addEventListener("DOMContentLoaded", () => {
+/* ===============================
+   3D SPHERE SETUP
+================================ */
 
-  /* ===== ORBIT LAYOUT ===== */
-  const items = document.querySelectorAll(".item");
-  const radius = 350;
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
+const sphere = document.getElementById("sphere");
+const photos = document.querySelectorAll(".photo img");
 
-  items.forEach((item, index) => {
-    const angle = (index / items.length) * Math.PI * 2;
-    const x = centerX + radius * Math.cos(angle) - item.offsetWidth / 2;
-    const y = centerY + radius * Math.sin(angle) - item.offsetHeight / 2;
-    item.style.left = `${x}px`;
-    item.style.top = `${y}px`;
-  });
+let rotationY = 0;
+let rotationX = 0;
+let isDragging = false;
+let lastX = 0;
+let lastY = 0;
+let idleTimer = null;
 
-  /* ===== SHARED ELEMENT ZOOM ===== */
-  const overlay = document.getElementById("overlay");
-  const closeBtn = document.getElementById("overlay-close");
+/* Arrange photos in a sphere */
+const radius = 320;
+const count = photos.length;
 
-  let activeClone = null;
-  let originRect = null;
-
-  document.querySelectorAll(".item img").forEach(img => {
-    img.addEventListener("click", () => openImage(img));
-  });
-
-  function openImage(img) {
-    originRect = img.getBoundingClientRect();
-
-    activeClone = img.cloneNode(true);
-    activeClone.classList.add("zoom-clone");
-
-    activeClone.style.top = `${originRect.top}px`;
-    activeClone.style.left = `${originRect.left}px`;
-    activeClone.style.width = `${originRect.width}px`;
-    activeClone.style.height = `${originRect.height}px`;
-
-    document.body.appendChild(activeClone);
-    activeClone.getBoundingClientRect(); // force reflow
-
-    const maxW = window.innerWidth * 0.85;
-    const maxH = window.innerHeight * 0.85;
-    const aspect = originRect.width / originRect.height;
-
-    let finalW = maxW;
-    let finalH = maxW / aspect;
-
-    if (finalH > maxH) {
-      finalH = maxH;
-      finalW = maxH * aspect;
-    }
-
-    activeClone.style.top = `${(window.innerHeight - finalH) / 2}px`;
-    activeClone.style.left = `${(window.innerWidth - finalW) / 2}px`;
-    activeClone.style.width = `${finalW}px`;
-    activeClone.style.height = `${finalH}px`;
-
-    overlay.classList.add("show");
-  }
-
-  function closeImage() {
-    if (!activeClone) return;
-
-    activeClone.style.top = `${originRect.top}px`;
-    activeClone.style.left = `${originRect.left}px`;
-    activeClone.style.width = `${originRect.width}px`;
-    activeClone.style.height = `${originRect.height}px`;
-
-    overlay.classList.remove("show");
-
-    activeClone.addEventListener("transitionend", () => {
-      activeClone.remove();
-      activeClone = null;
-    }, { once: true });
-  }
-
-  closeBtn.addEventListener("click", closeImage);
-  overlay.addEventListener("click", e => {
-    if (e.target === overlay) closeImage();
-  });
-
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && activeClone) {
-    closeImage();
-  }
-});
-
-const photos = document.querySelectorAll(".photo");
-const radius = 250;
-
-photos.forEach((photo, i) => {
-  const phi = Math.acos(-1 + (2 * i) / photos.length);
-  const theta = Math.sqrt(photos.length * Math.PI) * phi;
+photos.forEach((img, i) => {
+  const phi = Math.acos(-1 + (2 * i) / count);
+  const theta = Math.sqrt(count * Math.PI) * phi;
 
   const x = radius * Math.cos(theta) * Math.sin(phi);
   const y = radius * Math.sin(theta) * Math.sin(phi);
   const z = radius * Math.cos(phi);
 
-  photo.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+  img.parentElement.style.transform =
+    `translate3d(${x}px, ${y}px, ${z}px)`;
 });
 
-let isDragging = false;
-let lastX = 0;
-let lastY = 0;
-let rotX = 0;
-let rotY = 0;
+/* ===============================
+   AUTO ROTATION
+================================ */
 
-const sphere = document.getElementById("sphere");
+function autoRotate() {
+  if (!isDragging) {
+    rotationY += 0.05;
+    sphere.style.transform =
+      `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+  }
+  requestAnimationFrame(autoRotate);
+}
 
-sphere.addEventListener("mousedown", (e) => {
+autoRotate();
+
+/* ===============================
+   MOUSE + TOUCH ROTATION
+================================ */
+
+function startDrag(x, y) {
   isDragging = true;
-  lastX = e.clientX;
-  lastY = e.clientY;
-});
+  lastX = x;
+  lastY = y;
+  clearTimeout(idleTimer);
+}
 
-window.addEventListener("mouseup", () => {
-  isDragging = false;
-});
-
-window.addEventListener("mousemove", (e) => {
+function dragMove(x, y) {
   if (!isDragging) return;
 
-  const dx = e.clientX - lastX;
-  const dy = e.clientY - lastY;
+  const dx = x - lastX;
+  const dy = y - lastY;
 
-  rotY += dx * 0.3;
-  rotX -= dy * 0.3;
+  rotationY += dx * 0.3;
+  rotationX -= dy * 0.3;
 
-  sphere.style.transform = `
-    translate(-50%, -50%)
-    rotateX(${rotX}deg)
-    rotateY(${rotY}deg)
-  `;
+  rotationX = Math.max(-90, Math.min(90, rotationX));
 
-  lastX = e.clientX;
-  lastY = e.clientY;
+  sphere.style.transform =
+    `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+  lastX = x;
+  lastY = y;
+}
+
+function endDrag() {
+  isDragging = false;
+}
+
+/* Mouse */
+window.addEventListener("mousedown", e => startDrag(e.clientX, e.clientY));
+window.addEventListener("mousemove", e => dragMove(e.clientX, e.clientY));
+window.addEventListener("mouseup", endDrag);
+
+/* Touch */
+window.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  startDrag(t.clientX, t.clientY);
+});
+
+window.addEventListener("touchmove", e => {
+  const t = e.touches[0];
+  dragMove(t.clientX, t.clientY);
+});
+
+window.addEventListener("touchend", endDrag);
+
+/* ===============================
+   CLICK → ZOOM ANIMATION
+================================ */
+
+const overlay = document.getElementById("overlay");
+const closeBtn = document.getElementById("overlay-close");
+
+let activeClone = null;
+let originRect = null;
+
+photos.forEach(img => {
+  img.addEventListener("click", e => {
+    e.stopPropagation();
+    openImage(img);
+  });
+});
+
+function openImage(img) {
+  originRect = img.getBoundingClientRect();
+
+  activeClone = img.cloneNode(true);
+  activeClone.classList.add("zoom-clone");
+
+  activeClone.style.top = `${originRect.top}px`;
+  activeClone.style.left = `${originRect.left}px`;
+  activeClone.style.width = `${originRect.width}px`;
+  activeClone.style.height = `${originRect.height}px`;
+
+  document.body.appendChild(activeClone);
+  activeClone.getBoundingClientRect();
+
+  const maxW = window.innerWidth * 0.9;
+  const maxH = window.innerHeight * 0.9;
+  const aspect = originRect.width / originRect.height;
+
+  let finalW = maxW;
+  let finalH = finalW / aspect;
+
+  if (finalH > maxH) {
+    finalH = maxH;
+    finalW = finalH * aspect;
+  }
+
+  activeClone.style.top = `${(window.innerHeight - finalH) / 2}px`;
+  activeClone.style.left = `${(window.innerWidth - finalW) / 2}px`;
+  activeClone.style.width = `${finalW}px`;
+  activeClone.style.height = `${finalH}px`;
+
+  overlay.classList.add("show");
+}
+
+/* Close logic */
+function closeImage() {
+  if (!activeClone) return;
+
+  activeClone.style.top = `${originRect.top}px`;
+  activeClone.style.left = `${originRect.left}px`;
+  activeClone.style.width = `${originRect.width}px`;
+  activeClone.style.height = `${originRect.height}px`;
+
+  overlay.classList.remove("show");
+
+  activeClone.addEventListener("transitionend", () => {
+    activeClone.remove();
+    activeClone = null;
+  }, { once: true });
+}
+
+closeBtn.addEventListener("click", closeImage);
+overlay.addEventListener("click", closeImage);
+
+/* ESC KEY */
+window.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeImage();
 });
