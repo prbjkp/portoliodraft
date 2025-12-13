@@ -9,7 +9,7 @@ const textRing = document.getElementById("start-text-ring");
 const letters = textRing.querySelectorAll("span");
 
 /* Rotation state */
-let rotX = 0, rotY = 0;
+let rotX = 1, rotY = 0;
 let targetRotX = 0, targetRotY = 0;
 let isDragging = false;
 let lastX = 0, lastY = 0;
