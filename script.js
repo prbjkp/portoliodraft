@@ -7,6 +7,12 @@ const photos = document.querySelectorAll(".photo");
 const radius = 600;
 const rows = 6;
 const cols = 10;
+let isDragging = false;
+let rotationX = 0;
+let rotationY = 0;
+let lastX = 0;
+let lastY = 0;
+let idleTimer = null;
 
 let index = 0;
 
@@ -110,7 +116,7 @@ const closeBtn = document.getElementById("overlay-close");
 let activeClone = null;
 let originRect = null;
 
-photos.forEach(img => {
+document.querySelectorAll(".photo img").forEach(img => {
   img.addEventListener("click", e => {
     e.stopPropagation();
     openImage(img);
@@ -177,18 +183,10 @@ window.addEventListener("keydown", e => {
 });
 
 
-let rotX = 0;
-let rotY = 0;
 
-window.addEventListener("mousemove", (e) => {
-  const x = (e.clientX / window.innerWidth - 0.5) * 180;
-  const y = (e.clientY / window.innerHeight - 0.5) * 180;
+const startContainer = document.getElementById("start-container");
 
-  rotY = x * 0.4;
-  rotX = -y * 0.4;
-
-  sphere.style.transform = `
-    rotateX(${rotX}deg)
-    rotateY(${rotY}deg)
-  `;
+startContainer.addEventListener("click", () => {
+  startContainer.style.opacity = "0";
+  startContainer.style.pointerEvents = "none";
 });
