@@ -50,6 +50,46 @@ html, body {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+/* START GROUP (sphere + text together) */
+#start-group {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  transform-style: preserve-3d;
+}
+
+/* TEXT RING */
+#start-text-ring {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: textSpinX 10s linear infinite;
+}
+
+#start-text-ring span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  letter-spacing: 0.35em;
+  transform:
+    rotateX(90deg)
+    translateZ(110px);
+  white-space: nowrap;
+}
+
+/* X-axis rotation */
+@keyframes textSpinX {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(360deg);
+  }
+}
+
 
 /* 3D SCENE */
 #scene {
@@ -59,10 +99,18 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  pointer-events: none;
+  opacity: 1;
+  pointer-events: auto;
   transition: opacity 0.8s ease;
 }
+#scene {
+  perspective: 1400px;
+}
+
+#sphere {
+  transform: translateZ(-200px);
+}
+
 
 #sphere {
   position: relative;
