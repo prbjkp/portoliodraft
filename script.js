@@ -86,3 +86,54 @@ document.addEventListener("keydown", (e) => {
     closeImage();
   }
 });
+
+const photos = document.querySelectorAll(".photo");
+const radius = 250;
+
+photos.forEach((photo, i) => {
+  const phi = Math.acos(-1 + (2 * i) / photos.length);
+  const theta = Math.sqrt(photos.length * Math.PI) * phi;
+
+  const x = radius * Math.cos(theta) * Math.sin(phi);
+  const y = radius * Math.sin(theta) * Math.sin(phi);
+  const z = radius * Math.cos(phi);
+
+  photo.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+});
+
+let isDragging = false;
+let lastX = 0;
+let lastY = 0;
+let rotX = 0;
+let rotY = 0;
+
+const sphere = document.getElementById("sphere");
+
+sphere.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+
+window.addEventListener("mouseup", () => {
+  isDragging = false;
+});
+
+window.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+
+  rotY += dx * 0.3;
+  rotX -= dy * 0.3;
+
+  sphere.style.transform = `
+    translate(-50%, -50%)
+    rotateX(${rotX}deg)
+    rotateY(${rotY}deg)
+  `;
+
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
