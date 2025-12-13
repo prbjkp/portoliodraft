@@ -14,7 +14,10 @@ html, body {
   color: white;
 }
 
-/* START SCREEN */
+/* =========================
+   START SCREEN
+========================= */
+
 #start-container {
   position: fixed;
   inset: 0;
@@ -22,12 +25,23 @@ html, body {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: opacity 0.6s ease;
 }
 
+/* GROUP (sphere + text) */
+#start-group {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  perspective: 800px;
+}
+
+/* SPHERE */
 #start-sphere {
+  position: absolute;
+  inset: 50%;
   width: 140px;
   height: 140px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #444, #000);
   box-shadow:
@@ -35,53 +49,30 @@ html, body {
     0 30px 60px rgba(0,0,0,0.6);
 }
 
-#orbit-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  animation: orbit 8s linear infinite;
-  letter-spacing: 0.3em;
-}
-
-@keyframes orbit {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-/* START GROUP (sphere + text together) */
-#start-group {
-  position: relative;
-  width: 300px;
-  height: 300px;
-  transform-style: preserve-3d;
-}
-
 /* TEXT RING */
 #start-text-ring {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  animation: textSpinX 10s linear infinite;
+  animation: spinX 10s linear infinite;
+  pointer-events: none;
 }
 
 #start-text-ring span {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  left: 50%;
+  top: 50%;
+  transform:
+    translate(-50%, -50%)
+    translateZ(110px);
   font-size: 14px;
   letter-spacing: 0.35em;
-  transform:
-    rotateX(90deg)
-    translateZ(110px);
   white-space: nowrap;
+  backface-visibility: hidden;
 }
 
-/* X-axis rotation */
-@keyframes textSpinX {
+/* Vertical orbit */
+@keyframes spinX {
   from {
     transform: rotateX(0deg);
   }
@@ -90,33 +81,25 @@ html, body {
   }
 }
 
+/* =========================
+   3D PHOTO SCENE
+========================= */
 
-/* 3D SCENE */
 #scene {
   position: fixed;
   inset: 0;
-  perspective: 1200px;
+  perspective: 1400px;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 0.8s ease;
 }
-#scene {
-  perspective: 1400px;
-}
-
-#sphere {
-  transform: translateZ(-200px);
-}
-
 
 #sphere {
   position: relative;
   width: 800px;
   height: 800px;
   transform-style: preserve-3d;
+  transform: translateZ(-200px);
   cursor: grab;
 }
 
