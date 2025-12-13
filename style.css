@@ -95,6 +95,25 @@ html, body {
   inset: -20px;
   border-radius: 50%;
 }
+#start-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+#start-sphere {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #444, #000);
+  box-shadow:
+    inset -12px -12px 24px rgba(0,0,0,0.7),
+    0 30px 60px rgba(0,0,0,0.6);
+}
+
 
 /* ===============================
    OVERLAY / ZOOM
@@ -162,4 +181,23 @@ html, body {
     height: 120px;
     font-size: 1.2rem;
   }
+}
+
+body {
+  perspective: 1200px;
+  overflow: hidden;
+  background: #000;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+#sphere {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  transform-style: preserve-3d;
 }

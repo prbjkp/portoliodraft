@@ -1,32 +1,38 @@
 /* ===============================
    3D SPHERE SETUP
 ================================ */
-
 const sphere = document.getElementById("sphere");
-const photos = document.querySelectorAll(".photo img");
+const photos = document.querySelectorAll(".photo");
 
-let rotationY = 0;
-let rotationX = 0;
-let isDragging = false;
-let lastX = 0;
-let lastY = 0;
-let idleTimer = null;
+const radius = 600;
+const rows = 6;
+const cols = 10;
 
-/* Arrange photos in a sphere */
-const radius = 320;
-const count = photos.length;
+let index = 0;
 
-photos.forEach((img, i) => {
-  const phi = Math.acos(-1 + (2 * i) / count);
-  const theta = Math.sqrt(count * Math.PI) * phi;
+for (let y = 0; y < rows; y++) {
+  const v = y / (rows - 1);
+  const phi = (v - 0.5) * Math.PI; // latitude
 
-  const x = radius * Math.cos(theta) * Math.sin(phi);
-  const y = radius * Math.sin(theta) * Math.sin(phi);
-  const z = radius * Math.cos(phi);
+  for (let x = 0; x < cols; x++) {
+    if (!photos[index]) return;
 
-  img.parentElement.style.transform =
-    `translate3d(${x}px, ${y}px, ${z}px)`;
-});
+    const u = x / cols;
+    const theta = u * Math.PI * 2; // longitude
+
+    const px = radius * Math.cos(phi) * Math.sin(theta);
+    const py = radius * Math.sin(phi);
+    const pz = radius * Math.cos(phi) * Math.cos(theta);
+
+    photos[index].style.transform = `
+      translate3d(${px}px, ${py}px, ${pz}px)
+      rotateY(${theta * 180 / Math.PI + 180}deg)
+      rotateX(${-phi * 180 / Math.PI}deg)
+    `;
+
+    index++;
+  }
+}
 
 /* ===============================
    AUTO ROTATION
@@ -168,4 +174,21 @@ overlay.addEventListener("click", closeImage);
 /* ESC KEY */
 window.addEventListener("keydown", e => {
   if (e.key === "Escape") closeImage();
+});
+
+
+let rotX = 0;
+let rotY = 0;
+
+window.addEventListener("mousemove", (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 180;
+  const y = (e.clientY / window.innerHeight - 0.5) * 180;
+
+  rotY = x * 0.4;
+  rotX = -y * 0.4;
+
+  sphere.style.transform = `
+    rotateX(${rotX}deg)
+    rotateY(${rotY}deg)
+  `;
 });
