@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<div class="home-content">
+  <div class="home-text">
+    <h1>Hello, I'm Peter Kopp</h1>
+    <p>I'm a passionate photographer who enjoys the art, and specializes in nature and car photography. I am based out of Madison, Wisconsin, and have been doing photography for 3 years now.
+  <br> I love photography because of the super creative things you can do with it, and the fact that I have the ability to capture a moment in time. I also play the trombone in my schools band, and work on my school yearbook as a editor. 
+  <br> 
+  </p>
+  </div>
+  <div class="home-image">
+    <img src="Images/pfp.JPG" alt="Peter Kopp">
+  </div>
+</div>
+
+<div class="home-content">
+  <div class="home-text">
+    <h1>Fun Facts</h1>
+    <p>I love to read, espaecially fantasy. Authors like Brandon Sanderson, Will Wight, and Bryce O'Connor are favorites of mine. I also love listening to music, with a pretty diverse music taste. <br>
+      I love Pink Floyd, and am conviced that Dark Side of the Moon is one of the greatest albums of all time. I also listen to some older alternative/light rock, or hiphop like Kendrick Lamar. 
+  <br> 
+  </p>
+  </div>
+  </div>
+
+<style>
+   .home-content {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 2rem;
+}
+
+.home-text {
+  flex: 1;
+  min-width: 250px;
+}
+
+.home-image {
+  flex: 1;
+  min-width: 250px;
+  text-align: center;
+}
+
+.home-image img {
+  max-width: 100%;
+  height: auto;
+  border: 4px solid black;
+  border-radius: 8px;
+}
+
+.lightbox {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+/* Visible state */
+.lightbox.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.6);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+
+</style>
