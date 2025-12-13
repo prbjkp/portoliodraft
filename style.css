@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f8f8f8;
+  overflow: hidden;
+  font-family: Inter, sans-serif;
+}
+
+#canvas {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+#start-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: none;
+  background: black;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.orbit {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.item {
+  position: absolute;
+  width: 160px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item:hover {
+  transform: scale(1.1);
+}
