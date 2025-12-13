@@ -1,6 +1,7 @@
 const sphere = document.getElementById("sphere");
 const photos = document.querySelectorAll(".photo");
 
+/* DISTRIBUTE PHOTOS ON SPHERE */
 const radius = 350;
 const total = photos.length;
 
@@ -12,29 +13,46 @@ photos.forEach((photo, i) => {
   const y = radius * Math.sin(theta) * Math.sin(phi);
   const z = radius * Math.cos(phi);
 
-  photo.style.transform = `
-    translate3d(${x}px, ${y}px, ${z}px)
-  `;
+  photo.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
 });
 
+/* ROTATION STATE */
 let rotX = 0;
 let rotY = 0;
-let dragging = false;
+let isDragging = false;
 let lastX = 0;
 let lastY = 0;
+let autoRotateSpeed = 0.03;
 
+/* AUTO ROTATION LOOP */
+function animate() {
+  if (!isDragging) {
+    rotY += autoRotateSpeed;
+    sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* MOUSE CONTROLS */
 window.addEventListener("mousedown", e => {
-  dragging = true;
+  isDragging = true;
   lastX = e.clientX;
   lastY = e.clientY;
 });
 
-window.addEventListener("mouseup", () => dragging = false);
+window.addEventListener("mouseup", () => {
+  isDragging = false;
+});
 
 window.addEventListener("mousemove", e => {
-  if (!dragging) return;
-  rotY += (e.clientX - lastX) * 0.3;
-  rotX -= (e.clientY - lastY) * 0.3;
+  if (!isDragging) return;
+
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+
+  rotY += dx * 0.3;
+  rotX -= dy * 0.3;
 
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
@@ -42,6 +60,7 @@ window.addEventListener("mousemove", e => {
   lastY = e.clientY;
 });
 
+/* START BUTTON */
 const startContainer = document.getElementById("start-container");
 const scene = document.getElementById("scene");
 

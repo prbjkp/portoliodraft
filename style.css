@@ -1,6 +1,4 @@
-/* ===============================
-   RESET
-================================ */
+/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -12,89 +10,11 @@ html, body {
   height: 100%;
   overflow: hidden;
   font-family: Inter, system-ui, sans-serif;
-  background: #ffffff;
+  background: #000;
   color: white;
 }
 
-/* ===============================
-   CANVAS
-================================ */
-#canvas {
-  position: fixed;
-  inset: 0;
-  perspective: 1200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ===============================
-   3D SPHERE
-================================ */
-#sphere {
-  position: relative;
-  width: 0;
-  height: 0;
-  transform-style: preserve-3d;
-  cursor: grab;
-}
-
-#sphere:active {
-  cursor: grabbing;
-}
-
-.photo {
-  position: absolute;
-  width: 180px;
-  height: 120px;
-  transform-style: preserve-3d;
-}
-
-.photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 
-    0 20px 40px rgba(0,0,0,0.45);
-  cursor: zoom-in;
-  transition: transform 0.25s ease;
-}
-
-.photo img:hover {
-  transform: scale(1.05);
-}
-
-/* ===============================
-   START BUTTON (3D)
-================================ */
-#start-btn {
-  position: absolute;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 30%, #000000, #000);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  box-shadow:
-    0 30px 60px rgba(0,0,0,0.6),
-    inset 0 -8px 12px rgba(0,0,0,0.8),
-    inset 0 8px 12px rgba(255,255,255,0.08);
-  transform-style: preserve-3d;
-  z-index: 10;
-}
-
-/* Floating orbit text (future ready) */
-#start-btn span {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-}
+/* START SCREEN */
 #start-container {
   position: fixed;
   inset: 0;
@@ -102,6 +22,7 @@ html, body {
   align-items: center;
   justify-content: center;
   z-index: 10;
+  transition: opacity 0.6s ease;
 }
 
 #start-sphere {
@@ -114,58 +35,6 @@ html, body {
     0 30px 60px rgba(0,0,0,0.6);
 }
 
-
-/* ===============================
-   OVERLAY / ZOOM
-================================ */
-#overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-}
-
-#overlay.show {
-  opacity: 1;
-  pointer-events: all;
-}
-
-#overlay-close {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  font-size: 28px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1001;
-}
-
-#overlay.show #overlay-close {
-  opacity: 1;
-}
-
-#scene {
-  position: fixed;
-  inset: 0;
-  perspective: 1200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#sphere {
-  position: relative;
-  width: 800px;
-  height: 800px;
-  transform-style: preserve-3d;
-}
 #orbit-text {
   position: absolute;
   inset: 0;
@@ -174,79 +43,56 @@ html, body {
   justify-content: center;
   pointer-events: none;
   animation: orbit 8s linear infinite;
+  letter-spacing: 0.3em;
 }
 
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 3D SCENE */
 #scene {
+  position: fixed;
+  inset: 0;
+  perspective: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.8s ease;
 }
 
-
-/* ===============================
-   ZOOM CLONE
-================================ */
-.zoom-clone {
-  position: fixed;
-  z-index: 1000;
-  border-radius: 12px;
-  box-shadow:
-    0 40px 80px rgba(0,0,0,0.6);
-  transition:
-    top 0.45s cubic-bezier(.22,.61,.36,1),
-    left 0.45s cubic-bezier(.22,.61,.36,1),
-    width 0.45s cubic-bezier(.22,.61,.36,1),
-    height 0.45s cubic-bezier(.22,.61,.36,1);
-}
-
-/* ===============================
-   MOBILE TWEAKS
-================================ */
-@media (max-width: 768px) {
-  .photo {
-    width: 140px;
-    height: 95px;
-  }
-
-  #start-btn {
-    width: 120px;
-    height: 120px;
-    font-size: 1.2rem;
-  }
-}
-
-body {
-  perspective: 1200px;
-  overflow: hidden;
-  background: #ffffff;
-}
-#start-container {
-  transition: opacity 0.6s ease;
-}
-
-
-#scene {
-  position: fixed;
-  inset: 0;
-  perspective: 1200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 #sphere {
   position: relative;
   width: 800px;
   height: 800px;
   transform-style: preserve-3d;
-}
-#orbit-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  animation: orbit 8s linear infinite;
+  cursor: grab;
 }
 
+#sphere:active {
+  cursor: grabbing;
+}
+
+/* PHOTOS */
+.photo {
+  position: absolute;
+  width: 180px;
+  height: 120px;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  cursor: zoom-in;
+  transition: transform 0.25s ease;
+}
+
+.photo img:hover {
+  transform: scale(1.05);
+}
