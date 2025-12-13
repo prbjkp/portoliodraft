@@ -50,26 +50,43 @@ html, body {
 }
 
 /* TEXT RING */
+/* START GROUP */
+#start-group {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  perspective: 800px;
+}
+
+/* TEXT RING */
 #start-text-ring {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
   animation: spinX 10s linear infinite;
-  pointer-events: none;
 }
 
+/* EACH LETTER */
 #start-text-ring span {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform:
-    translate(-50%, -50%)
-    translateZ(110px);
+  transform-style: preserve-3d;
   font-size: 14px;
-  letter-spacing: 0.35em;
-  white-space: nowrap;
+  letter-spacing: 0.1em;
   backface-visibility: hidden;
 }
+
+/* X-axis rotation */
+@keyframes spinX {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(360deg);
+  }
+}
+
 
 /* Vertical orbit */
 @keyframes spinX {

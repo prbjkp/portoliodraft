@@ -1,17 +1,20 @@
+/**********************************************************
+ * PHOTO SPHERE
+ **********************************************************/
 const sphere = document.getElementById("sphere");
 const photos = document.querySelectorAll(".photo");
 
 /* DISTRIBUTE PHOTOS ON SPHERE */
-const radius = 350;
-const total = photos.length;
+const sphereRadius = 350;
+const totalPhotos = photos.length;
 
 photos.forEach((photo, i) => {
-  const phi = Math.acos(-1 + (2 * i) / total);
-  const theta = Math.sqrt(total * Math.PI) * phi;
+  const phi = Math.acos(-1 + (2 * i) / totalPhotos);
+  const theta = Math.sqrt(totalPhotos * Math.PI) * phi;
 
-  const x = radius * Math.cos(theta) * Math.sin(phi);
-  const y = radius * Math.sin(theta) * Math.sin(phi);
-  const z = radius * Math.cos(phi);
+  const x = sphereRadius * Math.cos(theta) * Math.sin(phi);
+  const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
+  const z = sphereRadius * Math.cos(phi);
 
   photo.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
 });
@@ -25,14 +28,15 @@ let lastY = 0;
 let autoRotateSpeed = 0.03;
 
 /* AUTO ROTATION LOOP */
-function animate() {
+function animateSphere() {
   if (!isDragging) {
     rotY += autoRotateSpeed;
-    sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   }
-  requestAnimationFrame(animate);
+
+  sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  requestAnimationFrame(animateSphere);
 }
-animate();
+animateSphere();
 
 /* MOUSE CONTROLS */
 window.addEventListener("mousedown", e => {
@@ -54,19 +58,40 @@ window.addEventListener("mousemove", e => {
   rotY += dx * 0.3;
   rotX -= dy * 0.3;
 
-  sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-
   lastX = e.clientX;
   lastY = e.clientY;
 });
 
-/* START BUTTON */
+
+/**********************************************************
+ * START TEXT RING (WRAPPED AROUND SPHERE)
+ **********************************************************/
+const textRing = document.getElementById("start-text-ring");
+const letters = textRing.querySelectorAll("span");
+
+const textRadius = 110;
+const letterCount = letters.length;
+
+letters.forEach((letter, i) => {
+  const angle = (360 / letterCount) * i;
+
+  letter.style.transform = `
+    rotateY(${angle}deg)
+    translateZ(${textRadius}px)
+  `;
+});
+
+
+/**********************************************************
+ * START BUTTON TRANSITION
+ **********************************************************/
 const startContainer = document.getElementById("start-container");
 const scene = document.getElementById("scene");
 
 startContainer.addEventListener("click", () => {
   startContainer.style.opacity = "0";
   startContainer.style.pointerEvents = "none";
+
   scene.style.opacity = "1";
   scene.style.pointerEvents = "auto";
 });
