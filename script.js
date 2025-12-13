@@ -27,7 +27,7 @@ letters.forEach((letter, i) => {
 /**********************************************************
 * DISTRIBUTE PHOTOS ON SPHERE
 **********************************************************/
-const sphereRadius = 350;
+const sphereRadius = 600;
 photos.forEach((photo, i) => {
   const phi = Math.acos(-1 + (2 * i) / photos.length);
   const theta = Math.sqrt(photos.length * Math.PI) * phi;
