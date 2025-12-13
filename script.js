@@ -1,113 +1,83 @@
-const items = document.querySelectorAll(".item");
-const radius = 350;
-const centerX = window.innerWidth / 2;
-const centerY = window.innerHeight / 2;
+document.addEventListener("DOMContentLoaded", () => {
 
-items.forEach((item, index) => {
-  const angle = (index / items.length) * Math.PI * 2;
+  /* ===== ORBIT LAYOUT ===== */
+  const items = document.querySelectorAll(".item");
+  const radius = 350;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
 
-  const x = centerX + radius * Math.cos(angle) - item.offsetWidth / 2;
-  const y = centerY + radius * Math.sin(angle) - item.offsetHeight / 2;
-
-  item.style.left = `${x}px`;
-  item.style.top = `${y}px`;
-});
-item.addEventListener("click", () => {
-  item.style.transform = "scale(2)";
-});
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightbox-img");
-if (closeBtn) {
-  closeBtn.addEventListener("click", closeImage);
-}
-
-
-document.querySelectorAll(".item img").forEach(img => {
-  img.addEventListener("click", () => {
-    lightboxImg.src = img.src;
-    lightbox.classList.add("show");
+  items.forEach((item, index) => {
+    const angle = (index / items.length) * Math.PI * 2;
+    const x = centerX + radius * Math.cos(angle) - item.offsetWidth / 2;
+    const y = centerY + radius * Math.sin(angle) - item.offsetHeight / 2;
+    item.style.left = `${x}px`;
+    item.style.top = `${y}px`;
   });
-});
 
-closeBtn.addEventListener("click", closeLightbox);
-lightbox.addEventListener("click", (e) => {
-  if (e.target === lightbox) closeLightbox();
-});
+  /* ===== SHARED ELEMENT ZOOM ===== */
+  const overlay = document.getElementById("overlay");
+  const closeBtn = document.getElementById("overlay-close");
 
-function closeLightbox() {
-  lightbox.classList.remove("show");
-}
-const overlay = document.getElementById("overlay");
-const closeBtn = document.getElementById("overlay-close");
+  let activeClone = null;
+  let originRect = null;
 
-let activeClone = null;
-let originRect = null;
+  document.querySelectorAll(".item img").forEach(img => {
+    img.addEventListener("click", () => openImage(img));
+  });
 
-document.querySelectorAll(".item img").forEach(img => {
-  img.addEventListener("click", () => openImage(img));
-});
+  function openImage(img) {
+    originRect = img.getBoundingClientRect();
 
-function openImage(img) {
-  originRect = img.getBoundingClientRect();
+    activeClone = img.cloneNode(true);
+    activeClone.classList.add("zoom-clone");
 
-  // Create clone
-  activeClone = img.cloneNode(true);
-  activeClone.classList.add("zoom-clone");
+    activeClone.style.top = `${originRect.top}px`;
+    activeClone.style.left = `${originRect.left}px`;
+    activeClone.style.width = `${originRect.width}px`;
+    activeClone.style.height = `${originRect.height}px`;
 
-  // Set start position
-  activeClone.style.top = `${originRect.top}px`;
-  activeClone.style.left = `${originRect.left}px`;
-  activeClone.style.width = `${originRect.width}px`;
-  activeClone.style.height = `${originRect.height}px`;
+    document.body.appendChild(activeClone);
+    activeClone.getBoundingClientRect(); // force reflow
 
-  document.body.appendChild(activeClone);
+    const maxW = window.innerWidth * 0.85;
+    const maxH = window.innerHeight * 0.85;
+    const aspect = originRect.width / originRect.height;
 
-  // Force reflow
-  activeClone.getBoundingClientRect();
+    let finalW = maxW;
+    let finalH = maxW / aspect;
 
-  // Target size (centered)
-  const targetWidth = window.innerWidth * 0.85;
-  const targetHeight = window.innerHeight * 0.85;
+    if (finalH > maxH) {
+      finalH = maxH;
+      finalW = maxH * aspect;
+    }
 
-  const aspect = originRect.width / originRect.height;
-  let finalWidth = targetWidth;
-  let finalHeight = targetWidth / aspect;
+    activeClone.style.top = `${(window.innerHeight - finalH) / 2}px`;
+    activeClone.style.left = `${(window.innerWidth - finalW) / 2}px`;
+    activeClone.style.width = `${finalW}px`;
+    activeClone.style.height = `${finalH}px`;
 
-  if (finalHeight > targetHeight) {
-    finalHeight = targetHeight;
-    finalWidth = targetHeight * aspect;
+    overlay.classList.add("show");
   }
 
-  activeClone.style.top = `${(window.innerHeight - finalHeight) / 2}px`;
-  activeClone.style.left = `${(window.innerWidth - finalWidth) / 2}px`;
-  activeClone.style.width = `${finalWidth}px`;
-  activeClone.style.height = `${finalHeight}px`;
+  function closeImage() {
+    if (!activeClone) return;
 
-  overlay.classList.add("show");
-}
+    activeClone.style.top = `${originRect.top}px`;
+    activeClone.style.left = `${originRect.left}px`;
+    activeClone.style.width = `${originRect.width}px`;
+    activeClone.style.height = `${originRect.height}px`;
 
-function closeImage() {
-  if (!activeClone) return;
+    overlay.classList.remove("show");
 
-  // Animate back
-  activeClone.style.top = `${originRect.top}px`;
-  activeClone.style.left = `${originRect.left}px`;
-  activeClone.style.width = `${originRect.width}px`;
-  activeClone.style.height = `${originRect.height}px`;
-
-  overlay.classList.remove("show");
-
-  activeClone.addEventListener(
-    "transitionend",
-    () => {
+    activeClone.addEventListener("transitionend", () => {
       activeClone.remove();
       activeClone = null;
-    },
-    { once: true }
-  );
-}
+    }, { once: true });
+  }
 
-closeBtn.addEventListener("click", closeImage);
-overlay.addEventListener("click", (e) => {
-  if (e.target === overlay) closeImage();
+  closeBtn.addEventListener("click", closeImage);
+  overlay.addEventListener("click", e => {
+    if (e.target === overlay) closeImage();
+  });
+
 });
