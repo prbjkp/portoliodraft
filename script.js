@@ -7,7 +7,7 @@ let targetRotX = 0, targetRotY = 0;
 let isDragging = false;
 let lastX = 0, lastY = 0;
 
-const autoRotateSpeed = 0.12;
+const autoRotateSpeed = 0.15;
 const sphereRadius = 900;
 
 /* DISTRIBUTE PHOTOS ON SPHERE */
@@ -32,26 +32,18 @@ function animate() {
   rotX += (targetRotX - rotX) * 0.08;
   rotY += (targetRotY - rotY) * 0.08;
 
-  /* Rotate entire sphere */
+  /* Rotate the sphere */
   sphere.style.transform = `
     rotateX(${rotX}deg)
     rotateY(${rotY}deg)
   `;
 
-  /* Position photos + billboard images */
+  /* Position photos */
   photos.forEach((photo, i) => {
     const { x, y, z } = positions[i];
-    const img = photo.querySelector("img");
 
-    // Position in 3D space
     photo.style.transform = `
       translate3d(${x}px, ${y}px, ${z}px)
-    `;
-
-    // Billboard image to camera
-    img.style.transform = `
-      rotateY(${-rotY}deg)
-      rotateX(${-rotX}deg)
     `;
   });
 
@@ -69,8 +61,8 @@ window.addEventListener("mouseup", () => isDragging = false);
 window.addEventListener("mouseleave", () => isDragging = false);
 window.addEventListener("mousemove", e => {
   if (!isDragging) return;
-  targetRotY += (e.clientX - lastX) * 0.3;
-  targetRotX -= (e.clientY - lastY) * 0.3;
+  targetRotY += (e.clientX - lastX) * 0.25;
+  targetRotX -= (e.clientY - lastY) * 0.25;
   lastX = e.clientX;
   lastY = e.clientY;
 });

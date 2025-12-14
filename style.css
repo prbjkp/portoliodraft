@@ -11,8 +11,7 @@ html, body {
 #scene {
   position: absolute;
   inset: 0;
-  perspective: 1800px;
-  perspective-origin: center;
+  perspective: 2200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,14 +29,13 @@ html, body {
     inset -12px -12px 24px rgba(0,0,0,0.7),
     0 30px 60px rgba(0,0,0,0.6);
   z-index: 10;
-  transform: translateZ(0);
 }
 
-/* ROTATION PIVOT ONLY */
+/* IMAGE SPHERE */
 #sphere {
   position: relative;
-  width: 1px;
-  height: 1px;
+  width: 800px;
+  height: 800px;
   transform-style: preserve-3d;
   cursor: grab;
 }
@@ -60,6 +58,4 @@ html, body {
   border-radius: 10px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   backface-visibility: hidden;
-  transform-style: preserve-3d;
-  will-change: transform;
 }
