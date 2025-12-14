@@ -45,14 +45,14 @@ function animateSphere(){
   if(!isDragging) targetRotY+=autoRotateSpeed;
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
-  sphere.style.transform = `translateZ(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   textRing.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
     const rotYtoCenter = Math.atan2(dx,dz)*(180/Math.PI);
     const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI);
-    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${rotY + rotYtoCenter}deg) rotateX(${rotX + rotXtoCenter}deg)`;
+    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${rotYtoCenter}deg) rotateX(${rotXtoCenter}deg)`;
   });
   requestAnimationFrame(animateSphere);
 }
