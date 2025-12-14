@@ -16,7 +16,7 @@ let lastX = 0, lastY = 0;
 const autoRotateSpeed = 0.03;
 
 /* Sphere radius (distance from center to images) */
-const sphereRadius = 800;
+const sphereRadius = 1200;
 
 /* Store positions for the sphere */
 const positions = [];
