@@ -31,15 +31,17 @@ letters.forEach((letter, i) => {
 });
 
 /**********************************************************
-* DISTRIBUTE PHOTOS ON SPHERE (store positions)
+* DISTRIBUTE PHOTOS EVENLY ON SPHERE
 **********************************************************/
 photos.forEach((photo, i) => {
-  const phi = Math.acos(-1 + (2 * i) / photos.length);
-  const theta = Math.sqrt(photos.length * Math.PI) * phi;
+  const total = photos.length;
+  // Even distribution using Fibonacci sphere formula
+  const phi = Math.acos(1 - 2 * (i + 0.5) / total);
+  const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
 
-  const x = sphereRadius * Math.cos(theta) * Math.sin(phi);
-  const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
-  const z = sphereRadius * Math.cos(phi);
+  const x = sphereRadius * Math.sin(phi) * Math.cos(theta);
+  const y = sphereRadius * Math.cos(phi);
+  const z = sphereRadius * Math.sin(phi) * Math.sin(theta);
 
   positions.push({ x, y, z });
 });
@@ -57,7 +59,7 @@ function animateSphere() {
   // Rotate the whole sphere
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-  // Update each photo to face camera
+  // Update each photo to face camera (billboarding)
   photos.forEach((photo, i) => {
     const pos = positions[i];
     photo.style.transform = `
@@ -163,7 +165,7 @@ photos.forEach(photo => {
 });
 
 /**********************************************************
-* ZOOM ANIMATION KEYFRAMES (inject into document)
+* ZOOM ANIMATION KEYFRAMES
 **********************************************************/
 const styleSheet = document.createElement("style");
 styleSheet.innerText = `
