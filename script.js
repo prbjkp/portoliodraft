@@ -41,10 +41,28 @@ photos.forEach((photo, i) => {
 
   const x = sphereRadius * Math.sin(phi) * Math.cos(theta);
   const y = sphereRadius * Math.cos(phi);
-  const z = sphereRadius * Math.sin(phi) * Math.sin(theta);
+const z = -sphereRadius * Math.sin(phi) * Math.sin(theta); // flipped
+
 
   positions.push({ x, y, z });
 });
+
+photos.forEach((photo, i) => {
+  const pos = positions[i]; // x, y, z
+  const dx = -pos.x; // vector toward center
+  const dy = -pos.y;
+  const dz = -pos.z;
+
+  const rotY = Math.atan2(dx, dz) * (180 / Math.PI);
+  const rotX = Math.asin(dy / sphereRadius) * (180 / Math.PI);
+
+  photo.style.transform = `
+    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+    rotateY(${rotY}deg)
+    rotateX(${rotX}deg)
+  `;
+});
+
 
 /**********************************************************
 * AUTO-ROTATE + DRAG + BILLBOARDING
