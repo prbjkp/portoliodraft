@@ -9,98 +9,84 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: Inter, system-ui, sans-serif;
-  background: #ffffff; /* darker background for contrast */
+  background: #111;
   color: white;
+  font-family: Inter, system-ui, sans-serif;
 }
 
 /* =========================
-   START SCREEN
+   SCENE / CAMERA
 ========================= */
-
-#start-container {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
 
 #scene {
   position: fixed;
   inset: 0;
-  perspective: 2000px; /* viewer is inside outer sphere */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0; /* hidden until start is clicked */
-  pointer-events: none;
+  perspective: 2000px;
 }
 
-/* GROUP (small black start sphere + text) */
-#start-group {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  perspective: 800px;
-}
-
-/* SMALL BLACK START SPHERE */
-#start-sphere {
+#camera {
   position: absolute;
-  inset: 50%;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* =========================
+   CORE (CENTER OBJECT)
+========================= */
+
+#core,
+#core-clone {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  z-index: 10;
+}
+
+#start-sphere {
   width: 80px;
   height: 80px;
-  transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #444, #000);
   box-shadow:
     inset -8px -8px 16px rgba(0,0,0,0.7),
     0 20px 40px rgba(0,0,0,0.6);
-  z-index: 5; /* above photos */
 }
 
-/* TEXT RING */
+/* START TEXT RING */
 #start-text-ring {
   position: absolute;
-  inset: 0;
+  inset: -60px;
   transform-style: preserve-3d;
   animation: spinX 10s linear infinite;
 }
 
-/* EACH LETTER */
 #start-text-ring span {
   position: absolute;
   left: 50%;
   top: 50%;
   transform-style: preserve-3d;
   font-size: 14px;
-  letter-spacing: 0.1em;
-  backface-visibility: hidden;
-}
-
-/* SPHERE ROTATION */
-@keyframes spinX {
-  from { transform: rotateX(0deg); }
-  to { transform: rotateX(360deg); }
 }
 
 /* =========================
-   3D PHOTO SPHERE
+   OUTER WORLD
 ========================= */
 
-#sphere {
-  position: relative;
-  width: 1000px;  /* larger outer sphere */
-  height: 1000px; /* larger outer sphere */
+#world {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   transform-style: preserve-3d;
-  transform: translateZ(0); /* viewer is inside, Z=0 is center */
-  cursor: grab;
+  transform: translate(-50%, -50%);
 }
 
-#sphere:active {
-  cursor: grabbing;
+#sphere {
+  width: 1200px;
+  height: 1200px;
+  position: relative;
+  transform-style: preserve-3d;
 }
 
 /* PHOTOS */
@@ -115,34 +101,24 @@ html, body {
   height: 100%;
   object-fit: cover;
   border-radius: 10px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   cursor: zoom-in;
-  transition: transform 0.25s ease;
-}
-
-.photo img:hover {
-  transform: scale(1.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
 /* =========================
-   ZOOM OVERLAY
+   OVERLAY
 ========================= */
 
 #overlay {
   position: fixed;
   inset: 0;
   display: none;
+  background: rgba(0,0,0,0.85);
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.85);
-  z-index: 50;
+  z-index: 100;
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-#overlay img {
-  border-radius: 10px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
 }
 
 #overlay-close {
@@ -154,13 +130,9 @@ html, body {
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 60;
 }
 
-/* =========================
-   USER SELECT / DRAG PREVENTION
-========================= */
-body, img {
-  user-select: none;
-  -webkit-user-drag: none;
+@keyframes spinX {
+  from { transform: rotateX(0deg); }
+  to { transform: rotateX(360deg); }
 }
