@@ -3,10 +3,10 @@
 **********************************************************/
 const sphere = document.getElementById("sphere");
 const photos = document.querySelectorAll(".photo");
-const startContainer = document.getElementById("start-container");
+const overlay = document.getElementById("overlay");
+const overlayClose = document.getElementById("overlay-close");
 const textRing = document.getElementById("start-text-ring");
 const letters = textRing.querySelectorAll("span");
-const overlay = document.getElementById("overlay");
 
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 let isDragging=false, lastX=0, lastY=0;
@@ -40,11 +40,10 @@ photos.forEach((photo,i)=>{
 * ANIMATION LOOP
 **********************************************************/
 function animateSphere(){
-  if(!isDragging) targetRotY+=autoRotateSpeed;
+  if(!isDragging) targetRotY += autoRotateSpeed;
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
@@ -52,7 +51,6 @@ function animateSphere(){
     const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI);
     photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${rotYtoCenter}deg) rotateX(${rotXtoCenter}deg)`;
   });
-
   requestAnimationFrame(animateSphere);
 }
 animateSphere();
@@ -77,14 +75,12 @@ photos.forEach(p=>p.ondragstart=e=>e.preventDefault());
 document.body.style.userSelect="none";
 
 /**********************************************************
-* START SCREEN CLICK
+* START SCREEN AUTO FADE
 **********************************************************/
-startContainer.addEventListener("click", ()=>{
-  startContainer.style.opacity="0";
-  startContainer.style.pointerEvents="none";
-  document.getElementById("scene").style.opacity="1";
-  document.getElementById("scene").style.pointerEvents="auto";
-});
+setTimeout(()=>{
+  document.getElementById("start-container").style.transition="opacity 1s";
+  document.getElementById("start-container").style.opacity="0";
+}, 3000);
 
 /**********************************************************
 * IMAGE ZOOM
@@ -98,7 +94,9 @@ photos.forEach(photo=>{
     document.getElementById("overlay-close").addEventListener("click", closeOverlay);
   });
 });
+
 function closeOverlay() {
   overlay.style.opacity="0"; overlay.style.pointerEvents="none";
 }
+
 window.addEventListener("keydown", e=>{ if(e.key==="Escape") closeOverlay(); });
