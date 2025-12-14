@@ -1,8 +1,5 @@
 const sphere = document.getElementById("sphere");
 const photos = document.querySelectorAll(".photo");
-const textRing = document.getElementById("start-text-ring");
-const letters = textRing.querySelectorAll("span");
-const overlay = document.getElementById("overlay");
 
 /* ROTATION STATE */
 let rotX = 0, rotY = 0;
@@ -10,21 +7,14 @@ let targetRotX = 0, targetRotY = 0;
 let isDragging = false;
 let lastX = 0, lastY = 0;
 
-const autoRotateSpeed = 0.15;
-const sphereRadius = 900 ;
+const autoRotateSpeed = 0.12;
+const sphereRadius = 900;
 
-/* TEXT RING (CENTER ORB ONLY) */
-const textRadius = 90;
-letters.forEach((letter, i) => {
-  const angle = (360 / letters.length) * i;
-  letter.style.transform =
-    `rotateY(${angle}deg) translateZ(${textRadius}px)`;
-});
-
-/* PHOTO DISTRIBUTION */
+/* DISTRIBUTE PHOTOS ON SPHERE */
 const positions = [];
+const total = photos.length;
+
 photos.forEach((photo, i) => {
-  const total = photos.length;
   const phi = Math.acos(1 - 2 * (i + 0.5) / total);
   const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
 
@@ -42,27 +32,27 @@ function animate() {
   rotX += (targetRotX - rotX) * 0.08;
   rotY += (targetRotY - rotY) * 0.08;
 
-  // ROTATE ONLY THE IMAGE SPHERE
-  sphere.style.transform =
-    `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  /* Rotate entire sphere */
+  sphere.style.transform = `
+    rotateX(${rotX}deg)
+    rotateY(${rotY}deg)
+  `;
 
+  /* Position photos + billboard images */
   photos.forEach((photo, i) => {
     const { x, y, z } = positions[i];
+    const img = photo.querySelector("img");
 
-photos.forEach((photo, i) => {
-  const { x, y, z } = positions[i];
+    // Position in 3D space
+    photo.style.transform = `
+      translate3d(${x}px, ${y}px, ${z}px)
+    `;
 
-  photo.style.transform = `
-    translate3d(${x}px, ${y}px, ${z}px)
-    rotateY(${-rotY}deg)
-    rotateX(${-rotX}deg)
-  `;
-});
-
-    photo.style.transform =
-      `translate3d(${x}px, ${y}px, ${z}px)
-       rotateY(${rotYtoCenter}deg)
-       rotateX(${rotXtoCenter}deg)`;
+    // Billboard image to camera
+    img.style.transform = `
+      rotateY(${-rotY}deg)
+      rotateX(${-rotX}deg)
+    `;
   });
 
   requestAnimationFrame(animate);
@@ -85,6 +75,6 @@ window.addEventListener("mousemove", e => {
   lastY = e.clientY;
 });
 
-/* PREVENT DRAG */
+/* PREVENT IMAGE DRAG */
 photos.forEach(p => p.ondragstart = e => e.preventDefault());
 document.body.style.userSelect = "none";
