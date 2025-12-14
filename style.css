@@ -27,7 +27,7 @@ html, body {
   z-index: 10;
 }
 #scene {
-  perspective: 5000px; /* was 1400px */
+  perspective: 10000px; /* was 1400px */
 }
 /* GROUP (sphere + text) */
 #start-group {
