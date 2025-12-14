@@ -1,42 +1,76 @@
-html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; font-family:Inter, sans-serif; background:#111; color:white; }
-
-/* START BUTTON SPHERE */
-#start-container {
-  position: absolute; top:50%; left:50%; transform:translate(-50%, -50%);
-  z-index:10; pointer-events:auto;
+html, body {
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:#111; /* */
+  color:white;
 }
-#start-group { position: relative; width:300px; height:300px; perspective:800px; }
-/* CENTER BLACK SPHERE */
-#start-sphere {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 140px; height: 140px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
+
+/* SCENE */
+#scene {
+  position:absolute;
+  inset:0;
+  perspective:1400px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* STATIC CENTER ORB */
+#center-orb {
+  position:absolute;
+  width:140px;
+  height:140px;
+  border-radius:50%;
   background: radial-gradient(circle at 30% 30%, #444, #000);
   box-shadow:
     inset -12px -12px 24px rgba(0,0,0,0.7),
     0 30px 60px rgba(0,0,0,0.6);
-  pointer-events: none; /* allow clicks to pass through to sphere */
-  z-index: 5;
+  z-index:5;
+  pointer-events:auto;
 }
 
-#start-text-ring { position:absolute; inset:0; transform-style:preserve-3d; animation:spinX 10s linear infinite; }
-#start-text-ring span { position:absolute; left:50%; top:50%; transform-style:preserve-3d; font-size:14px; letter-spacing:0.1em; backface-visibility:hidden; }
-@keyframes spinX { from {transform:rotateX(0deg);} to {transform:rotateX(360deg);} }
+/* TEXT RING */
+#start-text-ring {
+  position:absolute;
+  inset:0;
+  transform-style:preserve-3d;
+  animation:spinX 10s linear infinite;
+}
+#start-text-ring span {
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-style:preserve-3d;
+  font-size:14px;
+  letter-spacing:0.1em;
+}
+@keyframes spinX {
+  from { transform:rotateX(0deg); }
+  to { transform:rotateX(360deg); }
+}
 
-/* 3D PHOTO SPHERE */
-#scene { position:absolute; inset:0; perspective:1400px; display:flex; justify-content:center; align-items:center; }
-#sphere { position: relative; width:800px; height:800px; transform-style: preserve-3d; transform: translateZ(1200px); cursor: grab; }
-#sphere:active { cursor: grabbing; }
+/* ROTATING IMAGE SPHERE */
+#sphere {
+  position:relative;
+  width:800px;
+  height:800px;
+  transform-style:preserve-3d;
+  cursor:grab;
+}
+#sphere:active { cursor:grabbing; }
 
 /* PHOTOS */
-.photo { position:absolute; width:180px; height:120px; }
-.photo img { width:100%; height:100%; object-fit:cover; border-radius:10px; box-shadow:0 20px 40px rgba(0,0,0,0.5); cursor:zoom-in; transition:transform 0.25s ease; }
-.photo img:hover { transform:scale(1.05); }
-
-/* ZOOM OVERLAY */
-#overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition:opacity 0.4s ease; z-index:100; }
-#overlay img { max-width:90%; max-height:90%; border-radius:10px; box-shadow:0 20px 40px rgba(0,0,0,0.8); transform:scale(0); animation:zoomIn 0.4s forwards; }
-#overlay-close { position:absolute; top:20px; right:20px; font-size:2rem; background:none; border:none; color:white; cursor:pointer; }
-@keyframes zoomIn { to { transform:scale(1); } }
+.photo {
+  position:absolute;
+  width:180px;
+  height:120px;
+}
+.photo img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}

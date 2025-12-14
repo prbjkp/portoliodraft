@@ -13,7 +13,7 @@ let lastX = 0, lastY = 0;
 const autoRotateSpeed = 0.15;
 const sphereRadius = 550;
 
-/* TEXT RING */
+/* TEXT RING (CENTER ORB ONLY) */
 const textRadius = 90;
 letters.forEach((letter, i) => {
   const angle = (360 / letters.length) * i;
@@ -21,7 +21,7 @@ letters.forEach((letter, i) => {
     `rotateY(${angle}deg) translateZ(${textRadius}px)`;
 });
 
-/* PHOTO DISTRIBUTION (GOLDEN SPIRAL) */
+/* PHOTO DISTRIBUTION */
 const positions = [];
 photos.forEach((photo, i) => {
   const total = photos.length;
@@ -42,6 +42,7 @@ function animate() {
   rotX += (targetRotX - rotX) * 0.08;
   rotY += (targetRotY - rotY) * 0.08;
 
+  // ROTATE ONLY THE IMAGE SPHERE
   sphere.style.transform =
     `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
@@ -67,10 +68,8 @@ window.addEventListener("mousedown", e => {
   lastX = e.clientX;
   lastY = e.clientY;
 });
-
 window.addEventListener("mouseup", () => isDragging = false);
 window.addEventListener("mouseleave", () => isDragging = false);
-
 window.addEventListener("mousemove", e => {
   if (!isDragging) return;
   targetRotY += (e.clientX - lastX) * 0.3;
@@ -82,25 +81,3 @@ window.addEventListener("mousemove", e => {
 /* PREVENT DRAG */
 photos.forEach(p => p.ondragstart = e => e.preventDefault());
 document.body.style.userSelect = "none";
-
-/* ZOOM OVERLAY */
-photos.forEach(photo => {
-  photo.addEventListener("click", () => {
-    const src = photo.querySelector("img").src;
-    overlay.innerHTML =
-      `<button id="overlay-close">✕</button><img src="${src}">`;
-    overlay.style.display = "flex";
-    requestAnimationFrame(() => overlay.style.opacity = "1");
-    document.getElementById("overlay-close")
-      .addEventListener("click", closeOverlay);
-  });
-});
-
-function closeOverlay() {
-  overlay.style.opacity = "0";
-  overlay.style.pointerEvents = "none";
-}
-
-window.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeOverlay();
-});
