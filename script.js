@@ -13,7 +13,7 @@ const overlayClose = document.getElementById("overlay-close");
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 let isDragging=false, lastX=0, lastY=0;
 const autoRotateSpeed = 0.04;
-const sphereRadius = 5000;
+const sphereRadius = 1200;
 const positions = [];
 
 /**********************************************************
@@ -48,10 +48,7 @@ function animateSphere(){
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
-    const dx=-pos.x, dy=-pos.y, dz=-pos.z;
-    const rotYtoCenter = Math.atan2(dx,dz)*(180/Math.PI);
-    const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI);
-    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${rotYtoCenter - rotY}deg) rotateX(${rotXtoCenter - rotX}deg)`;
+    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
   });
   requestAnimationFrame(animateSphere);
 }
