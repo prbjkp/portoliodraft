@@ -15,6 +15,12 @@ let isDragging = false;
 let lastX = 0, lastY = 0;
 const autoRotateSpeed = 0.03;
 
+/* Sphere radius */
+const sphereRadius = 600;
+
+/* Store original positions for billboarding */
+const positions = [];
+
 /**********************************************************
 * DISTRIBUTE START TEXT AROUND SPHERE
 **********************************************************/
@@ -25,9 +31,8 @@ letters.forEach((letter, i) => {
 });
 
 /**********************************************************
-* DISTRIBUTE PHOTOS ON SPHERE
+* DISTRIBUTE PHOTOS ON SPHERE (store positions)
 **********************************************************/
-const sphereRadius = 600;
 photos.forEach((photo, i) => {
   const phi = Math.acos(-1 + (2 * i) / photos.length);
   const theta = Math.sqrt(photos.length * Math.PI) * phi;
@@ -36,11 +41,11 @@ photos.forEach((photo, i) => {
   const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
   const z = sphereRadius * Math.cos(phi);
 
-  photo.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+  positions.push({ x, y, z });
 });
 
 /**********************************************************
-* AUTO-ROTATE + DRAG
+* AUTO-ROTATE + DRAG + BILLBOARDING
 **********************************************************/
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
@@ -49,11 +54,24 @@ function animateSphere() {
   rotX += (targetRotX - rotX) * 0.1;
   rotY += (targetRotY - rotY) * 0.1;
 
+  // Rotate the whole sphere
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+
+  // Update each photo to face camera
+  photos.forEach((photo, i) => {
+    const pos = positions[i];
+    photo.style.transform = `
+      translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+      rotateY(${-rotY}deg)
+      rotateX(${-rotX}deg)
+    `;
+  });
+
   requestAnimationFrame(animateSphere);
 }
 animateSphere();
 
+/* Mouse drag controls */
 window.addEventListener("mousedown", e => {
   isDragging = true;
   lastX = e.clientX;
