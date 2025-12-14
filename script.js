@@ -19,10 +19,17 @@ const positions = [];
 /**********************************************************
 * DISTRIBUTE START TEXT
 **********************************************************/
-const textRadius = 110;
+const textRadius = 70;
 letters.forEach((letter,i)=>{
   const angle = (360/letters.length)*i;
-  letter.style.transform = `rotateY(${angle}deg) translateZ(${textRadius}px)`;
+  const phi = Math.acos(1 - 2*(i+0.5)/letters.length);
+  const theta = Math.PI*(1+Math.sqrt(5))*(i+0.5);
+  const x = textRadius*Math.sin(phi)*Math.cos(theta);
+  const y = textRadius*Math.cos(phi);
+  const z = textRadius*Math.sin(phi)*Math.sin(theta);
+  const rotYtoCenter = Math.atan2(-x,-z)*(180/Math.PI);
+  const rotXtoCenter = Math.asin(y/textRadius)*(180/Math.PI);
+  letter.style.transform = `translate3d(${x}px, ${y}px, ${z}px) rotateY(${rotYtoCenter}deg) rotateX(${rotXtoCenter}deg)`;
 });
 
 /**********************************************************
@@ -51,7 +58,7 @@ function animateSphere(){
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
     const rotYtoCenter = Math.atan2(dx,dz)*(180/Math.PI);
     const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI);
-    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${rotYtoCenter}deg) rotateX(${rotXtoCenter}deg)`;
+    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${rotY + rotYtoCenter}deg) rotateX(${rotX + rotXtoCenter}deg)`;
   });
   requestAnimationFrame(animateSphere);
 }
