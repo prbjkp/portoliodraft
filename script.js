@@ -12,7 +12,7 @@ const overlayClose = document.getElementById("overlay-close");
 
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 let isDragging=false, lastX=0, lastY=0;
-const autoRotateSpeed = 0.03;
+const autoRotateSpeed = 0.04;
 const sphereRadius = 1200;
 const positions = [];
 
@@ -45,7 +45,7 @@ function animateSphere(){
   if(!isDragging) targetRotY+=autoRotateSpeed;
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
-  sphere.style.transform = `rotateX(${-rotX}deg) rotateY(${-rotY}deg) translateZ(1200px)`;
+  sphere.style.transform = `translateZ(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
