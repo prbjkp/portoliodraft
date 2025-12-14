@@ -7,7 +7,7 @@ const overlay = document.getElementById("overlay");
 
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 let isDragging=false, lastX=0, lastY=0;
-const autoRotateSpeed = 0.03;
+const autoRotateSpeed = 0.02;
 const sphereRadius = 1200;
 const positions = [];
 
