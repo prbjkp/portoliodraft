@@ -11,7 +11,7 @@ let isDragging = false;
 let lastX = 0, lastY = 0;
 
 const autoRotateSpeed = 0.15;
-const sphereRadius = 900;
+const sphereRadius = 900 ;
 
 /* TEXT RING (CENTER ORB ONLY) */
 const textRadius = 90;
@@ -49,8 +49,15 @@ function animate() {
   photos.forEach((photo, i) => {
     const { x, y, z } = positions[i];
 
-    const rotYtoCenter = Math.atan2(-x, -z) * 180 / Math.PI;
-    const rotXtoCenter = Math.asin(-y / sphereRadius) * 180 / Math.PI;
+photos.forEach((photo, i) => {
+  const { x, y, z } = positions[i];
+
+  photo.style.transform = `
+    translate3d(${x}px, ${y}px, ${z}px)
+    rotateY(${-rotY}deg)
+    rotateX(${-rotX}deg)
+  `;
+});
 
     photo.style.transform =
       `translate3d(${x}px, ${y}px, ${z}px)
