@@ -48,7 +48,7 @@ function animateSphere(){
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
-    photo.style.transform = `rotateY(${-rotY}deg) rotateX(${-rotX}deg) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)`;
+    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
   });
   requestAnimationFrame(animateSphere);
 }
