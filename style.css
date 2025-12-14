@@ -10,7 +10,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   font-family: Inter, system-ui, sans-serif;
-  background: #ffffff;
+  background: #111; /* darker background for contrast */
   color: white;
 }
 
@@ -26,39 +26,39 @@ html, body {
   justify-content: center;
   z-index: 10;
 }
+
 #scene {
-  perspective: 2000px; /* was 1400px */
-  perspective-origin: 50% 50%;
+  position: fixed;
+  inset: 0;
+  perspective: 2000px; /* viewer is inside outer sphere */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* hidden until start is clicked */
+  pointer-events: none;
 }
-/* GROUP (sphere + text) */
+
+/* GROUP (small black start sphere + text) */
 #start-group {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
   perspective: 800px;
 }
 
-/* SPHERE */
+/* SMALL BLACK START SPHERE */
 #start-sphere {
   position: absolute;
   inset: 50%;
-  width: 140px;
-  height: 140px;
+  width: 80px;
+  height: 80px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #444, #000);
   box-shadow:
-    inset -12px -12px 24px rgba(0,0,0,0.7),
-    0 30px 60px rgba(0,0,0,0.6);
-}
-
-/* TEXT RING */
-/* START GROUP */
-#start-group {
-  position: relative;
-  width: 300px;
-  height: 300px;
-  perspective: 800px;
+    inset -8px -8px 16px rgba(0,0,0,0.7),
+    0 20px 40px rgba(0,0,0,0.6);
+  z-index: 5; /* above photos */
 }
 
 /* TEXT RING */
@@ -80,46 +80,22 @@ html, body {
   backface-visibility: hidden;
 }
 
-/* X-axis rotation */
+/* SPHERE ROTATION */
 @keyframes spinX {
-  from {
-    transform: rotateX(0deg);
-  }
-  to {
-    transform: rotateX(360deg);
-  }
-}
-
-
-/* Vertical orbit */
-@keyframes spinX {
-  from {
-    transform: rotateX(0deg);
-  }
-  to {
-    transform: rotateX(360deg);
-  }
+  from { transform: rotateX(0deg); }
+  to { transform: rotateX(360deg); }
 }
 
 /* =========================
-   3D PHOTO SCENE
+   3D PHOTO SPHERE
 ========================= */
-
-#scene {
-  position: fixed;
-  inset: 0;
-  perspective: 1400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 #sphere {
   position: relative;
-  width: 800px;
-  height: 800px;
+  width: 1000px;  /* larger outer sphere */
+  height: 1000px; /* larger outer sphere */
   transform-style: preserve-3d;
-  transform: translateZ(-200px);
+  transform: translateZ(0); /* viewer is inside, Z=0 is center */
   cursor: grab;
 }
 
@@ -146,4 +122,45 @@ html, body {
 
 .photo img:hover {
   transform: scale(1.05);
+}
+
+/* =========================
+   ZOOM OVERLAY
+========================= */
+
+#overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.85);
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#overlay img {
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+#overlay-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 32px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 60;
+}
+
+/* =========================
+   USER SELECT / DRAG PREVENTION
+========================= */
+body, img {
+  user-select: none;
+  -webkit-user-drag: none;
 }

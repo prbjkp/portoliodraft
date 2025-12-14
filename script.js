@@ -1,6 +1,6 @@
 /**********************************************************
-* VARIABLES
-**********************************************************/
+ * VARIABLES
+ **********************************************************/
 const sphere = document.getElementById("sphere");
 const photos = document.querySelectorAll(".photo");
 const startContainer = document.getElementById("start-container");
@@ -22,8 +22,8 @@ const sphereRadius = 1200;
 const positions = [];
 
 /**********************************************************
-* DISTRIBUTE START TEXT AROUND CENTER SPHERE
-**********************************************************/
+ * DISTRIBUTE START TEXT AROUND CENTER SPHERE
+ **********************************************************/
 const textRadius = 110;
 letters.forEach((letter, i) => {
   const angle = (360 / letters.length) * i;
@@ -31,8 +31,8 @@ letters.forEach((letter, i) => {
 });
 
 /**********************************************************
-* DISTRIBUTE PHOTOS EVENLY AROUND INSIDE OF SPHERE
-**********************************************************/
+ * DISTRIBUTE PHOTOS EVENLY AROUND INSIDE OF SPHERE
+ **********************************************************/
 photos.forEach((photo, i) => {
   const total = photos.length;
 
@@ -49,8 +49,8 @@ photos.forEach((photo, i) => {
 });
 
 /**********************************************************
-* ANIMATION LOOP: AUTO-ROTATE + DRAG + BILLBOARDING
-**********************************************************/
+ * ANIMATION LOOP: AUTO-ROTATE + DRAG + BILLBOARDING
+ **********************************************************/
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
 
@@ -91,13 +91,8 @@ window.addEventListener("mousedown", e => {
   lastY = e.clientY;
 });
 
-window.addEventListener("mouseup", () => {
-  isDragging = false;
-});
-
-window.addEventListener("mouseleave", () => {
-  isDragging = false;
-});
+window.addEventListener("mouseup", () => { isDragging = false; });
+window.addEventListener("mouseleave", () => { isDragging = false; });
 
 window.addEventListener("mousemove", e => {
   if (!isDragging) return;
@@ -113,16 +108,14 @@ window.addEventListener("mousemove", e => {
 });
 
 /**********************************************************
-* PREVENT IMAGE SELECTION / DRAGGING
-**********************************************************/
-photos.forEach(photo => {
-  photo.ondragstart = e => e.preventDefault();
-});
+ * PREVENT IMAGE SELECTION / DRAGGING
+ **********************************************************/
+photos.forEach(photo => { photo.ondragstart = e => e.preventDefault(); });
 document.body.style.userSelect = "none";
 
 /**********************************************************
-* START BUTTON TRANSITION
-**********************************************************/
+ * START BUTTON TRANSITION
+ **********************************************************/
 startContainer.addEventListener("click", () => {
   startContainer.style.opacity = "0";
   startContainer.style.pointerEvents = "none";
@@ -131,11 +124,54 @@ startContainer.addEventListener("click", () => {
   scene.style.pointerEvents = "auto";
 });
 
+/**********************************************************
+ * IMAGE ZOOM OVERLAY
+ **********************************************************/
+const overlay = document.getElementById("overlay");
+const overlayClose = document.getElementById("overlay-close");
 
+photos.forEach(photo => {
+  photo.addEventListener("click", () => {
+    const imgSrc = photo.querySelector("img").src;
+
+    overlay.innerHTML = `
+      <button id="overlay-close">✕</button>
+      <img src="${imgSrc}" style="
+        max-width:90%;
+        max-height:90%;
+        border-radius:10px;
+        box-shadow:0 20px 40px rgba(0,0,0,0.8);
+        transform: scale(0);
+        animation: zoomIn 0.4s forwards;
+      ">
+    `;
+
+    overlay.style.display = "flex";
+    requestAnimationFrame(() => {
+      overlay.style.opacity = "1";
+      overlay.style.pointerEvents = "auto";
+    });
+
+    // Re-assign close button after creating new button
+    const newClose = document.getElementById("overlay-close");
+    newClose.addEventListener("click", closeOverlay);
+  });
+});
+
+/* Close overlay function */
+function closeOverlay() {
+  overlay.style.opacity = "0";
+  overlay.style.pointerEvents = "none";
+}
+
+/* ESC key closes overlay */
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeOverlay();
+});
 
 /**********************************************************
-* ZOOM ANIMATION KEYFRAMES
-**********************************************************/
+ * ZOOM ANIMATION KEYFRAMES
+ **********************************************************/
 const styleSheet = document.createElement("style");
 styleSheet.innerText = `
 @keyframes zoomIn {
