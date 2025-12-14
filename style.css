@@ -1,44 +1,104 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 html, body {
   width: 100%;
   height: 100%;
-  margin: 0;
   overflow: hidden;
-  background: #111; /* */
+  font-family: Inter, system-ui, sans-serif;
+  background: #ffffff; /* darker background for contrast */
   color: white;
 }
 
-/* SCENE */
-#scene {
-  position: absolute;
-  inset: 0;
-  perspective: 2200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform-style: preserve-3d;
-}
+/* =========================
+   START SCREEN
+========================= */
 
-/* CENTER ORB */
-#center-orb {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #444, #000);
-  box-shadow:
-    inset -12px -12px 24px rgba(0,0,0,0.7),
-    0 30px 60px rgba(0,0,0,0.6);
+#start-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 10;
 }
 
-/* IMAGE SPHERE */
+#scene {
+  position: fixed;
+  inset: 0;
+  perspective: 2000px; /* viewer is inside outer sphere */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* hidden until start is clicked */
+  pointer-events: none;
+}
+
+/* GROUP (small black start sphere + text) */
+#start-group {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  perspective: 800px;
+}
+
+/* SMALL BLACK START SPHERE */
+#start-sphere {
+  position: absolute;
+  inset: 50%;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #444, #000);
+  box-shadow:
+    inset -8px -8px 16px rgba(0,0,0,0.7),
+    0 20px 40px rgba(0,0,0,0.6);
+  z-index: 5; /* above photos */
+}
+
+/* TEXT RING */
+#start-text-ring {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: spinX 10s linear infinite;
+}
+
+/* EACH LETTER */
+#start-text-ring span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  backface-visibility: hidden;
+}
+
+/* SPHERE ROTATION */
+@keyframes spinX {
+  from { transform: rotateX(0deg); }
+  to { transform: rotateX(360deg); }
+}
+
+/* =========================
+   3D PHOTO SPHERE
+========================= */
+
 #sphere {
   position: relative;
-  width: 800px;
-  height: 800px;
+  width: 1000px;  /* larger outer sphere */
+  height: 1000px; /* larger outer sphere */
   transform-style: preserve-3d;
+  transform: translateZ(0); /* viewer is inside, Z=0 is center */
   cursor: grab;
 }
+
 #sphere:active {
   cursor: grabbing;
 }
@@ -48,7 +108,6 @@ html, body {
   position: absolute;
   width: 180px;
   height: 120px;
-  transform-style: preserve-3d;
 }
 
 .photo img {
@@ -57,5 +116,51 @@ html, body {
   object-fit: cover;
   border-radius: 10px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  backface-visibility: hidden;
+  cursor: zoom-in;
+  transition: transform 0.25s ease;
+}
+
+.photo img:hover {
+  transform: scale(1.05);
+}
+
+/* =========================
+   ZOOM OVERLAY
+========================= */
+
+#overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.85);
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#overlay img {
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+#overlay-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 32px;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 60;
+}
+
+/* =========================
+   USER SELECT / DRAG PREVENTION
+========================= */
+body, img {
+  user-select: none;
+  -webkit-user-drag: none;
 }
