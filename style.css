@@ -2,70 +2,37 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100%; height:100%; overflow:hidden; font-family:Inter, sans-serif; background: #111; color:white; }
 
-/* 3D PHOTO SCENE */
-#scene {
-  position: fixed; inset:0;
-  perspective:1400px;
-  display:flex; align-items:center; justify-content:center;
-}
-
-#sphere {
-  position: relative;
-  width: 800px; height:800px;
-  transform-style: preserve-3d;
-  cursor: grab;
-}
-
-#sphere:active { cursor: grabbing; }
-
-/* CENTER BLACK SPHERE */
-#center-sphere {
-  position:absolute; inset:50%;
-  width:120px; height:120px;
-  transform: translate(-50%, -50%);
-  border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #444, #000);
-  box-shadow: inset -12px -12px 24px rgba(0,0,0,0.7), 0 30px 60px rgba(0,0,0,0.6);
-  z-index:5;
-}
-
-/* PHOTOS */
-.photo { position:absolute; width:180px; height:120px; }
-.photo img {
-  width:100%; height:100%;
-  object-fit:cover;
-  border-radius:10px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.5);
-  cursor: zoom-in;
-  transition: transform 0.25s ease;
-}
-.photo img:hover { transform: scale(1.05); }
-
 /* START SCREEN */
 #start-container {
-  position: fixed; inset:0;
-  display:flex; justify-content:center; align-items:center;
-  z-index:10;
-  background: rgba(0,0,0,0.85);
-  pointer-events:none; /* allow drag interaction behind it */
+  position: fixed; inset:0; display:flex; justify-content:center; align-items:center; z-index:10;
 }
-
 #start-group { position: relative; width:300px; height:300px; perspective:800px; }
-
-#start-text-ring {
-  position:absolute; inset:0;
-  transform-style: preserve-3d;
-  animation: spinX 10s linear infinite;
+#start-sphere {
+  position:absolute; inset:50%; width:140px; height:140px;
+  transform: translate(-50%,-50%) translateZ(0);
+  border-radius:50%; background: radial-gradient(circle at 30% 30%, #444, #000);
+  box-shadow: inset -12px -12px 24px rgba(0,0,0,0.7), 0 30px 60px rgba(0,0,0,0.6);
 }
-#start-text-ring span {
-  position:absolute; left:50%; top:50%;
-  transform-style: preserve-3d;
-  font-size:14px;
-  letter-spacing:0.1em;
-  backface-visibility:hidden;
-}
-
+#start-text-ring { position:absolute; inset:0; transform-style: preserve-3d; animation: spinX 10s linear infinite; }
+#start-text-ring span { position:absolute; left:50%; top:50%; transform-style: preserve-3d; font-size:14px; letter-spacing:0.1em; backface-visibility:hidden; }
 @keyframes spinX { from {transform:rotateX(0deg);} to {transform:rotateX(360deg);} }
+
+/* 3D PHOTO SCENE */
+#scene { position: fixed; inset:0; perspective:1400px; display:flex; align-items:center; justify-content:center; }
+#sphere {
+  position: relative; width: 800px; height:800px; transform-style: preserve-3d;
+  transform: translateZ(1200px); /* move sphere outward so viewer is inside */
+  cursor: grab;
+}
+#sphere:active { cursor: grabbing; }
+
+/* PHOTOS */
+.photo { position: absolute; width:180px; height:120px; }
+.photo img {
+  width:100%; height:100%; object-fit:cover; border-radius:10px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.5); cursor: zoom-in; transition: transform 0.25s ease;
+}
+.photo img:hover { transform: scale(1.05); }
 
 /* ZOOM OVERLAY */
 #overlay {
@@ -73,13 +40,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:Inter, sans-s
   display:flex; justify-content:center; align-items:center;
   opacity:0; pointer-events:none; transition:opacity 0.4s ease; z-index:100;
 }
-#overlay img {
-  max-width:90%; max-height:90%; border-radius:10px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.8);
-  transform: scale(0); animation: zoomIn 0.4s forwards;
-}
+#overlay img { max-width:90%; max-height:90%; border-radius:10px; box-shadow:0 20px 40px rgba(0,0,0,0.8); transform: scale(0); animation: zoomIn 0.4s forwards; }
 #overlay-close {
-  position:absolute; top:20px; right:20px; font-size:2rem;
-  background:none; border:none; color:white; cursor:pointer;
+  position:absolute; top:20px; right:20px; font-size:2rem; background:none; border:none; color:white; cursor:pointer;
 }
 @keyframes zoomIn { to { transform: scale(1); } }

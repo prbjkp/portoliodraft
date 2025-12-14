@@ -3,10 +3,12 @@
 **********************************************************/
 const sphere = document.getElementById("sphere");
 const photos = document.querySelectorAll(".photo");
-const overlay = document.getElementById("overlay");
-const overlayClose = document.getElementById("overlay-close");
+const startContainer = document.getElementById("start-container");
+const scene = document.getElementById("scene");
 const textRing = document.getElementById("start-text-ring");
 const letters = textRing.querySelectorAll("span");
+const overlay = document.getElementById("overlay");
+const overlayClose = document.getElementById("overlay-close");
 
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 let isDragging=false, lastX=0, lastY=0;
@@ -40,10 +42,10 @@ photos.forEach((photo,i)=>{
 * ANIMATION LOOP
 **********************************************************/
 function animateSphere(){
-  if(!isDragging) targetRotY += autoRotateSpeed;
+  if(!isDragging) targetRotY+=autoRotateSpeed;
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
-  sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(1200px)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
@@ -75,12 +77,14 @@ photos.forEach(p=>p.ondragstart=e=>e.preventDefault());
 document.body.style.userSelect="none";
 
 /**********************************************************
-* START SCREEN AUTO FADE
+* START SCREEN
 **********************************************************/
-setTimeout(()=>{
-  document.getElementById("start-container").style.transition="opacity 1s";
-  document.getElementById("start-container").style.opacity="0";
-}, 3000);
+startContainer.addEventListener("click", ()=>{
+  startContainer.style.opacity="0";
+  startContainer.style.pointerEvents="none";
+  scene.style.opacity="1";
+  scene.style.pointerEvents="auto";
+});
 
 /**********************************************************
 * IMAGE ZOOM
@@ -94,9 +98,7 @@ photos.forEach(photo=>{
     document.getElementById("overlay-close").addEventListener("click", closeOverlay);
   });
 });
-
 function closeOverlay() {
   overlay.style.opacity="0"; overlay.style.pointerEvents="none";
 }
-
 window.addEventListener("keydown", e=>{ if(e.key==="Escape") closeOverlay(); });
