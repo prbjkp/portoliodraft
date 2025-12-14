@@ -7,24 +7,30 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:Inter, sans-s
   position: fixed; inset:0; display:flex; justify-content:center; align-items:center; z-index:10;
 }
 #start-group { position: relative; width:300px; height:300px; perspective:800px; }
-#start-sphere {
-  position:absolute; inset:50%; width:140px; height:140px;
-  transform: translate(-50%,-50%) translateZ(0);
-  border-radius:50%; background: radial-gradient(circle at 30% 30%, #444, #000);
-  box-shadow: inset -12px -12px 24px rgba(0,0,0,0.7), 0 30px 60px rgba(0,0,0,0.6);
-}
 #start-text-ring { position:absolute; inset:0; transform-style: preserve-3d; animation: spinX 10s linear infinite; }
-#start-text-ring span { position:absolute; left:50%; top:50%; transform-style: preserve-3d; font-size:14px; letter-spacing:0.1em; backface-visibility:hidden; }
-@keyframes spinX { from {transform:rotateX(0deg);} to {transform:rotateX(360deg);} }
+#start-text-ring span {
+  position:absolute; left:50%; top:50%; transform-style: preserve-3d;
+  font-size:14px; letter-spacing:0.1em; backface-visibility:hidden;
+}
 
 /* 3D PHOTO SCENE */
-#scene { position: fixed; inset:0; perspective:1400px; display:flex; align-items:center; justify-content:center; }
+#scene { position: fixed; inset:0; perspective:1400px; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; }
 #sphere {
   position: relative; width: 800px; height:800px; transform-style: preserve-3d;
-  transform: translateZ(1200px); /* move sphere outward so viewer is inside */
   cursor: grab;
 }
 #sphere:active { cursor: grabbing; }
+
+/* CENTER ORB */
+#center-sphere {
+  position: absolute; top: 50%; left: 50%;
+  width: 140px; height: 140px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #444, #000);
+  box-shadow: inset -12px -12px 24px rgba(0,0,0,0.7), 0 30px 60px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
 
 /* PHOTOS */
 .photo { position: absolute; width:180px; height:120px; }
@@ -44,4 +50,5 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:Inter, sans-s
 #overlay-close {
   position:absolute; top:20px; right:20px; font-size:2rem; background:none; border:none; color:white; cursor:pointer;
 }
+@keyframes spinX { from {transform:rotateX(0deg);} to {transform:rotateX(360deg);} }
 @keyframes zoomIn { to { transform: scale(1); } }
