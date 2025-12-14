@@ -13,7 +13,7 @@ const overlayClose = document.getElementById("overlay-close");
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 let isDragging=false, lastX=0, lastY=0;
 const autoRotateSpeed = 0.04;
-const sphereRadius = 2000;
+const sphereRadius = 5000;
 const positions = [];
 
 /**********************************************************
