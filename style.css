@@ -9,13 +9,14 @@ html, body {
 
 /* SCENE */
 #scene {
-  position:absolute;
-  inset:0;
-  perspective:1400px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  position: absolute;
+  inset: 0;
+  perspective: 700px;   /* was 1400px */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 /* STATIC CENTER ORB */
 #center-orb {

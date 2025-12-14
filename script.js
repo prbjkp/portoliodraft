@@ -11,7 +11,7 @@ let isDragging = false;
 let lastX = 0, lastY = 0;
 
 const autoRotateSpeed = 0.15;
-const sphereRadius = 550;
+const sphereRadius = 900;
 
 /* TEXT RING (CENTER ORB ONLY) */
 const textRadius = 90;
