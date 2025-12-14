@@ -131,61 +131,7 @@ startContainer.addEventListener("click", () => {
   scene.style.pointerEvents = "auto";
 });
 
-/**********************************************************
-* IMAGE ZOOM OVERLAY
-**********************************************************/
-const overlay = document.createElement("div");
-overlay.id = "overlay";
-overlay.style.cssText = `
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  z-index: 100;
-`;
-document.body.appendChild(overlay);
 
-photos.forEach(photo => {
-  photo.addEventListener("click", () => {
-    const imgSrc = photo.querySelector("img").src;
-
-    overlay.innerHTML = `
-      <button id="overlay-close" style="
-        position:absolute;
-        top:20px;
-        right:20px;
-        font-size:2rem;
-        background:none;
-        border:none;
-        color:white;
-        cursor:pointer;">✕</button>
-      <img src="${imgSrc}" style="
-        max-width:90%;
-        max-height:90%;
-        border-radius:10px;
-        box-shadow:0 20px 40px rgba(0,0,0,0.8);
-        transform: scale(0);
-        animation: zoomIn 0.4s forwards;">
-    `;
-
-    overlay.style.display = "flex";
-    requestAnimationFrame(() => {
-      overlay.style.opacity = "1";
-      overlay.style.pointerEvents = "auto";
-    });
-
-    const closeBtn = document.getElementById("overlay-close");
-    closeBtn.addEventListener("click", () => {
-      overlay.style.opacity = "0";
-      overlay.style.pointerEvents = "none";
-    });
-  });
-});
 
 /**********************************************************
 * ZOOM ANIMATION KEYFRAMES
