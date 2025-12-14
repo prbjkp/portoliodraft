@@ -87,8 +87,8 @@ document.body.style.userSelect="none";
 * START SCREEN
 **********************************************************/
 startContainer.addEventListener("click", ()=>{
-  startContainer.style.opacity="0";
-  startContainer.style.pointerEvents="none";
+  textRing.style.opacity="0";
+  textRing.style.pointerEvents="none";
   scene.style.opacity="1";
   scene.style.pointerEvents="auto";
 });
