@@ -45,9 +45,7 @@ function animateSphere(){
   if(!isDragging) targetRotY+=autoRotateSpeed;
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
-sphere.style.transform =
-  `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(1200px)`;
-
+  sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(1200px)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
@@ -78,14 +76,14 @@ window.addEventListener("mousemove", e=>{
 photos.forEach(p=>p.ondragstart=e=>e.preventDefault());
 document.body.style.userSelect="none";
 
-let started = false;
-
-startContainer.addEventListener("click", () => {
-  if (started) return;
-  started = true;
-
-  // Optional: add a subtle feedback animation instead of hiding
-  startContainer.classList.add("started");
+/**********************************************************
+* START SCREEN
+**********************************************************/
+startContainer.addEventListener("click", ()=>{
+  startContainer.style.opacity="0";
+  startContainer.style.pointerEvents="none";
+  scene.style.opacity="1";
+  scene.style.pointerEvents="auto";
 });
 
 /**********************************************************
