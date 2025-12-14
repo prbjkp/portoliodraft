@@ -46,7 +46,6 @@ function animateSphere(){
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-  textRing.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
