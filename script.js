@@ -12,6 +12,7 @@ const overlayClose = document.getElementById("overlay-close");
 const centerSphere = document.getElementById("center-sphere");
 
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
+const toRad = Math.PI/180;
 let isDragging=false, lastX=0, lastY=0;
 const autoRotateSpeed = 0.04;
 let sphereRadius = 360; // will be computed based on `#sphere` size
@@ -63,13 +64,17 @@ function animateSphere(){
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   // Keep the center sphere facing the camera by counter-rotating it
   if (centerSphere) {
-    centerSphere.style.transform = `translate(-50%, -50%) rotateX(${-rotX}deg) rotateY(${-rotY}deg)`;
-    // Update lighting position so the highlight follows rotation, making
-    // the sphere look solid and 3D. Values are percentages for the CSS vars.
-    const lightX = 50 + (rotY / 360) * 40; // shift with horizontal rotation
-    const lightY = 50 - (rotX / 360) * 40; // shift with vertical rotation
+    // Use inverse rotation in Y then X order so the transform cancels the
+    // parent's rotations and the circle stays facing the camera (remains
+    // circular instead of appearing edge-on).
+    centerSphere.style.transform = `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
+    // Update lighting position using sines so highlight moves naturally
+    // and the sphere reads as 3D even when the view tilts up/down.
+    const lightX = 50 + Math.sin(rotY*toRad) * 30; // horizontal drift
+    const lightY = 50 - Math.sin(rotX*toRad) * 30; // vertical drift
     centerSphere.style.setProperty('--light-x', `${lightX}%`);
     centerSphere.style.setProperty('--light-y', `${lightY}%`);
+    centerSphere.style.willChange = 'transform';
   }
   photos.forEach((photo,i)=>{
     const pos=positions[i];
