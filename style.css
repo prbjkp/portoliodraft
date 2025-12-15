@@ -84,14 +84,14 @@ html, body {
 ================================================== */
 #hud-hints {
   position: absolute;
-  top: calc(50% + 200px); /* farther below center sphere */
+  top: calc(50% + 100px); /* farther below center sphere */
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
   pointer-events: none;
-  max-width: 460px;
+  max-width: 1000px;
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
   letter-spacing: 0.08em;
   text-transform: uppercase;
