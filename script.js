@@ -60,10 +60,10 @@ function animateSphere(){
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
-    // Compute angles toward the viewer and subtract the sphere's current
-    // rotation so each photo always faces the camera (billboard effect).
-    const rotYtoCenter = Math.atan2(dx,dz)*(180/Math.PI) - rotY;
-    const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI) - rotX;
+    // Compute angles toward the sphere center so each photo faces inward
+    // (they rotate with the sphere and always point at the center sphere).
+    const rotYtoCenter = Math.atan2(dx,dz)*(180/Math.PI);
+    const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI);
     photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${rotYtoCenter}deg) rotateX(${rotXtoCenter}deg)`;
   });
   requestAnimationFrame(animateSphere);
