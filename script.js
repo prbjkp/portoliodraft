@@ -89,7 +89,7 @@ function animateSphere() {
 /**********************************************************
  * CAMERA-LOCKED TEXT RING (DOES NOT FOLLOW SPHERE)
  **********************************************************/
-textOrbit += 0.15;
+textOrbit += 0.05;
 
 /* World-locked ring (never affected by rotX / rotY) */
 textRing.style.transform = `
