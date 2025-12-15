@@ -181,14 +181,8 @@ function animateSphere(){
     // regardless of the outer sphere rotation. Apply translation first
     // (position in the rotated parent), then rotate by the inverse of
     // the parent's rotation to align with the viewport.
-   const faceStrength = 0.5; // 0 = world-locked, 1 = full billboard
-
-photo.style.transform =
-  `translate(-50%,-50%)
-   translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-   rotateY(${-rotY * faceStrength}deg)
-   rotateX(${-rotX * faceStrength}deg)`;
- });
+    photo.style.transform = `translate(-50%,-50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
+  });
   requestAnimationFrame(animateSphere);
 }
 animateSphere();
