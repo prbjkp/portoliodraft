@@ -137,21 +137,6 @@ textSegments.forEach((seg, i) => {
 
 let textRotation = 0;
 
-/**********************************************************
- * SPHERE-WRAPPED TEXT ROTATION
- **********************************************************/
-textRotation += 0.05;
-
-textBand.style.transform = `
-  translate(-50%, -50%)
-  rotateY(${textRotation}deg)
-`;
-textBand.style.transform = `
-  translate(-50%, -50%)
-  rotateY(${textRotation - rotY}deg)
-  rotateX(${-rotX * 0.1}deg)
-`;
-
 
 photos.forEach((photo, i) => {
   const pos = positions[i];
