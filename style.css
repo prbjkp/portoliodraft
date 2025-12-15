@@ -35,8 +35,8 @@ html, body {
 #start-sphere {
   position: absolute;
   inset: 50%;
-  width: 110px;  /* reduced size */
-  height: 110px; /* reduced size */
+  width: 110px;
+  height: 110px;
   transform: translate(-50%, -50%) translateZ(1500px);
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #555, #222 50%, #000 85%);
@@ -54,8 +54,8 @@ html, body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 200px; /* scaled with smaller sphere */
-  height: 200px; /* scaled with smaller sphere */
+  width: 200px;
+  height: 200px;
   transform-style: preserve-3d;
   pointer-events: none;
   z-index: 30;
@@ -84,30 +84,19 @@ html, body {
 ================================================== */
 #hud-hints {
   position: absolute;
-  top: calc(50% + 100px); /* farther below center sphere */
+  top: calc(50% + 150px); /* farther below center sphere */
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
   pointer-events: none;
-  max-width: 500px;  /* increased for long hints */
+  max-width: 4000px;
   text-align: center;
   font-size: 14px;
   line-height: 1.4;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: black;
-}
-/* Image dimming effect */
-.photo.dimmed img {
-  filter: brightness(40%);
-  transition: filter 0.2s ease;
-}
 
-/* Center sphere text brightening */
-#center-sphere.bright-text {
-  color: #fff; /* Or whatever highlight color you want */
-  filter: brightness(1.5);
-  transition: filter 0.2s ease;
 }
 
 .hud-hint {
@@ -115,29 +104,23 @@ html, body {
   left: 50%;
   transform: translate(-50%, 16px);
   opacity: 0;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+#hud-hints::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(3px);
+  border-radius: 8px;
+  z-index: -1; /* behind text */
 }
 
 .hud-hint.active {
   opacity: 1;
   transform: translate(-50%, 0);
-}
-
-/* Dim the images behind HUD when a hint is active */
-#scene.dimmed,
-#sphere.dimmed {
-  filter: brightness(40%);
-  transition: filter 0.4s ease;
-}
-
-/* Optional: subtle white background behind text */
-#hud-hints::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 0;
-  z-index: -1; /* behind text */
 }
 
 /* ==================================================
@@ -160,31 +143,6 @@ html, body {
   transform-style: preserve-3d;
   cursor: grab;
 }
-/* CENTER SPHERE TEXT */
-#center-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: rgba(255,255,255,0.3); /* dimmed by default */
-  font-size: 18px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-  pointer-events: none;
-}
-
-#center-sphere.bright-text #center-text {
-  color: #fff; 
-  text-shadow: 0 0 20px rgba(255,255,255,0.8);
-}
-
-/* DIMMING PHOTOS UNDER CENTER */
-.photo.dimmed img {
-  filter: brightness(40%);
-  transition: filter 0.2s ease;
-}
-
 
 #sphere:active {
   cursor: grabbing;
@@ -204,8 +162,15 @@ html, body {
   cursor: zoom-in;
 }
 
-.photo.landscape { width: 280px; height: 180px; }
-.photo.portrait { width: 180px; height: 280px; }
+.photo.landscape {
+  width: 280px;
+  height: 180px;
+}
+
+.photo.portrait {
+  width: 180px;
+  height: 280px;
+}
 
 .photo img {
   width: 100%;
@@ -235,8 +200,8 @@ html, body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 110px; /* scaled down 25% */
-  height: 110px; /* scaled down 25% */
+  width: 165px;
+  height: 165px;
   border-radius: 50%;
   transform-style: preserve-3d;
   background: radial-gradient(circle at var(--light-x) var(--light-y), #444 0%, #111 35%, #000 85%);

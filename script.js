@@ -13,52 +13,6 @@ const overlayImg = document.getElementById("overlay-img");
 const overlayClose = document.getElementById("overlay-close");
 
 /**********************************************************
- * PROXIMITY EFFECTS
- **********************************************************/
-
-
-function updateProximityEffects() {
-  const cosX = Math.cos(rotX * Math.PI / 180);
-  const sinX = Math.sin(rotX * Math.PI / 180);
-  const cosY = Math.cos(rotY * Math.PI / 180);
-  const sinY = Math.sin(rotY * Math.PI / 180);
-
-  let anyClose = false;
-
-  photos.forEach((photo, i) => {
-    const pos = positions[i];
-    if (!pos) return;
-
-    // Rotate position with sphere rotation
-    let x = pos.x, y = pos.y, z = pos.z;
-    let y1 = y * cosX - z * sinX;
-    let z1 = y * sinX + z * cosX;
-    y = y1; z = z1;
-
-    let x1 = x * cosY + z * sinY;
-    let z2 = -x * sinY + z * cosY;
-    x = x1; z = z2;
-
-    const distance = Math.sqrt(x*x + y*y + z*z);
-
-    // Dimming photos
-    if(distance < DIM_RADIUS) photo.classList.add('dimmed');
-    else photo.classList.remove('dimmed');
-
-    if(distance < BRIGHT_RADIUS) anyClose = true;
-  });
-
-  // Brighten center sphere text if any photo is close
-  if(anyClose) centerSphere.classList.add('bright-text');
-  else centerSphere.classList.remove('bright-text');
-
-  requestAnimationFrame(updateProximityEffects);
-}
-
-updateProximityEffects();
-
-
-/**********************************************************
  * TEXT RING CONSTANTS
  **********************************************************/
 const TEXT_RING_DISTANCE = 95;
@@ -296,4 +250,3 @@ function playHudHints() {
 window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
-
