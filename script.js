@@ -173,3 +173,18 @@ function closeOverlay() {
 window.addEventListener("keydown", e => {
   if (e.key === "Escape") closeOverlay();
 });
+photos.forEach(photo => {
+  const img = photo.querySelector("img");
+
+  if (img.complete) {
+    markPortrait(photo, img);
+  } else {
+    img.addEventListener("load", () => markPortrait(photo, img));
+  }
+});
+
+function markPortrait(photo, img) {
+  if (img.naturalHeight > img.naturalWidth) {
+    photo.classList.add("portrait");
+  }
+}
