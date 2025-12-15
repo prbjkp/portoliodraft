@@ -89,20 +89,20 @@ function animateSphere() {
       `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
   }
 
-  // Position & orient photos
-  photos.forEach((photo, i) => {
-    const pos = positions[i];
-    const isPortrait = photo.classList.contains("portrait");
-const portraitFix = photo.classList.contains("portrait") ? 90 : 0;
+photos.forEach((photo, i) => {
+  const pos = positions[i];
+  const isPortrait = photo.dataset.portrait === "true";
+  const portraitFix = isPortrait ? 90 : 0;
 
-photo.style.transform =
-  `translate(-50%,-50%)
-   translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-   rotateY(${-rotY}deg)
-   rotateX(${-rotX}deg)
-   rotateZ(${portraitFix}deg)`;
+  photo.style.transform = `
+    translate(-50%, -50%)
+    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+    rotateY(${-rotY}deg)
+    rotateX(${-rotX}deg)
+    rotateZ(${portraitFix}deg)
+  `;
+});
 
-  });
 
   requestAnimationFrame(animateSphere);
 }
@@ -153,18 +153,22 @@ startContainer.addEventListener("click", () => {
 /**********************************************************
  * IMAGE ZOOM OVERLAY
  **********************************************************/
+const overlayImg = document.getElementById("overlay-img");
+const overlayClose = document.getElementById("overlay-close");
+
 photos.forEach(photo => {
   photo.addEventListener("click", () => {
-    const imgSrc = photo.querySelector("img").src;
-    overlay.innerHTML =
-      `<button id="overlay-close">✕</button><img src="${imgSrc}">`;
+    overlayImg.src = photo.querySelector("img").src;
     overlay.style.display = "flex";
-    requestAnimationFrame(() => overlay.style.opacity = "1");
+    overlay.style.pointerEvents = "auto";
 
-    document.getElementById("overlay-close")
-      .addEventListener("click", closeOverlay);
+    requestAnimationFrame(() => {
+      overlay.style.opacity = "1";
+    });
   });
 });
+
+overlayClose.addEventListener("click", closeOverlay);
 
 function closeOverlay() {
   overlay.style.opacity = "0";
@@ -174,18 +178,3 @@ function closeOverlay() {
 window.addEventListener("keydown", e => {
   if (e.key === "Escape") closeOverlay();
 });
-photos.forEach(photo => {
-  const img = photo.querySelector("img");
-
-  if (img.complete) {
-    markPortrait(photo, img);
-  } else {
-    img.addEventListener("load", () => markPortrait(photo, img));
-  }
-});
-
-function markPortrait(photo, img) {
-  if (img.naturalHeight > img.naturalWidth) {
-    photo.classList.add("portrait");
-  }
-}
