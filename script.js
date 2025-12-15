@@ -93,14 +93,15 @@ function animateSphere() {
   photos.forEach((photo, i) => {
     const pos = positions[i];
     const isPortrait = photo.classList.contains("portrait");
+const portraitFix = photo.classList.contains("portrait") ? 90 : 0;
 
-    photo.style.transform = `
-      translate(-50%, -50%)
-      translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-      rotateY(${-rotY * faceStrength}deg)
-      rotateX(${-rotX * faceStrength}deg)
-      ${isPortrait ? "rotateZ(0deg)" : ""}
-    `;
+photo.style.transform =
+  `translate(-50%,-50%)
+   translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+   rotateY(${-rotY}deg)
+   rotateX(${-rotX}deg)
+   rotateZ(${portraitFix}deg)`;
+
   });
 
   requestAnimationFrame(animateSphere);
