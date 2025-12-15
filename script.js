@@ -14,7 +14,7 @@ const centerSphere = document.getElementById("center-sphere");
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 const toRad = Math.PI/180;
 let isDragging=false, lastX=0, lastY=0;
-const autoRotateSpeed = 0.04;
+const autoRotateSpeed = 0.02;
 let sphereRadius = 360; // will be computed based on `#sphere` size
 const positions = [];
 
