@@ -192,3 +192,36 @@ function closeOverlay() {
   overlay.style.opacity = "0";
   overlay.style.pointerEvents = "none";
 }
+
+/**********************************************************
+ * HUD HINT SEQUENCE
+ **********************************************************/
+const hudHints = document.querySelectorAll(".hud-hint");
+let currentHint = 0;
+
+const HINT_DURATION = 4000; // visible time (ms)
+const HINT_GAP = 500;       // time between hints
+
+function showHint(index) {
+  hudHints.forEach(h => h.classList.remove("active"));
+
+  const hint = hudHints[index];
+  if (!hint) return;
+
+  hint.classList.add("active");
+
+  setTimeout(() => {
+    hint.classList.remove("active");
+  }, HINT_DURATION - HINT_GAP);
+}
+
+function startHintSequence() {
+  showHint(currentHint);
+
+  setInterval(() => {
+    currentHint = (currentHint + 1) % hudHints.length;
+    showHint(currentHint);
+  }, HINT_DURATION);
+}
+
+/* Start after scene loads */
