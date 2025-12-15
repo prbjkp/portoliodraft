@@ -176,29 +176,38 @@ function closeOverlay() {
 }
 
 /**********************************************************
- * HUD HINT SEQUENCE (EVERY TIME)
+ * HUD HINT SEQUENCE (TEXT ONLY)
  **********************************************************/
 const hudHints = document.querySelectorAll(".hud-hint");
-const HINT_DURATION = 4000;
-const HINT_GAP = 500;
+const HINT_START_DELAY = 2000; // 2s after page load
+const HINT_DURATION = 4000;    // visible time per hint
+const HINT_GAP = 500;          // short gap between hints
 
-function playHudHintsOnce() {
+function playHudHints() {
   let index = 0;
 
-  function nextHint() {
-    // Hide previous
+  function showNextHint() {
+    if (index >= hudHints.length) return; // stop when done
+
+    // hide previous hint
     if (index > 0) hudHints[index - 1].classList.remove("active");
-    if (index >= hudHints.length) return;
 
-    // Show current
-    hudHints[index].classList.add("active");
+    // show current hint
+    const hint = hudHints[index];
+    hint.classList.add("active");
 
+    // hide after duration then schedule next hint
     setTimeout(() => {
-      hudHints[index].classList.remove("active");
+      hint.classList.remove("active");
       index++;
-      setTimeout(nextHint, HINT_GAP);
+      setTimeout(showNextHint, HINT_GAP);
     }, HINT_DURATION);
   }
 
-  nextHint();
+  showNextHint();
 }
+
+// auto-fire 2 seconds after page load
+window.addEventListener("load", () => {
+  setTimeout(playHudHints, HINT_START_DELAY);
+});
