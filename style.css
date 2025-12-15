@@ -13,13 +13,12 @@ html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; font
 
 /* 3D PHOTO SPHERE */
 #scene { position:absolute; inset:0; perspective:1400px; display:flex; justify-content:center; align-items:center; perspective-origin: 50% 50%; }
-#sphere { position: relative; width:800px; height:800px; transform-style: preserve-3d; cursor: grab; }
+#sphere { position: relative; width:800px; height:800px; transform-style: preserve-3d; cursor: grab; overflow: visible; }
 #sphere:active { cursor: grabbing; }
 
 /* PHOTOS */
-.photo { position:absolute; width:180px; height:120px; }
-.photo { position:absolute; width:180px; height:120px; left:50%; top:50%; transform-style:preserve-3d; }
-.photo img { width:100%; height:100%; object-fit:cover; border-radius:10px; box-shadow:0 20px 40px rgba(0,0,0,0.5); cursor:zoom-in; transition:transform 0.25s ease; backface-visibility:hidden; }
+.photo { position:absolute; width:280px; height:180px; left:50%; top:50%; transform-style:preserve-3d; }
+.photo img { width:100%; height:100%; object-fit:cover; border-radius:12px; box-shadow:0 28px 56px rgba(0,0,0,0.55); cursor:zoom-in; transition:transform 0.25s ease; backface-visibility:hidden; }
 .photo img:hover { transform:scale(1.05); }
 
 /* CENTER SPHERE */
