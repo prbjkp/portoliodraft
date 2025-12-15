@@ -84,7 +84,7 @@ html, body {
 ================================================== */
 #hud-hints {
   position: absolute;
-  top: calc(50% + 1000px); /* farther below center sphere */
+  top: calc(50% + 600px); /* farther below center sphere */
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
