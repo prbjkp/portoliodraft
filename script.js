@@ -18,6 +18,84 @@ const autoRotateSpeed = 0.03; // reduced ~25% for slower auto-rotation
 let sphereRadius = 360; // will be computed based on `#sphere` size
 const positions = [];
 
+// ---- FERROFLUID (metaballs) for center sphere -----------------
+let ferroCanvas, ferroCtx, ferroBlobs = [], ferroAnimId;
+function initFerro() {
+  if (!centerSphere) return;
+  // create canvas if not exists
+  ferroCanvas = centerSphere.querySelector('canvas.ferro') || document.createElement('canvas');
+  ferroCanvas.classList.add('ferro');
+  ferroCanvas.style.width = '100%'; ferroCanvas.style.height = '100%';
+  ferroCanvas.width = centerSphere.offsetWidth * devicePixelRatio;
+  ferroCanvas.height = centerSphere.offsetHeight * devicePixelRatio;
+  ferroCanvas.style.width = centerSphere.offsetWidth + 'px';
+  ferroCanvas.style.height = centerSphere.offsetHeight + 'px';
+  ferroCanvas.style.display = 'block';
+  ferroCanvas.style.borderRadius = '50%';
+  ferroCanvas.style.position = 'absolute';
+  ferroCanvas.style.left = '0'; ferroCanvas.style.top = '0';
+  ferroCanvas.style.pointerEvents = 'none';
+  if (!centerSphere.contains(ferroCanvas)) centerSphere.appendChild(ferroCanvas);
+  ferroCtx = ferroCanvas.getContext('2d');
+  // create blobs sized relative to center sphere
+  const w = ferroCanvas.width, h = ferroCanvas.height;
+  ferroBlobs = [];
+  const baseR = Math.min(w,h) * 0.12;
+  const count = 7;
+  for (let i=0;i<count;i++){
+    ferroBlobs.push({
+      ox: (w/2) + (Math.cos(i)*0.15*w),
+      oy: (h/2) + (Math.sin(i)*0.15*h),
+      r: baseR * (0.7 + Math.random()*0.8),
+      phase: Math.random()*Math.PI*2,
+      speed: 0.3 + Math.random()*0.6
+    });
+  }
+  if (!ferroAnimId) animateFerro();
+}
+
+function resizeFerro(){
+  if(!ferroCanvas || !centerSphere) return;
+  ferroCanvas.width = centerSphere.offsetWidth * devicePixelRatio;
+  ferroCanvas.height = centerSphere.offsetHeight * devicePixelRatio;
+  ferroCanvas.style.width = centerSphere.offsetWidth + 'px';
+  ferroCanvas.style.height = centerSphere.offsetHeight + 'px';
+  // recompute base radii
+  const baseR = Math.min(ferroCanvas.width, ferroCanvas.height) * 0.12;
+  ferroBlobs.forEach((b,i)=>{ b.r = baseR * (0.7 + (i%2)*0.2); });
+}
+
+function animateFerro(){
+  if(!ferroCtx) return;
+  const ctx = ferroCtx; const w = ferroCanvas.width; const h = ferroCanvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.save();
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  // draw blurred white circles (metaballs)
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.filter = 'blur(20px)';
+  ferroBlobs.forEach((b, i)=>{
+    const t = performance.now()/1000;
+    const ox = (b.ox/ devicePixelRatio) + Math.cos(t*b.speed + b.phase)* (20 + i*6) + (rotY*0.02);
+    const oy = (b.oy/ devicePixelRatio) + Math.sin(t*b.speed + b.phase)* (18 + i*4) + (rotX*0.02);
+    const grad = ctx.createRadialGradient(ox, oy, b.r*0.1, ox, oy, b.r);
+    grad.addColorStop(0, 'rgba(255,255,255,0.95)');
+    grad.addColorStop(0.4, 'rgba(200,200,200,0.6)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(ox, oy, b.r, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.filter = 'none';
+  ctx.restore();
+  ferroAnimId = requestAnimationFrame(animateFerro);
+}
+
+window.addEventListener('resize', ()=>{ resizeFerro(); });
+// init after DOM read
+setTimeout(()=>{ try{ initFerro(); }catch(e){} }, 100);
+
 function computePositions(){
   // compute a radius that fits inside the #sphere element and guarantees
   // the photos sit outside the center sphere (so they form a surrounding
