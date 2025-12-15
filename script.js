@@ -86,11 +86,22 @@ function animateSphere() {
   /* CAMERA-LOCKED TEXT RING */
   textOrbit += 0.15;
 
-  textRing.style.transform = `
-    translate(-50%, -50%)
-    rotateY(${-rotY}deg)
-    rotateX(${-rotX}deg)
-  `;
+/**********************************************************
+ * CAMERA-LOCKED TEXT RING (DOES NOT FOLLOW SPHERE)
+ **********************************************************/
+textOrbit += 0.15;
+
+/* World-locked ring (never affected by rotX / rotY) */
+textRing.style.transform = `
+  translate(-50%, -50%)
+`;
+
+/* Only self-rotation */
+textRingSvg.style.transform = `
+  translateZ(${TEXT_RING_DISTANCE}px)
+  rotateY(${textOrbit}deg)
+`;
+
 
   textRingSvg.style.transform = `
     translateZ(${TEXT_RING_DISTANCE}px)
