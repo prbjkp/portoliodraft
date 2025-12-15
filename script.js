@@ -201,6 +201,7 @@ let currentHint = 0;
 
 const HINT_DURATION = 4000; // visible time (ms)
 const HINT_GAP = 500;       // time between hints
+const HINT_START_DELAY = 2000; // delay after page load (ms)
 
 function showHint(index) {
   hudHints.forEach(h => h.classList.remove("active"));
@@ -224,4 +225,7 @@ function startHintSequence() {
   }, HINT_DURATION);
 }
 
-/* Start after scene loads */
+/* Auto-fire 2 seconds after page load */
+window.addEventListener("load", () => {
+  setTimeout(startHintSequence, HINT_START_DELAY);
+});
