@@ -97,18 +97,6 @@ html, body {
   text-transform: uppercase;
   color: black;
 }
-/* Image dimming effect */
-.photo.dimmed img {
-  filter: brightness(40%);
-  transition: filter 0.2s ease;
-}
-
-/* Center sphere text brightening */
-#center-sphere.bright-text {
-  color: #fff; /* Or whatever highlight color you want */
-  filter: brightness(1.5);
-  transition: filter 0.2s ease;
-}
 
 .hud-hint {
   position: absolute;
