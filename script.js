@@ -250,10 +250,9 @@ photos.forEach(photo => {
 
 function applyOrientation(photo, img) {
   const isPortrait = img.naturalHeight > img.naturalWidth;
-
   photo.classList.toggle("portrait", isPortrait);
-  photo.classList.toggle("landscape", !isPortrait);
 }
+
 
 // inside photos.forEach in animateSphere()
 const depthOffset = photo.classList.contains("portrait") ? -120 : 0;

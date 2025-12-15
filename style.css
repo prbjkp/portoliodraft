@@ -27,6 +27,39 @@ html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; font
   align-items: center;
   justify-content: center;
 }
+/* BASE IMAGE */
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 28px 56px rgba(0,0,0,0.55);
+  backface-visibility: hidden;
+}
+
+/* ROTATE PORTRAITS UPRIGHT */
+.photo.portrait img {
+  transform: rotateZ(90deg);
+}
+
+.photo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+
+  width: 260px;
+  aspect-ratio: 3 / 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo.portrait {
+  aspect-ratio: 2 / 3;
+}
+
 
 /* LANDSCAPE IMAGES */
 .photo.landscape {
