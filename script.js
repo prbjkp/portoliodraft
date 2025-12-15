@@ -24,7 +24,7 @@ const toRad = Math.PI / 180;
 /**********************************************************
  * SPHERE LAYOUT
  **********************************************************/
-let sphereRadius = 3200;
+let sphereRadius = 2400;
 const positions = [];
 
 function computePositions() {
