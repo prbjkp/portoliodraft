@@ -8,8 +8,6 @@ const scene = document.getElementById("scene");
 const textRing = document.getElementById("start-text-ring");
 const letters = textRing.querySelectorAll("span");
 const overlay = document.getElementById("overlay");
-const overlayImg = document.getElementById("overlay-img");
-const overlayClose = document.getElementById("overlay-close");
 const centerSphere = document.getElementById("center-sphere");
 
 /**********************************************************
@@ -21,6 +19,7 @@ let isDragging = false;
 let lastX = 0, lastY = 0;
 
 const autoRotateSpeed = 0.03;
+const toRad = Math.PI / 180;
 
 /**********************************************************
  * SPHERE LAYOUT
@@ -57,57 +56,55 @@ letters.forEach((letter, i) => {
 });
 
 /**********************************************************
- * IMAGE ORIENTATION (APPLIED ONCE)
+ * IMAGE ORIENTATION DETECTION
  **********************************************************/
 photos.forEach(photo => {
   const img = photo.querySelector("img");
-
-  if (img.complete) {
-    applyOrientation(img);
-  } else {
-    img.addEventListener("load", () => applyOrientation(img));
-  }
+  if (img.complete) applyOrientation(photo, img);
+  else img.addEventListener("load", () => applyOrientation(photo, img));
 });
 
-function applyOrientation(img) {
+function applyOrientation(photo, img) {
   const isPortrait = img.naturalHeight > img.naturalWidth;
-  img.style.transform = isPortrait ? "rotate(90deg)" : "rotate(0deg)";
+  photo.classList.toggle("portrait", isPortrait);
 }
 
 /**********************************************************
  * ANIMATION LOOP
  **********************************************************/
+const faceStrength = 1; // 1 = full billboard | 0.5 = hybrid | 0 = world-locked
+
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
 
   rotX += (targetRotX - rotX) * 0.1;
   rotY += (targetRotY - rotY) * 0.1;
 
-  // Rotate the entire sphere
+  // Rotate outer shell
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-  // Keep center sphere visually locked
+  // Lock center sphere visually
   if (centerSphere) {
     centerSphere.style.transform =
       `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
   }
 
-  // Billboard each photo
-  photos.forEach((photo, i) => {
-    const pos = positions[i];
-    const depth = Number(photo.dataset.depth || 0);
+photos.forEach((photo, i) => {
+  const pos = positions[i];
+  const isPortrait = photo.dataset.portrait === "true";
+  const portraitFix = isPortrait ? (img.naturalHeight > img.naturalWidth ? -90 : 0) : 0;
 
-    photo.style.transform = `
-      translate(-50%, -50%)
-      translate3d(
-        ${pos.x}px,
-        ${pos.y}px,
-        ${pos.z + depth}px
-      )
-      rotateY(${-rotY}deg)
-      rotateX(${-rotX}deg)
-    `;
-  });
+
+
+  photo.style.transform = `
+    translate(-50%, -50%)
+    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+    rotateY(${-rotY}deg)
+    rotateX(${-rotX}deg)
+    rotateZ(${portraitFix}deg)
+  `;
+});
+
 
   requestAnimationFrame(animateSphere);
 }
@@ -158,6 +155,9 @@ startContainer.addEventListener("click", () => {
 /**********************************************************
  * IMAGE ZOOM OVERLAY
  **********************************************************/
+const overlayImg = document.getElementById("overlay-img");
+const overlayClose = document.getElementById("overlay-close");
+
 photos.forEach(photo => {
   photo.addEventListener("click", () => {
     overlayImg.src = photo.querySelector("img").src;
