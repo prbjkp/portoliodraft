@@ -99,14 +99,9 @@ textRing.style.transform = `
 /* Only self-rotation */
 textRingSvg.style.transform = `
   translateZ(${TEXT_RING_DISTANCE}px)
-  rotateY(${textOrbit}deg)
+  rotateZ(${textOrbit}deg)
 `;
 
-
-  textRingSvg.style.transform = `
-    translateZ(${TEXT_RING_DISTANCE}px)
-    rotateY(${textOrbit}deg)
-  `;
 
   /* POSITION PHOTOS */
   photos.forEach((photo, i) => {
