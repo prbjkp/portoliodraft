@@ -99,11 +99,11 @@ function animateSphere(){
     // then subtract the parent's rotation so the photo's local rotation
     // cancels the parent's rotation and the image points at the center
     // sphere while the outer shell rotates.
-    const rotYtoCenter = Math.atan2(dx,dz)*(180/Math.PI);
-    const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI);
-    const localRotY = rotYtoCenter - rotY;
-    const localRotX = rotXtoCenter - rotX;
-    photo.style.transform = `translate(-50%,-50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${localRotY}deg) rotateX(${localRotX}deg)`;
+    // Billboard: cancel the parent's rotation so each image faces the camera
+    // regardless of the outer sphere rotation. Apply translation first
+    // (position in the rotated parent), then rotate by the inverse of
+    // the parent's rotation to align with the viewport.
+    photo.style.transform = `translate(-50%,-50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
   });
   requestAnimationFrame(animateSphere);
 }
@@ -117,9 +117,12 @@ window.addEventListener("mouseup", ()=>{ isDragging=false; });
 window.addEventListener("mouseleave", ()=>{ isDragging=false; });
 window.addEventListener("mousemove", e=>{
   if(!isDragging) return;
-  targetRotY += (e.clientX - lastX)*0.3;
-  targetRotX -= (e.clientY - lastY)*0.3;
-  lastX=e.clientX; lastY=e.clientY;
+  // Inverted controls: moving cursor left should rotate scene right
+  const deltaX = e.clientX - lastX;
+  const deltaY = e.clientY - lastY;
+  targetRotY -= deltaX * 0.3; // invert horizontal
+  targetRotX += deltaY * 0.3; // invert vertical
+  lastX = e.clientX; lastY = e.clientY;
 });
 
 /**********************************************************
