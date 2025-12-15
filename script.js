@@ -25,19 +25,20 @@ function computePositions(){
   // sphere size and a max radius from the container size, then pick
   // the larger of those so the outer photos actually surround the
   // center object.
-  const marginFromEdge = 40; // keep some gap from the container edge
+  const marginFromEdge = 20; // reduce margin so we can expand further
   const containerRadius = Math.min(sphere.clientWidth, sphere.clientHeight) / 2 - marginFromEdge;
   const centerRadius = centerSphere ? (centerSphere.offsetWidth || 220) / 2 : 110;
   // place photos so their centers sit outside the center sphere surface
-  // and a bit further back; also apply a spread scale so the shell feels
-  // more roomy.
+  // and a bit further back; apply a larger spread so the shell fully
+  // encompasses the center sphere and feels more roomy.
   const photoHalf = photos[0] ? Math.max(photos[0].offsetWidth, photos[0].offsetHeight) / 2 : 90;
-  const extraGap = 140; // push photos further from the center sphere
-  const spreadScale = 1.15; // slightly scale positions outward to spread them
+  const extraGap = 220; // push photos further from the center sphere
+  const spreadScale = 1.35; // scale positions outward more to spread them
   const desiredRadius = centerRadius + photoHalf + extraGap;
-  // clamp so we don't overflow the container
-  sphereRadius = Math.min(Math.max(desiredRadius, centerRadius + 40), containerRadius);
-  sphereRadius = Math.min(sphereRadius * spreadScale, containerRadius);
+  // apply spread before clamping so we get a roomy shell, then clamp
+  const spacedRadius = desiredRadius * spreadScale;
+  // ensure final radius is at least slightly outside the center sphere
+  sphereRadius = Math.min(Math.max(spacedRadius, centerRadius + photoHalf + 20), containerRadius);
   positions.length = 0;
   photos.forEach((photo,i)=>{
     const total = photos.length;
