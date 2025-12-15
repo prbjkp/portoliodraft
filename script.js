@@ -9,6 +9,7 @@ const textRing = document.getElementById("start-text-ring");
 const letters = textRing.querySelectorAll("span");
 const overlay = document.getElementById("overlay");
 const overlayClose = document.getElementById("overlay-close");
+const centerSphere = document.getElementById("center-sphere");
 
 let rotX=0, rotY=0, targetRotX=0, targetRotY=0;
 let isDragging=false, lastX=0, lastY=0;
@@ -46,6 +47,8 @@ function animateSphere(){
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  // Keep the center sphere facing the camera by counter-rotating it
+  if (centerSphere) centerSphere.style.transform = `translate(-50%, -50%) rotateX(${-rotX}deg) rotateY(${-rotY}deg)`;
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
