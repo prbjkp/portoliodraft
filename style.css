@@ -160,6 +160,31 @@ html, body {
   transform-style: preserve-3d;
   cursor: grab;
 }
+/* CENTER SPHERE TEXT */
+#center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255,255,255,0.3); /* dimmed by default */
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  pointer-events: none;
+}
+
+#center-sphere.bright-text #center-text {
+  color: #fff; 
+  text-shadow: 0 0 20px rgba(255,255,255,0.8);
+}
+
+/* DIMMING PHOTOS UNDER CENTER */
+.photo.dimmed img {
+  filter: brightness(40%);
+  transition: filter 0.2s ease;
+}
+
 
 #sphere:active {
   cursor: grabbing;
