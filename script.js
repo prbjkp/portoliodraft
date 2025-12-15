@@ -28,11 +28,16 @@ function computePositions(){
   const marginFromEdge = 40; // keep some gap from the container edge
   const containerRadius = Math.min(sphere.clientWidth, sphere.clientHeight) / 2 - marginFromEdge;
   const centerRadius = centerSphere ? (centerSphere.offsetWidth || 220) / 2 : 110;
-  // place photos so their centers sit just outside the center sphere surface
+  // place photos so their centers sit outside the center sphere surface
+  // and a bit further back; also apply a spread scale so the shell feels
+  // more roomy.
   const photoHalf = photos[0] ? Math.max(photos[0].offsetWidth, photos[0].offsetHeight) / 2 : 90;
-  const desiredRadius = centerRadius + photoHalf + 8; // small gap so photos sit on top
+  const extraGap = 140; // push photos further from the center sphere
+  const spreadScale = 1.15; // slightly scale positions outward to spread them
+  const desiredRadius = centerRadius + photoHalf + extraGap;
   // clamp so we don't overflow the container
   sphereRadius = Math.min(Math.max(desiredRadius, centerRadius + 40), containerRadius);
+  sphereRadius = Math.min(sphereRadius * spreadScale, containerRadius);
   positions.length = 0;
   photos.forEach((photo,i)=>{
     const total = photos.length;
