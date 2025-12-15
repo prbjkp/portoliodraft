@@ -92,7 +92,8 @@ function animateSphere() {
 photos.forEach((photo, i) => {
   const pos = positions[i];
   const isPortrait = photo.dataset.portrait === "true";
-  const portraitFix = isPortrait ? 90 : 0;
+const portraitFix = isPortrait ? -90 : 0;
+
 
   photo.style.transform = `
     translate(-50%, -50%)
