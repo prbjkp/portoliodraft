@@ -54,8 +54,8 @@ html, body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   transform-style: preserve-3d;
   pointer-events: none;
   z-index: 30;
@@ -107,7 +107,7 @@ html, body {
   transition:
     opacity 0.6s ease,
     transform 0.6s ease;
-}
+
 #hud-hints::before {
   content: '';
   position: absolute;
@@ -272,4 +272,5 @@ html, body {
 
 @keyframes zoomIn {
   to { transform: scale(1); }
+}
 }
