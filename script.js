@@ -114,6 +114,44 @@ textRingSvg.style.transform = `
   rotateY(${-rotY}deg)
 `;
 
+/**********************************************************
+ * TEXT WRAPPED ON SPHERE SURFACE
+ **********************************************************/
+const textBand = document.querySelector(".text-band");
+const textSegments = document.querySelectorAll(".text-segment");
+
+const bandRadius = 90;          // slightly larger than sphere radius
+const bandY = 0;                // equator
+const segmentCount = textSegments.length;
+
+textSegments.forEach((seg, i) => {
+  const angle = (360 / segmentCount) * i;
+
+  seg.dataset.angle = angle;
+
+  seg.style.transform = `
+    rotateY(${angle}deg)
+    translateZ(${bandRadius}px)
+  `;
+});
+
+let textRotation = 0;
+
+/**********************************************************
+ * SPHERE-WRAPPED TEXT ROTATION
+ **********************************************************/
+textRotation += 0.05;
+
+textBand.style.transform = `
+  translate(-50%, -50%)
+  rotateY(${textRotation}deg)
+`;
+textBand.style.transform = `
+  translate(-50%, -50%)
+  rotateY(${textRotation - rotY}deg)
+  rotateX(${-rotX * 0.1}deg)
+`;
+
 
 photos.forEach((photo, i) => {
   const pos = positions[i];
