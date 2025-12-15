@@ -46,14 +46,34 @@ function computePositions() {
 computePositions();
 window.addEventListener("resize", computePositions);
 
+
 /**********************************************************
- * START TEXT RING
+ * START TEXT RING (ORBIT SETUP)
  **********************************************************/
-const textRadius = 110;
+const textRadius = 140;
+const textCount = letters.length;
+
 letters.forEach((letter, i) => {
-  const angle = (360 / letters.length) * i;
-  letter.style.transform = `rotateY(${angle}deg) translateZ(${textRadius}px)`;
+  const angle = (360 / textCount) * i;
+  letter.dataset.angle = angle;
 });
+/**********************************************************
+ * TEXT RING BILLBOARDING
+ **********************************************************/
+const textOrbitSpeed = 0.2;
+
+letters.forEach(letter => {
+  const baseAngle = Number(letter.dataset.angle);
+  const angle = baseAngle + rotY * textOrbitSpeed;
+
+  letter.style.transform = `
+    rotateY(${angle}deg)
+    translateZ(${textRadius}px)
+    rotateY(${-angle - rotY}deg)
+    rotateX(${-rotX}deg)
+  `;
+});
+
 
 /**********************************************************
  * IMAGE ORIENTATION DETECTION
