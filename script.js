@@ -63,10 +63,7 @@ photos.forEach(photo => {
 });
 
 function handleLoaded(photo, img) {
-const isPortrait = img.naturalHeight > img.naturalWidth;
-photo.dataset.portrait = isPortrait;
-photo.classList.toggle("portrait", isPortrait);
-
+  const isPortrait = img.naturalHeight > img.naturalWidth;
 
   // Assign container type based on orientation
   photo.classList.toggle("portrait", isPortrait);
