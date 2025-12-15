@@ -80,34 +80,36 @@ function animateSphere() {
   rotX += (targetRotX - rotX) * 0.1;
   rotY += (targetRotY - rotY) * 0.1;
 
-  // Rotate outer shell
+  // Rotate entire sphere (THIS drives motion)
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-  // Lock center sphere visually
+  // Keep center sphere visually locked
   if (centerSphere) {
     centerSphere.style.transform =
-      `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
+      `translate(-50%, -50%) rotateX(${-rotX}deg) rotateY(${-rotY}deg)`;
   }
 
-photos.forEach((photo, i) => {
-  const pos = positions[i];
-  const isPortrait = photo.dataset.portrait === "true";
-  const portraitFix = isPortrait ? (img.naturalHeight > img.naturalWidth ? -90 : 0) : 0;
+  photos.forEach((photo, i) => {
+    const pos = positions[i];
+    const depth = Number(photo.dataset.depth || 0);
 
-
-
-  photo.style.transform = `
-    translate(-50%, -50%)
-    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-    rotateY(${-rotY}deg)
-    rotateX(${-rotX}deg)
-    rotateZ(${portraitFix}deg)
-  `;
-});
-
+    photo.style.transform = `
+      translate(-50%, -50%)
+      translate3d(
+        ${pos.x}px,
+        ${pos.y}px,
+        ${pos.z + depth}px
+      )
+      rotateY(180deg)
+    `;
+  });
 
   requestAnimationFrame(animateSphere);
 }
+
+
+  requestAnimationFrame(animateSphere);
+
 
 animateSphere();
 
