@@ -19,6 +19,7 @@ let isDragging = false;
 let lastX = 0, lastY = 0;
 
 const autoRotateSpeed = 0.03;
+const toRad = Math.PI / 180;
 
 /**********************************************************
  * SPHERE LAYOUT
@@ -55,7 +56,7 @@ letters.forEach((letter, i) => {
 });
 
 /**********************************************************
- * IMAGE ORIENTATION (portrait detection)
+ * IMAGE ORIENTATION DETECTION
  **********************************************************/
 photos.forEach(photo => {
   const img = photo.querySelector("img");
@@ -69,27 +70,10 @@ function applyOrientation(photo, img) {
 }
 
 /**********************************************************
- * ATTRIBUTE HELPERS
- **********************************************************/
-function getFaceStrength(photo) {
-  switch (photo.dataset.face) {
-    case "none": return 0;
-    case "half": return 0.5;
-    default: return 1; // full
-  }
-}
-
-function getTilt(photo) {
-  return parseFloat(photo.dataset.tilt || 0);
-}
-
-function getDepth(photo) {
-  return parseFloat(photo.dataset.depth || 0);
-}
-
-/**********************************************************
  * ANIMATION LOOP
  **********************************************************/
+const faceStrength = 1; // 1 = full billboard | 0.5 = hybrid | 0 = world-locked
+
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
 
@@ -108,21 +92,14 @@ function animateSphere() {
   // Position & orient photos
   photos.forEach((photo, i) => {
     const pos = positions[i];
-    const faceStrength = getFaceStrength(photo);
-    const tilt = getTilt(photo);
-    const depth = getDepth(photo);
-    const portraitDepth = photo.classList.contains("portrait") ? -120 : 0;
+    const isPortrait = photo.classList.contains("portrait");
 
     photo.style.transform = `
       translate(-50%, -50%)
-      translate3d(
-        ${pos.x}px,
-        ${pos.y}px,
-        ${pos.z + depth + portraitDepth}px
-      )
+      translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
       rotateY(${-rotY * faceStrength}deg)
       rotateX(${-rotX * faceStrength}deg)
-      rotateZ(${tilt}deg)
+      ${isPortrait ? "rotateZ(0deg)" : ""}
     `;
   });
 
