@@ -48,7 +48,15 @@ function animateSphere(){
   rotY += (targetRotY - rotY)*0.1;
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   // Keep the center sphere facing the camera by counter-rotating it
-  if (centerSphere) centerSphere.style.transform = `translate(-50%, -50%) rotateX(${-rotX}deg) rotateY(${-rotY}deg)`;
+  if (centerSphere) {
+    centerSphere.style.transform = `translate(-50%, -50%) rotateX(${-rotX}deg) rotateY(${-rotY}deg)`;
+    // Update lighting position so the highlight follows rotation, making
+    // the sphere look solid and 3D. Values are percentages for the CSS vars.
+    const lightX = 50 + (rotY / 360) * 40; // shift with horizontal rotation
+    const lightY = 50 - (rotX / 360) * 40; // shift with vertical rotation
+    centerSphere.style.setProperty('--light-x', `${lightX}%`);
+    centerSphere.style.setProperty('--light-y', `${lightY}%`);
+  }
   photos.forEach((photo,i)=>{
     const pos=positions[i];
     const dx=-pos.x, dy=-pos.y, dz=-pos.z;
