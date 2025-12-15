@@ -211,3 +211,47 @@ function playHudHints() {
 window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
+
+
+
+const DIM_RADIUS = 250; // Distance threshold in pixels
+const BRIGHT_RADIUS = 250; // Radius for text brightening
+
+function updateProximityEffects() {
+  const centerX = 0; // sphere origin in your 3D coordinate system
+  const centerY = 0;
+  const centerZ = 0;
+
+  photos.forEach((photo, i) => {
+    const pos = positions[i];
+    if (!pos) return;
+
+    // Calculate distance from the center in 3D space
+    const dx = pos.x;
+    const dy = pos.y;
+    const dz = pos.z;
+
+    const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+    // Apply dimming if inside the radius
+    if (distance < DIM_RADIUS) {
+      photo.classList.add('dimmed');
+    } else {
+      photo.classList.remove('dimmed');
+    }
+
+    // Brighten the center sphere text if any image is close
+    if (distance < BRIGHT_RADIUS) {
+      centerSphere.classList.add('bright-text');
+    } else {
+      centerSphere.classList.remove('bright-text');
+    }
+  });
+
+  requestAnimationFrame(updateProximityEffects);
+}
+
+updateProximityEffects();
+
+let scale = Math.min(1, distance / DIM_RADIUS);
+photo.style.filter = `brightness(${scale})`;
