@@ -32,13 +32,17 @@ function computePositions(){
   // and a bit further back; apply a larger spread so the shell fully
   // encompasses the center sphere and feels more roomy.
   const photoHalf = photos[0] ? Math.max(photos[0].offsetWidth, photos[0].offsetHeight) / 2 : 90;
-  const extraGap = 220; // push photos further from the center sphere
-  const spreadScale = 1.35; // scale positions outward more to spread them
+  const extraGap = 600; // push photos much further from the center sphere
+  const spreadScale = 2.2; // scale positions outward more to spread them
   const desiredRadius = centerRadius + photoHalf + extraGap;
   // apply spread before clamping so we get a roomy shell, then clamp
   const spacedRadius = desiredRadius * spreadScale;
-  // ensure final radius is at least slightly outside the center sphere
-  sphereRadius = Math.min(Math.max(spacedRadius, centerRadius + photoHalf + 20), containerRadius);
+  // ensure final radius is well outside the center sphere so the
+  // viewer (at the origin) is inside the photo shell. Pick a large
+  // minimum outer radius to guarantee the perspective sits inside
+  // the sphere even on large screens.
+  const minOuterRadius = 3200;
+  sphereRadius = Math.max(spacedRadius, centerRadius + photoHalf + 20, minOuterRadius);
   positions.length = 0;
   photos.forEach((photo,i)=>{
     const total = photos.length;
