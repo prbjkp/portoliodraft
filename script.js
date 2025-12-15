@@ -11,6 +11,7 @@ const centerSphere = document.getElementById("center-sphere");
 const overlay = document.getElementById("overlay");
 const overlayImg = document.getElementById("overlay-img");
 const overlayClose = document.getElementById("overlay-close");
+
 /**********************************************************
  * PROXIMITY EFFECTS
  **********************************************************/
