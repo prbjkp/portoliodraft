@@ -67,7 +67,9 @@ photos.forEach(photo => {
 function applyOrientation(photo, img) {
   const isPortrait = img.naturalHeight > img.naturalWidth;
   photo.classList.toggle("portrait", isPortrait);
+  photo.dataset.portrait = isPortrait; // Add this line
 }
+
 
 /**********************************************************
  * ANIMATION LOOP
@@ -91,17 +93,17 @@ function animateSphere() {
 
 photos.forEach((photo, i) => {
   const pos = positions[i];
-  const isPortrait = photo.dataset.portrait === "true";
-const portraitFix = isPortrait ? -90 : 0;
+const isPortrait = photo.dataset.portrait === "true";
+const rotateZ = isPortrait ? 90 : 0;
 
+photo.style.transform = `
+  translate(-50%, -50%)
+  translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+  rotateY(${-rotY}deg)
+  rotateX(${-rotX}deg)
+  rotateZ(${rotateZ}deg)
+`;
 
-  photo.style.transform = `
-    translate(-50%, -50%)
-    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-    rotateY(${-rotY}deg)
-    rotateX(${-rotX}deg)
-    rotateZ(${portraitFix}deg)
-  `;
 });
 
 
