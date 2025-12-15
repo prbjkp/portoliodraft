@@ -14,17 +14,27 @@ html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; font
   pointer-events: none;
 }
 
-#start-text-ring span {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+#text-ring-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
   transform-style: preserve-3d;
-  font-size: 14px;
-  letter-spacing: 0.25em;
-  white-space: nowrap;
-  backface-visibility: hidden;
-  color: white;
 }
+
+#text-ring-svg text {
+  fill: white;
+  font-size: 14px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  dominant-baseline: middle;
+
+  /* subtle cinematic glow */
+  filter:
+    drop-shadow(0 0 6px rgba(255,255,255,0.25))
+    drop-shadow(0 0 18px rgba(255,255,255,0.15));
+}
+
+
 @keyframes spinX { from {transform:rotateX(0deg);} to {transform:rotateX(360deg);} }
 
 /* 3D PHOTO SPHERE */

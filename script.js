@@ -9,6 +9,9 @@ const textRing = document.getElementById("start-text-ring");
 const letters = textRing.querySelectorAll("span");
 const overlay = document.getElementById("overlay");
 const centerSphere = document.getElementById("center-sphere");
+const textRingSvg = document.getElementById("text-ring-svg");
+let textOrbit = 0;
+
 
 /**********************************************************
  * ROTATION STATE
@@ -47,16 +50,7 @@ computePositions();
 window.addEventListener("resize", computePositions);
 
 
-/**********************************************************
- * START TEXT RING (ORBIT SETUP)
- **********************************************************/
-const textRadius = 140;
-const textCount = letters.length;
 
-letters.forEach((letter, i) => {
-  const angle = (360 / textCount) * i;
-  letter.dataset.angle = angle;
-});
 /**********************************************************
  * TEXT RING BILLBOARDING
  **********************************************************/
@@ -108,6 +102,18 @@ function animateSphere() {
     centerSphere.style.transform =
       `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
   }
+  /**********************************************************
+ * CURVED TEXT RING (UNIVERSAL STYLE)
+ **********************************************************/
+textOrbit += 0.15;
+
+textRingSvg.style.transform = `
+  translateZ(180px)
+  rotateY(${textOrbit}deg)
+  rotateX(${-rotX}deg)
+  rotateY(${-rotY}deg)
+`;
+
 
 photos.forEach((photo, i) => {
   const pos = positions[i];
