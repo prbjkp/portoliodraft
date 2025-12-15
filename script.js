@@ -61,43 +61,32 @@ function animateSphere(){
   if(!isDragging) targetRotY+=autoRotateSpeed;
   rotX += (targetRotX - rotX)*0.1;
   rotY += (targetRotY - rotY)*0.1;
-  sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-  // Keep the center sphere facing the camera by counter-rotating it
+  // Instead of rotating the camera (scene), we rotate each photo's
+  // position so the user's perspective stays fixed and the outer
+  // sphere appears to move around the center sphere.
+  // Keep center sphere locked to the viewport (no rotation)
   if (centerSphere) {
-    // Use inverse rotation in Y then X order so the transform cancels the
-    // parent's rotations and the circle stays facing the camera (remains
-    // circular instead of appearing edge-on).
-    centerSphere.style.transform = `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
-    // Update lighting position using sines so highlight moves naturally
-    // and the sphere reads as 3D even when the view tilts up/down.
-    const lightX = 50 + Math.sin(rotY*toRad) * 30; // horizontal drift
-    const lightY = 50 - Math.sin(rotX*toRad) * 30; // vertical drift
+    centerSphere.style.transform = `translate(-50%, -50%)`;
+    const lightX = 50 + Math.sin(rotY*toRad) * 30;
+    const lightY = 50 - Math.sin(rotX*toRad) * 30;
     centerSphere.style.setProperty('--light-x', `${lightX}%`);
     centerSphere.style.setProperty('--light-y', `${lightY}%`);
-    centerSphere.style.willChange = 'transform';
   }
   photos.forEach((photo,i)=>{
     const pos=positions[i];
-    const dx=-pos.x, dy=-pos.y, dz=-pos.z;
-    // Rotate the direction vector by the sphere's current rotation to get
-    // the vector in world space, then compute the world-space angles to
-    // the center. Subtract the parent rotation so the child's local
-    // rotation cancels the parent's rotation and the photo faces the
-    // center sphere in world space.
-    const toRad = Math.PI/180;
+    // Apply the outer-sphere rotation to the base position to get a
+    // world-space position. We then place the photo at that world
+    // position and rotate it so it faces the center sphere.
+    const dx = pos.x, dy = pos.y, dz = pos.z;
     const rx = rotX*toRad, ry = rotY*toRad;
-    // apply rotateX then rotateY (same order as the sphere transform)
+    // rotate around X
     const y1 = dy*Math.cos(rx) - dz*Math.sin(rx);
     const z1 = dy*Math.sin(rx) + dz*Math.cos(rx);
+    // rotate around Y
     const x2 = dx*Math.cos(ry) + z1*Math.sin(ry);
     const z2 = -dx*Math.sin(ry) + z1*Math.cos(ry);
-    const worldX = x2, worldY = y1, worldZ = z2;
-    const angleYWorld = Math.atan2(worldX, worldZ)*(180/Math.PI);
-    const sinX = Math.max(-1, Math.min(1, worldY / sphereRadius));
-    const angleXWorld = Math.asin(sinX)*(180/Math.PI);
-    const localRotY = angleYWorld - rotY;
-    const localRotX = angleXWorld - rotX;
-    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${localRotY}deg) rotateX(${localRotX}deg)`;
+    // place photo at rotated world position
+    photo.style.transform = `translate3d(${x2}px, ${y1}px, ${z2}px) rotateY(${Math.atan2(x2,z2)*(180/Math.PI)}deg) rotateX(${Math.asin(Math.max(-1, Math.min(1, y1 / sphereRadius)))*(180/Math.PI)}deg)`;
   });
   requestAnimationFrame(animateSphere);
 }
