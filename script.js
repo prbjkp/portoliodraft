@@ -235,3 +235,31 @@ function closeOverlay() {
   overlay.style.opacity="0"; overlay.style.pointerEvents="none";
 }
 window.addEventListener("keydown", e=>{ if(e.key==="Escape") closeOverlay(); });
+/**********************************************************
+* IMAGE ORIENTATION DETECTION
+**********************************************************/
+photos.forEach(photo => {
+  const img = photo.querySelector("img");
+
+  if (img.complete) {
+    applyOrientation(photo, img);
+  } else {
+    img.addEventListener("load", () => applyOrientation(photo, img));
+  }
+});
+
+function applyOrientation(photo, img) {
+  const isPortrait = img.naturalHeight > img.naturalWidth;
+
+  photo.classList.toggle("portrait", isPortrait);
+  photo.classList.toggle("landscape", !isPortrait);
+}
+
+// inside photos.forEach in animateSphere()
+const depthOffset = photo.classList.contains("portrait") ? -120 : 0;
+
+photo.style.transform =
+  `translate(-50%,-50%)
+   translate3d(${pos.x}px, ${pos.y}px, ${pos.z + depthOffset}px)
+   rotateY(${-rotY}deg)
+   rotateX(${-rotX}deg)`;
