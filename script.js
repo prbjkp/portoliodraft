@@ -90,7 +90,7 @@ function animateSphere(){
     const rotXtoCenter = Math.asin(dy/sphereRadius)*(180/Math.PI);
     const localRotY = rotYtoCenter - rotY;
     const localRotX = rotXtoCenter - rotX;
-    photo.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${localRotY}deg) rotateX(${localRotX}deg)`;
+    photo.style.transform = `translate(-50%,-50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${localRotY}deg) rotateX(${localRotX}deg)`;
   });
   requestAnimationFrame(animateSphere);
 }
