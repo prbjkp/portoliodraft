@@ -170,19 +170,20 @@ function animateSphere(){
     centerSphere.style.setProperty('--light-x', `${lightX}%`);
     centerSphere.style.setProperty('--light-y', `${lightY}%`);
   }
-  photos.forEach((photo,i)=>{
-    const pos=positions[i];
-    const dx=-pos.x, dy=-pos.y, dz=-pos.z;
-    // Compute the angles to the center in the photo's local/base space
-    // then subtract the parent's rotation so the photo's local rotation
-    // cancels the parent's rotation and the image points at the center
-    // sphere while the outer shell rotates.
-    // Billboard: cancel the parent's rotation so each image faces the camera
-    // regardless of the outer sphere rotation. Apply translation first
-    // (position in the rotated parent), then rotate by the inverse of
-    // the parent's rotation to align with the viewport.
-    photo.style.transform = `translate(-50%,-50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
-  });
+photos.forEach((photo, i) => {
+  const pos = positions[i];
+
+  // Push portrait images slightly farther back
+  const depthOffset = photo.classList.contains("portrait") ? -120 : 0;
+
+  photo.style.transform =
+    `translate(-50%,-50%)
+     translate3d(${pos.x}px, ${pos.y}px, ${pos.z + depthOffset}px)
+     rotateY(${-rotY}deg)
+     rotateX(${-rotX}deg)`;
+});
+
+
   requestAnimationFrame(animateSphere);
 }
 animateSphere();
@@ -253,12 +254,3 @@ function applyOrientation(photo, img) {
   photo.classList.toggle("portrait", isPortrait);
 }
 
-
-// inside photos.forEach in animateSphere()
-const depthOffset = photo.classList.contains("portrait") ? -120 : 0;
-
-photo.style.transform =
-  `translate(-50%,-50%)
-   translate3d(${pos.x}px, ${pos.y}px, ${pos.z + depthOffset}px)
-   rotateY(${-rotY}deg)
-   rotateX(${-rotX}deg)`;
