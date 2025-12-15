@@ -25,6 +25,7 @@ let rotX = 0, rotY = 0;
 let targetRotX = 0, targetRotY = 0;
 let isDragging = false;
 let lastX = 0, lastY = 0;
+
 const autoRotateSpeed = 0.05;
 
 /**********************************************************
@@ -66,16 +67,9 @@ function applyOrientation(photo, img) {
 }
 
 /**********************************************************
- * PROXIMITY CONSTANTS
- **********************************************************/
-const DIM_RADIUS = 250;    // pixels: images within this distance are dimmed
-const BRIGHT_RADIUS = 250; // pixels: center sphere brightens when images within this radius
-
-/**********************************************************
  * ANIMATION LOOP
  **********************************************************/
 function animateSphere() {
-  // Auto-rotate
   if (!isDragging) targetRotY += autoRotateSpeed;
 
   rotX += (targetRotX - rotX) * 0.1;
@@ -88,7 +82,7 @@ function animateSphere() {
   centerSphere.style.transform =
     `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
 
-  // Text ring self-rotation
+  // Camera-locked text ring (self-rotating only)
   textOrbit += 0.01;
   textRing.style.transform = `translate(-50%, -50%)`;
   textRingSvg.style.transform = `
@@ -96,47 +90,13 @@ function animateSphere() {
     rotateZ(${textOrbit}deg)
   `;
 
-  // Calculate cosine/sine once for rotation math
-  const cosX = Math.cos(rotX * Math.PI / 180);
-  const sinX = Math.sin(rotX * Math.PI / 180);
-  const cosY = Math.cos(rotY * Math.PI / 180);
-  const sinY = Math.sin(rotY * Math.PI / 180);
-
-  let anyClose = false; // for center sphere text brightening
-
-  // Position photos and apply proximity effects
+  // Position photos
   photos.forEach((photo, i) => {
     const pos = positions[i];
     if (!pos) return;
 
-    // Rotation fix for portrait images
     const portraitFix = photo.classList.contains("portrait") ? -90 : 0;
 
-    // Apply rotation to photo positions
-    let x = pos.x;
-    let y = pos.y;
-    let z = pos.z;
-
-    // Rotate around X axis
-    let y1 = y * cosX - z * sinX;
-    let z1 = y * sinX + z * cosX;
-    y = y1; z = z1;
-
-    // Rotate around Y axis
-    let x1 = x * cosY + z * sinY;
-    let z2 = -x * sinY + z * cosY;
-    x = x1; z = z2;
-
-    // Distance from camera center
-    const distance = Math.sqrt(x*x + y*y + z*z);
-
-    // Apply dimming effect
-    const brightness = distance < DIM_RADIUS ? 0.35 : 1;
-    photo.style.filter = `brightness(${brightness})`;
-
-    if (distance < BRIGHT_RADIUS) anyClose = true;
-
-    // Set 3D position
     photo.style.transform = `
       translate(-50%, -50%)
       translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
@@ -145,10 +105,6 @@ function animateSphere() {
       rotateZ(${portraitFix}deg)
     `;
   });
-
-  // Brighten center sphere text if any photo is close
-  if (anyClose) centerSphere.classList.add('bright-text');
-  else centerSphere.classList.remove('bright-text');
 
   requestAnimationFrame(animateSphere);
 }
@@ -194,8 +150,8 @@ if (startContainer) {
     scene.style.opacity = "1";
     scene.style.pointerEvents = "auto";
 
-    // Auto-fire HUD hints 2s after start
-    setTimeout(playHudHints, 2000);
+    // Auto-fire HUD hints 2 seconds after START click
+    setTimeout(playHudHintsOnce, 2000);
   });
 }
 
@@ -220,24 +176,29 @@ function closeOverlay() {
 }
 
 /**********************************************************
- * HUD HINT SEQUENCE
+ * HUD HINT SEQUENCE (TEXT ONLY)
  **********************************************************/
 const hudHints = document.querySelectorAll(".hud-hint");
-const HINT_START_DELAY = 2000;
-const HINT_DURATION = 4000;
-const HINT_GAP = 500;
+const HINT_START_DELAY = 2000; // 2s after page load
+const HINT_DURATION = 4000;    // visible time per hint
+const HINT_GAP = 500;          // short gap between hints
 
 function playHudHints() {
   let index = 0;
 
   function showNextHint() {
-    if (index >= hudHints.length) return; // stop after last
+    if (index >= hudHints.length) return; // stop when done
 
+    // hide previous hint
     if (index > 0) hudHints[index - 1].classList.remove("active");
-    hudHints[index].classList.add("active");
 
+    // show current hint
+    const hint = hudHints[index];
+    hint.classList.add("active");
+
+    // hide after duration then schedule next hint
     setTimeout(() => {
-      hudHints[index].classList.remove("active");
+      hint.classList.remove("active");
       index++;
       setTimeout(showNextHint, HINT_GAP);
     }, HINT_DURATION);
@@ -246,7 +207,51 @@ function playHudHints() {
   showNextHint();
 }
 
-// Auto-fire 2s after page load
+// auto-fire 2 seconds after page load
 window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
+
+
+
+const DIM_RADIUS = 250; // Distance threshold in pixels
+const BRIGHT_RADIUS = 250; // Radius for text brightening
+
+function updateProximityEffects() {
+  const centerX = 0; // sphere origin in your 3D coordinate system
+  const centerY = 0;
+  const centerZ = 0;
+
+  photos.forEach((photo, i) => {
+    const pos = positions[i];
+    if (!pos) return;
+
+    // Calculate distance from the center in 3D space
+    const dx = pos.x;
+    const dy = pos.y;
+    const dz = pos.z;
+
+    const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+    // Apply dimming if inside the radius
+    if (distance < DIM_RADIUS) {
+      photo.classList.add('dimmed');
+    } else {
+      photo.classList.remove('dimmed');
+    }
+
+    // Brighten the center sphere text if any image is close
+    if (distance < BRIGHT_RADIUS) {
+      centerSphere.classList.add('bright-text');
+    } else {
+      centerSphere.classList.remove('bright-text');
+    }
+  });
+
+  requestAnimationFrame(updateProximityEffects);
+}
+
+updateProximityEffects();
+
+let scale = Math.min(1, distance / DIM_RADIUS);
+photo.style.filter = `brightness(${scale})`;
