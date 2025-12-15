@@ -75,21 +75,22 @@ function animateSphere() {
   rotX += (targetRotX - rotX) * 0.1;
   rotY += (targetRotY - rotY) * 0.1;
 
+  // Rotate photo sphere
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
+  // Lock center sphere to camera
   centerSphere.style.transform =
     `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
 
-  /* CAMERA-LOCKED TEXT RING */
+  // Camera-locked text ring (self-rotating only)
   textOrbit += 0.01;
-
   textRing.style.transform = `translate(-50%, -50%)`;
-
   textRingSvg.style.transform = `
     translateZ(${TEXT_RING_DISTANCE}px)
     rotateZ(${textOrbit}deg)
   `;
 
+  // Position photos
   photos.forEach((photo, i) => {
     const pos = positions[i];
     if (!pos) return;
@@ -148,6 +149,9 @@ if (startContainer) {
     textRing.style.pointerEvents = "none";
     scene.style.opacity = "1";
     scene.style.pointerEvents = "auto";
+
+    // Auto-fire HUD hints 2 seconds after START click
+    setTimeout(playHudHintsOnce, 2000);
   });
 }
 
@@ -172,51 +176,29 @@ function closeOverlay() {
 }
 
 /**********************************************************
- * HUD HINT SEQUENCE
+ * HUD HINT SEQUENCE (EVERY TIME)
  **********************************************************/
 const hudHints = document.querySelectorAll(".hud-hint");
-
 const HINT_DURATION = 4000;
-const HINT_START_DELAY = 2000;
-
-/* ======================================================
-   DEV NOTE — FIRST VISIT ONLY LOGIC
-   ------------------------------------------------------
-   Remove this block (and the check below) when the site
-   is finalized and you want hints to always show.
-====================================================== */
-const HINT_STORAGE_KEY = "hudHintsPlayed";
-/* ====================================================== */
+const HINT_GAP = 500;
 
 function playHudHintsOnce() {
   let index = 0;
 
   function nextHint() {
+    // Hide previous
     if (index > 0) hudHints[index - 1].classList.remove("active");
     if (index >= hudHints.length) return;
 
+    // Show current
     hudHints[index].classList.add("active");
 
     setTimeout(() => {
       hudHints[index].classList.remove("active");
       index++;
-      setTimeout(nextHint, 500);
+      setTimeout(nextHint, HINT_GAP);
     }, HINT_DURATION);
   }
 
   nextHint();
 }
-
-/* ======================================================
-   DEV NOTE — FIRST VISIT CHECK
-   ------------------------------------------------------
-   Delete the localStorage condition to always play hints
-====================================================== */
-/* window.addEventListener("load", () => {
-  if (localStorage.getItem(HINT_STORAGE_KEY)) return;
-
-  setTimeout(() => {
-    playHudHintsOnce();
-    localStorage.setItem(HINT_STORAGE_KEY, "true");
-  }, HINT_START_DELAY);
-}); */
