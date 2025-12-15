@@ -50,23 +50,22 @@ computePositions();
 window.addEventListener("resize", computePositions);
 
 
-
 /**********************************************************
- * TEXT RING BILLBOARDING
+ * CAMERA-LOCKED TEXT RING
  **********************************************************/
-const textOrbitSpeed = 0.2;
+textOrbit += 0.15;
 
-letters.forEach(letter => {
-  const baseAngle = Number(letter.dataset.angle);
-  const angle = baseAngle + rotY * textOrbitSpeed;
+textRing.style.transform = `
+  translate(-50%, -50%)
+  rotateY(${-rotY}deg)
+  rotateX(${-rotX}deg)
+`;
 
-  letter.style.transform = `
-    rotateY(${angle}deg)
-    translateZ(${textRadius}px)
-    rotateY(${-angle - rotY}deg)
-    rotateX(${-rotX}deg)
-  `;
-});
+textRingSvg.style.transform = `
+  translateZ(${TEXT_RING_DISTANCE}px)
+  rotateY(${textOrbit}deg)
+`;
+
 
 
 /**********************************************************
@@ -106,9 +105,10 @@ function animateSphere() {
  * CURVED TEXT RING (UNIVERSAL STYLE)
  **********************************************************/
 textOrbit += 0.15;
+const TEXT_RING_DISTANCE = 95; // just outside sphere surface
 
 textRingSvg.style.transform = `
-  translateZ(180px)
+  translateZ(${TEXT_RING_DISTANCE}px)
   rotateY(${textOrbit}deg)
   rotateX(${-rotX}deg)
   rotateY(${-rotY}deg)
