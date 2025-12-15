@@ -107,9 +107,32 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 260px;
-  aspect-ratio: 3 / 2;
+  border-radius: 12px;
+  box-shadow: 0 28px 56px rgba(0,0,0,0.55);
+  transition: transform 0.25s ease;
 }
+
+.photo.landscape {
+  width: 260px;
+  height: 160px; /* landscape ratio */
+}
+
+.photo.portrait {
+  width: 160px;
+  height: 260px; /* portrait ratio */
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.photo:hover {
+  transform: translateZ(60px);
+}
+
 
 .photo img {
   width: 100%;

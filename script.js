@@ -19,7 +19,6 @@ let rotX = 0, rotY = 0;
 let targetRotX = 0, targetRotY = 0;
 let isDragging = false;
 let lastX = 0, lastY = 0;
-
 const autoRotateSpeed = 0.03;
 
 /**********************************************************
@@ -28,7 +27,6 @@ const autoRotateSpeed = 0.03;
 const sphereRadius = 2400;
 const positions = [];
 
-// Compute 3D positions on sphere
 function computePositions() {
   positions.length = 0;
   const total = photos.length;
@@ -65,10 +63,12 @@ photos.forEach(photo => {
 });
 
 function handleLoaded(photo, img) {
-  // Detect portrait vs landscape
   const isPortrait = img.naturalHeight > img.naturalWidth;
-  photo.dataset.portrait = isPortrait;
+
+  // Assign container type based on orientation
   photo.classList.toggle("portrait", isPortrait);
+  photo.classList.toggle("landscape", !isPortrait);
+  photo.dataset.portrait = isPortrait;
 
   imagesLoaded++;
   if (imagesLoaded === photos.length) {
@@ -83,11 +83,10 @@ function handleLoaded(photo, img) {
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
 
-  // Smooth interpolation
   rotX += (targetRotX - rotX) * 0.1;
   rotY += (targetRotY - rotY) * 0.1;
 
-  // Rotate the entire sphere
+  // Rotate entire sphere
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
   // Keep center sphere visually locked
@@ -98,7 +97,7 @@ function animateSphere() {
   // Position and rotate each photo
   photos.forEach((photo, i) => {
     const pos = positions[i];
-    const rotateZ = photo.dataset.portrait === "true" ? 90 : 0; // portrait fix
+    const rotateZ = photo.dataset.portrait === "true" ? 90 : 0;
 
     photo.style.transform = `
       translate(-50%, -50%)
