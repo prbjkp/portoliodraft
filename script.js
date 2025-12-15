@@ -15,7 +15,7 @@ const overlayClose = document.getElementById("overlay-close");
 /**********************************************************
  * TEXT RING CONSTANTS
  **********************************************************/
-const TEXT_RING_DISTANCE = 95; // just above sphere surface
+const TEXT_RING_DISTANCE = 95;
 let textOrbit = 0;
 
 /**********************************************************
@@ -42,11 +42,11 @@ function computePositions() {
     const phi = Math.acos(1 - 2 * (i + 0.5) / total);
     const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
 
-    const x = sphereRadius * Math.sin(phi) * Math.cos(theta);
-    const y = sphereRadius * Math.cos(phi);
-    const z = sphereRadius * Math.sin(phi) * Math.sin(theta);
-
-    positions.push({ x, y, z: -z });
+    positions.push({
+      x: sphereRadius * Math.sin(phi) * Math.cos(theta),
+      y: sphereRadius * Math.cos(phi),
+      z: -sphereRadius * Math.sin(phi) * Math.sin(theta)
+    });
   });
 }
 
@@ -63,8 +63,7 @@ photos.forEach(photo => {
 });
 
 function applyOrientation(photo, img) {
-  const isPortrait = img.naturalHeight > img.naturalWidth;
-  photo.classList.toggle("portrait", isPortrait);
+  photo.classList.toggle("portrait", img.naturalHeight > img.naturalWidth);
 }
 
 /**********************************************************
@@ -76,40 +75,26 @@ function animateSphere() {
   rotX += (targetRotX - rotX) * 0.1;
   rotY += (targetRotY - rotY) * 0.1;
 
-  /* ROTATE PHOTO SPHERE */
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-  /* LOCK CENTER SPHERE TO CAMERA */
   centerSphere.style.transform =
     `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
 
   /* CAMERA-LOCKED TEXT RING */
-  textOrbit += 0.15;
+  textOrbit += 0.01;
 
-/**********************************************************
- * CAMERA-LOCKED TEXT RING (DOES NOT FOLLOW SPHERE)
- **********************************************************/
-textOrbit += 0.01;
+  textRing.style.transform = `translate(-50%, -50%)`;
 
-/* World-locked ring (never affected by rotX / rotY) */
-textRing.style.transform = `
-  translate(-50%, -50%)
-`;
+  textRingSvg.style.transform = `
+    translateZ(${TEXT_RING_DISTANCE}px)
+    rotateZ(${textOrbit}deg)
+  `;
 
-/* Only self-rotation */
-textRingSvg.style.transform = `
-  translateZ(${TEXT_RING_DISTANCE}px)
-  rotateZ(${textOrbit}deg)
-`;
-
-
-  /* POSITION PHOTOS */
   photos.forEach((photo, i) => {
     const pos = positions[i];
     if (!pos) return;
 
-    const isPortrait = photo.classList.contains("portrait");
-    const portraitFix = isPortrait ? -90 : 0;
+    const portraitFix = photo.classList.contains("portrait") ? -90 : 0;
 
     photo.style.transform = `
       translate(-50%, -50%)
@@ -134,17 +119,15 @@ window.addEventListener("mousedown", e => {
   lastY = e.clientY;
 });
 
-window.addEventListener("mouseup", () => isDragging = false);
-window.addEventListener("mouseleave", () => isDragging = false);
+["mouseup", "mouseleave"].forEach(evt =>
+  window.addEventListener(evt, () => isDragging = false)
+);
 
 window.addEventListener("mousemove", e => {
   if (!isDragging) return;
 
-  const dx = e.clientX - lastX;
-  const dy = e.clientY - lastY;
-
-  targetRotY -= dx * 0.3;
-  targetRotX += dy * 0.3;
+  targetRotY -= (e.clientX - lastX) * 0.3;
+  targetRotX += (e.clientY - lastY) * 0.3;
 
   lastX = e.clientX;
   lastY = e.clientY;
@@ -176,17 +159,12 @@ photos.forEach(photo => {
     overlayImg.src = photo.querySelector("img").src;
     overlay.style.display = "flex";
     overlay.style.pointerEvents = "auto";
-
-    requestAnimationFrame(() => {
-      overlay.style.opacity = "1";
-    });
+    requestAnimationFrame(() => overlay.style.opacity = "1");
   });
 });
 
 overlayClose.addEventListener("click", closeOverlay);
-window.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeOverlay();
-});
+window.addEventListener("keydown", e => e.key === "Escape" && closeOverlay());
 
 function closeOverlay() {
   overlay.style.opacity = "0";
@@ -197,35 +175,48 @@ function closeOverlay() {
  * HUD HINT SEQUENCE
  **********************************************************/
 const hudHints = document.querySelectorAll(".hud-hint");
-let currentHint = 0;
 
-const HINT_DURATION = 4000; // visible time (ms)
-const HINT_GAP = 500;       // time between hints
-const HINT_START_DELAY = 2000; // delay after page load (ms)
+const HINT_DURATION = 4000;
+const HINT_START_DELAY = 2000;
 
-function showHint(index) {
-  hudHints.forEach(h => h.classList.remove("active"));
+/* ======================================================
+   DEV NOTE — FIRST VISIT ONLY LOGIC
+   ------------------------------------------------------
+   Remove this block (and the check below) when the site
+   is finalized and you want hints to always show.
+====================================================== */
+const HINT_STORAGE_KEY = "hudHintsPlayed";
+/* ====================================================== */
 
-  const hint = hudHints[index];
-  if (!hint) return;
+function playHudHintsOnce() {
+  let index = 0;
 
-  hint.classList.add("active");
+  function nextHint() {
+    if (index > 0) hudHints[index - 1].classList.remove("active");
+    if (index >= hudHints.length) return;
+
+    hudHints[index].classList.add("active");
+
+    setTimeout(() => {
+      hudHints[index].classList.remove("active");
+      index++;
+      setTimeout(nextHint, 500);
+    }, HINT_DURATION);
+  }
+
+  nextHint();
+}
+
+/* ======================================================
+   DEV NOTE — FIRST VISIT CHECK
+   ------------------------------------------------------
+   Delete the localStorage condition to always play hints
+====================================================== */
+/* window.addEventListener("load", () => {
+  if (localStorage.getItem(HINT_STORAGE_KEY)) return;
 
   setTimeout(() => {
-    hint.classList.remove("active");
-  }, HINT_DURATION - HINT_GAP);
-}
-
-function startHintSequence() {
-  showHint(currentHint);
-
-  setInterval(() => {
-    currentHint = (currentHint + 1) % hudHints.length;
-    showHint(currentHint);
-  }, HINT_DURATION);
-}
-
-/* Auto-fire 2 seconds after page load */
-window.addEventListener("load", () => {
-  setTimeout(startHintSequence, HINT_START_DELAY);
-});
+    playHudHintsOnce();
+    localStorage.setItem(HINT_STORAGE_KEY, "true");
+  }, HINT_START_DELAY);
+}); */
