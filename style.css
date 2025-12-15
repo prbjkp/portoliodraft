@@ -74,10 +74,20 @@ html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; font
   transform-origin: center center;
 }
 
-/* Rotate portrait images */
-.photo.portrait img {
-  transform: rotate(90deg);
+.photo {
+  position: absolute;
+  transform-style: preserve-3d;
 }
+
+/* inner wrapper handles orientation */
+.photo-inner {
+  transform-origin: center center;
+}
+
+.photo.portrait .photo-inner {
+  transform: rotateZ(90deg);
+}
+
 
 
 .photo:hover {
@@ -92,10 +102,7 @@ html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; font
 }
 
 /* PORTRAIT IMAGES */
-.photo.portrait {
-  width: 180px;
-  height: 280px;
-}
+
 
 /* IMAGE ITSELF */
 .photo img {
