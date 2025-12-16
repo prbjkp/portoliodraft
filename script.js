@@ -11,6 +11,10 @@ const centerSphere = document.getElementById("center-sphere");
 const overlay = document.getElementById("overlay");
 const overlayImg = document.getElementById("overlay-img");
 const overlayClose = document.getElementById("overlay-close");
+const pageSphere = document.getElementById("page-sphere");
+const pageAbout = document.getElementById("page-about");
+const pageContact = document.getElementById("page-contact");
+
 
 /**********************************************************
  * TEXT RING CONSTANTS
@@ -236,3 +240,47 @@ console.log("Script is running!");
 console.log("16x9 aspect ratio");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
+
+// NEW ELEMENTS (from the suggested index.html structure)
+
+
+// Function to fetch and cache content (similar to your fetch, but targets specific inner divs)
+async function loadContent(pageId, url) {
+    // ... (Use the fetch logic from the previous comprehensive response)
+    // IMPORTANT: It injects content into #about-content or #contact-content, 
+    // NOT the main page container.
+}
+
+
+function switchPage(targetPageId) {
+    const pages = [pageSphere, pageAbout, pageContact];
+    
+    pages.forEach(page => {
+        const pageId = page.id.replace('page-', '');
+        const isActive = pageId === targetPageId;
+        
+        // This toggles the .active class, which triggers the CSS transition (slide/fade)
+        page.classList.toggle('active', isActive);
+    });
+
+    // Control 3D interaction (stop rotation, disable clicking)
+    if (targetPageId === 'sphere') {
+        sphere.style.pointerEvents = 'auto'; // Re-enable 3D interaction
+        window.isDragging = false; // Reset drag state
+    } else {
+        sphere.style.pointerEvents = 'none'; // Disable 3D interaction
+    }
+
+    // Load content for non-sphere pages if they are the target
+    if (targetPageId === 'about') {
+        loadContent('about', 'about.html');
+    } else if (targetPageId === 'contact') {
+        loadContent('contact', 'contact.html');
+    }
+}
+
+// Add event listener to menu items (after menu is opened)
+// Example:
+// document.getElementById('menu-about-link').addEventListener('click', () => switchPage('about'));
+// document.getElementById('menu-contact-link').addEventListener('click', () => switchPage('contact'));
+// document.getElementById('home-button-on-page').addEventListener('click', () => switchPage('sphere'));
