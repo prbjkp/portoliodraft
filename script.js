@@ -26,7 +26,7 @@ let targetRotX = 0, targetRotY = 0;
 let isDragging = false;
 let lastX = 0, lastY = 0;
 
-const autoRotateSpeed = 0.05;
+const autoRotateSpeed = 0.02;
 
 /**********************************************************
  * SPHERE LAYOUT (PHOTO DISTRIBUTION)
