@@ -37,29 +37,20 @@ const positions = [];
 function computePositions() {
   positions.length = 0;
   const total = photos.length;
-  computePositions();
-console.log("First 3 positions:", positions.slice(0, 3));
 
-// This part positions photos and applies the portrait rotation
-photos.forEach((photo, i) => {
-  const pos = positions[i];
-  if (!pos) return;
+  photos.forEach((_, i) => {
+    const phi = Math.acos(1 - 2 * (i + 0.5) / total);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
 
-  const portraitFix = photo.classList.contains("portrait") ? -90 : 0;
-
-  photo.style.transform = `
-    translate(-50%, -50%)
-    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-    rotateY(${-rotY}deg)
-    rotateX(${-rotX}deg)
-    rotateZ(${portraitFix}deg)
-  `;
-});
+    positions.push({
+      x: sphereRadius * Math.sin(phi) * Math.cos(theta),
+      y: sphereRadius * Math.cos(phi),
+      z: -sphereRadius * Math.sin(phi) * Math.sin(theta)
+    });
+  });
 }
-
 computePositions();
 window.addEventListener("resize", computePositions);
-
 /**********************************************************
  * IMAGE ORIENTATION DETECTION
  **********************************************************/
