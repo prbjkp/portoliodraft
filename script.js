@@ -171,6 +171,8 @@ if (startContainer) {
   });
 }
 
+
+
 /**********************************************************
  * IMAGE ZOOM OVERLAY
  **********************************************************/
@@ -236,3 +238,106 @@ console.log("Script is running!");
 console.log("16x9 aspect ratio");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
+
+/**********************************************************
+ * MENU SYSTEM
+ **********************************************************/
+let currentPage = 'home';
+
+// Open menu when center sphere is clicked
+centerSphere.addEventListener("click", (e) => {
+  e.stopPropagation();
+  dropdownMenu.classList.add("active");
+});
+
+// Close menu
+closeMenuBtn.addEventListener("click", () => {
+  dropdownMenu.classList.remove("active");
+});
+
+// Click outside to close
+window.addEventListener("click", (e) => {
+  if (!e.target.closest('#dropdown-menu') && !e.target.closest('#center-sphere')) {
+    dropdownMenu.classList.remove("active");
+  }
+});
+
+// Menu item clicks
+document.querySelectorAll('.menu-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const page = item.dataset.page;
+    loadPage(page);
+    dropdownMenu.classList.remove("active");
+  });
+});
+
+// Back button
+backButton.addEventListener("click", () => {
+  contentOverlay.classList.remove("active");
+  currentPage = 'home';
+  updateActiveMenuItem();
+});
+
+function loadPage(page) {
+  currentPage = page;
+  updateActiveMenuItem();
+  
+  if (page === 'home') {
+    contentOverlay.classList.remove("active");
+    return;
+  }
+  
+  // Load page content
+  const content = getPageContent(page);
+  contentContainer.innerHTML = content;
+  contentOverlay.classList.add("active");
+}
+
+function updateActiveMenuItem() {
+  document.querySelectorAll('.menu-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.page === currentPage);
+  });
+}
+
+function getPageContent(page) {
+  const contents = {
+    about: `
+      <h1>About Peter Kopp Photography</h1>
+      <p>Welcome to my photography portfolio. I specialize in capturing moments that tell stories through the lens.</p>
+      <h2>My Journey</h2>
+      <p>Photography has been my passion for over a decade. From landscapes to wildlife, portraits to abstract art, I explore various genres to express creativity and emotion.</p>
+      <h2>Philosophy</h2>
+      <p>Every photograph should evoke emotion and tell a story. I believe in capturing authentic moments that resonate with viewers.</p>
+    `,
+    contact: `
+      <h1>Contact Me</h1>
+      <p>I'd love to hear from you! Whether you're interested in prints, collaborations, or just want to say hello, feel free to reach out.</p>
+      <form id="contact-form" style="margin-top: 30px;">
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 500;">Name:</label>
+          <input type="text" name="name" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 500;">Email:</label>
+          <input type="email" name="email" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 500;">Message:</label>
+          <textarea name="message" required rows="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+        </div>
+        <button type="submit" style="padding: 12px 30px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem;">Send Message</button>
+      </form>
+    `
+  };
+  
+  return contents[page] || '<h1>Page Not Found</h1>';
+}
+
+// Form submission handler (for contact page)
+document.addEventListener('submit', (e) => {
+  if (e.target.id === 'contact-form') {
+    e.preventDefault();
+    alert('Thank you for your message! (This is a demo - form not actually submitted)');
+    e.target.reset();
+  }
+});
