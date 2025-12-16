@@ -243,6 +243,6 @@ window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
 console.log("Script is running!");
-console.log("CHANGES APPLIED!");
+console.log("newest update applied");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
