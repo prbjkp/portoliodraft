@@ -86,8 +86,8 @@ function animateSphere() {
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
   // Lock center sphere to camera
-  centerSphere.style.transform =
-    `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
+  // centerSphere.style.transform =
+   // `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
 
   // Camera-locked text ring (self-rotating only)
   textOrbit += 0.01;
