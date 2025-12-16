@@ -3,7 +3,6 @@
  **********************************************************/
 const sphere = document.getElementById("sphere");
 const photos = document.querySelectorAll(".photo");
-const startContainer = document.getElementById("start-container");
 const scene = document.getElementById("scene");
 const textRing = document.getElementById("start-text-ring");
 const textRingSvg = document.getElementById("text-ring-svg");
@@ -11,6 +10,12 @@ const centerSphere = document.getElementById("center-sphere");
 const overlay = document.getElementById("overlay");
 const overlayImg = document.getElementById("overlay-img");
 const overlayClose = document.getElementById("overlay-close");
+const dropdownMenu = document.getElementById("dropdown-menu");
+const closeMenuBtn = document.getElementById("close-menu");
+const contentOverlay = document.getElementById("content-overlay");
+const contentContainer = document.getElementById("content-container");
+const backButton = document.getElementById("back-button");
+
 
 /**********************************************************
  * TEXT RING CONSTANTS
