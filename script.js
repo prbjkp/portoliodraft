@@ -299,20 +299,27 @@ function getPageContent(page) {
     contact: `
       <h1>Contact Me</h1>
       <p>I'd love to hear from you! Whether you're interested in prints, collaborations, or just want to say hello, feel free to reach out.</p>
-      <form id="contact-form" style="margin-top: 30px;">
+      
+      <form id="contact-form" action="https://formspree.io/f/mgvkgkny" method="POST" style="margin-top: 30px;">
+        
         <div style="margin-bottom: 20px;">
           <label style="display: block; margin-bottom: 8px; font-weight: 500;">Name:</label>
           <input type="text" name="name" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
         </div>
+        
         <div style="margin-bottom: 20px;">
           <label style="display: block; margin-bottom: 8px; font-weight: 500;">Email:</label>
           <input type="email" name="email" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
         </div>
+        
         <div style="margin-bottom: 20px;">
           <label style="display: block; margin-bottom: 8px; font-weight: 500;">Message:</label>
           <textarea name="message" required rows="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
         </div>
+        
         <button type="submit" style="padding: 12px 30px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem;">Send Message</button>
+        
+        <p id="my-form-status" style="margin-top: 15px; font-weight: bold;"></p>
       </form>
     `
   };
@@ -321,10 +328,43 @@ function getPageContent(page) {
 }
 
 // Form submission handler (for contact page)
+// Form submission handler (Dynamic Event Delegation)
 document.addEventListener('submit', (e) => {
+  // Check if the submitted form is our contact form
   if (e.target.id === 'contact-form') {
     e.preventDefault();
-    alert('Thank you for your message! (This is a demo - form not actually submitted)');
-    e.target.reset();
+    
+    const form = e.target;
+    const status = document.getElementById("my-form-status");
+    const data = new FormData(form);
+
+    // Show loading state (optional)
+    status.innerHTML = "Sending...";
+
+    fetch(form.action, {
+      method: form.method,
+      body: data,
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        status.innerHTML = "Thanks for your submission!";
+        status.style.color = "green"; // Optional styling
+        form.reset();
+      } else {
+        response.json().then(data => {
+          if (Object.hasOwn(data, 'errors')) {
+            status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+          } else {
+            status.innerHTML = "Oops! There was a problem submitting your form";
+          }
+          status.style.color = "red"; // Optional styling
+        });
+      }
+    }).catch(error => {
+      status.innerHTML = "Oops! There was a problem submitting your form";
+      status.style.color = "red";
+    });
   }
 });
