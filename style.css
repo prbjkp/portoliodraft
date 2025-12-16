@@ -175,6 +175,7 @@ html, body {
 .photo.portrait { 
   width: 170px; 
   height: 260px; 
+  object-fit: cover;
 }
 
 /* --- Image Tag Styling --- */
