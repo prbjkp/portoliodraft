@@ -39,6 +39,7 @@ function computePositions() {
   const total = photos.length;
 
   photos.forEach((_, i) => {
+    // Fibonacci Sphere layout algorithm
     const phi = Math.acos(1 - 2 * (i + 0.5) / total);
     const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
 
@@ -51,11 +52,13 @@ function computePositions() {
 }
 computePositions();
 window.addEventListener("resize", computePositions);
+
 /**********************************************************
  * IMAGE ORIENTATION DETECTION
  **********************************************************/
 photos.forEach(photo => {
   const img = photo.querySelector("img");
+  // Check if image is already loaded or wait for load event
   if (img.complete) applyOrientation(photo, img);
   else img.addEventListener("load", () => applyOrientation(photo, img));
 });
@@ -65,7 +68,7 @@ function applyOrientation(photo, img) {
 }
 
 /**********************************************************
- * ANIMATION LOOP
+ * ANIMATION LOOP (FIXED)
  **********************************************************/
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
@@ -88,11 +91,12 @@ function animateSphere() {
     rotateZ(${textOrbit}deg)
   `;
 
-  // Position photos
+  // Position photos - SINGLE, CORRECT LOOP
   photos.forEach((photo, i) => {
     const pos = positions[i];
     if (!pos) return;
 
+    // Use 90 degrees rotation for portrait images (or adjust to -90 if needed)
     const portraitFix = photo.classList.contains("portrait") ? 90 : 0;
 
     photo.style.transform = `
@@ -102,56 +106,18 @@ function animateSphere() {
       rotateX(${-rotX}deg)
       rotateZ(${portraitFix}deg)
     `;
-  });
 
-  requestAnimationFrame(animateSphere);
-}
-  // Position photos
-photos.forEach((photo, i) => {
-  const pos = positions[i];
-  if (!pos) return;
-
-  const portraitFix = photo.classList.contains("portrait") ? 90 : 0;  // Changed from -90 to 90
-
-  photo.style.transform = `
-    translate(-50%, -50%)
-    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-    rotateY(${-rotY}deg)
-    rotateX(${-rotX}deg)
-    rotateZ(${portraitFix}deg)
-  `;
-});
-    
-    // DEBUG: Log first photo's transform once
+    // DEBUG: Log first photo's transform once - 'i' is correctly scoped here
     if (i === 0 && !window.firstPhotoLogged) {
       console.log("First photo transform:", photo.style.transform);
       window.firstPhotoLogged = true;
     }
-  ;
-
-  requestAnimationFrame(animateSphere);
-
-
-  // Position photos
-  photos.forEach((photo, i) => {
-    const pos = positions[i];
-    if (!pos) return;
-
-    const portraitFix = photo.classList.contains("portrait") ? -90 : 0;
-
-    photo.style.transform = `
-      translate(-50%, -50%)
-      translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-      rotateY(${-rotY}deg)
-      rotateX(${-rotX}deg)
-      rotateZ(${portraitFix}deg)
-    `;
   });
 
   requestAnimationFrame(animateSphere);
+}
 
-
-animateSphere();
+animateSphere(); // Start the animation loop
 
 /**********************************************************
  * DRAG CONTROLS
@@ -185,6 +151,14 @@ document.body.style.userSelect = "none";
 /**********************************************************
  * START SCREEN
  **********************************************************/
+// Added playHudHintsOnce function definition, which was missing but referenced
+function playHudHintsOnce() {
+  if (!window.hudHintsPlayed) {
+    playHudHints();
+    window.hudHintsPlayed = true;
+  }
+}
+
 if (startContainer) {
   startContainer.addEventListener("click", () => {
     textRing.style.opacity = "0";
@@ -253,7 +227,9 @@ function playHudHints() {
 window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
+
+// Final console logs
 console.log("Script is running!");
-console.log("newest update applied");
+console.log("newest update applied (error fixed)");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
