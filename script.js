@@ -230,6 +230,6 @@ window.addEventListener("load", () => {
 
 // Final console logs
 console.log("Script is running!");
-console.log("newest update applied (error fixed)");
+console.log("even more newest update applied (error fixed)");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
