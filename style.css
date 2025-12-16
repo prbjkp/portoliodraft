@@ -80,52 +80,44 @@ html, body {
 }
 
 /* ==================================================
-   HUD HINTS (TEXT ONLY)
+   HUD HINTS (FIXED VERSION)
 ================================================== */
 #hud-hints {
-  position: absolute;
-  top: calc(50% + 100px); /* farther below center sphere */
+  position: fixed;
+  top: calc(50% + 120px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 60;
   pointer-events: none;
-   width: auto;  /* increased for long hints */
   text-align: center;
-  font-size: 14px;
-  line-height: 1.4;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: black;
 }
 
 .hud-hint {
   position: absolute;
   left: 50%;
-  transform: translate(-50%, 16px);
+  top: 0;
+  transform: translate(-50%, 0);
   opacity: 0;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.6s ease;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: black;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px 24px;
+  border-radius: 4px;
 }
 
 .hud-hint.active {
   opacity: 1;
-  transform: translate(-50%, 0);
 }
 
 /* Dim the images behind HUD when a hint is active */
-#scene.dimmed,
-#sphere.dimmed {
+#scene.dimmed {
   filter: brightness(40%);
   transition: filter 0.4s ease;
-}
-
-/* Optional: subtle white background behind text */
-#hud-hints::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 0;
-  z-index: -1; /* behind text */
 }
 
 /* ==================================================
