@@ -89,7 +89,7 @@ html, body {
   transform: translateX(-50%);
   z-index: 60;
   pointer-events: none;
-  max-width: 1000px;  /* increased for long hints */
+   width: auto;  /* increased for long hints */
   text-align: center;
   font-size: 14px;
   line-height: 1.4;
