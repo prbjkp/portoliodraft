@@ -331,3 +331,14 @@ html, body {
   pointer-events: none;
   z-index: 1;
 }
+
+/* Add specific styling for your new gallery page layout */
+#gallery-content {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+/* You would add specific styles for your gallery images/grid here */
+/* #gallery-content img { ... } */

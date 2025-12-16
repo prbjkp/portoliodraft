@@ -279,6 +279,60 @@ function switchPage(targetPageId) {
     }
 }
 
+// In script.js:
+
+// ... existing code ...
+
+menuItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        const target = e.target.getAttribute('data-target'); // target is now 'gallery'
+        toggleMenu(); // Close the menu
+        
+        // Delay the page switch slightly so the menu close animation starts first
+        setTimeout(() => switchPage(target), 200); 
+    });
+});
+
+// In script.js:
+
+// --- NEW ELEMENTS (Ensure you query the new page) ---
+const pageGallery = document.getElementById("page-gallery");
+// ... existing elements (pageSphere, pageAbout, pageContact) ...
+
+function switchPage(targetPageId) {
+    // 🛑 IMPORTANT: Add the new page element here!
+    const pages = [pageSphere, pageGallery, pageAbout, pageContact];
+    
+    pages.forEach(page => {
+        const pageId = page.id.replace('page-', '');
+        const isActive = pageId === targetPageId;
+        
+        page.classList.toggle('active', isActive);
+    });
+
+    // Control 3D interaction (stop rotation, disable clicking)
+    if (targetPageId === 'sphere') {
+        sphere.style.pointerEvents = 'auto'; 
+        window.isDragging = false; 
+    } else {
+        sphere.style.pointerEvents = 'none'; 
+    }
+
+    // Add content loading logic for the new page
+    if (targetPageId === 'gallery') {
+        // If your gallery is a large external file, use loadContent:
+        // loadContent('gallery', 'gallery.html'); 
+        
+        // If your gallery content is small and already in index.html, 
+        // you don't need the loadContent call.
+        
+    } else if (targetPageId === 'about') {
+        loadContent('about', 'about.html');
+    } else if (targetPageId === 'contact') {
+        loadContent('contact', 'contact.html');
+    }
+}
+// ... existing code ...
 // Add event listener to menu items (after menu is opened)
 // Example:
 // document.getElementById('menu-about-link').addEventListener('click', () => switchPage('about'));
