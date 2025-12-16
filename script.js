@@ -73,58 +73,40 @@ function applyOrientation(photo, img) {
   photo.classList.toggle("portrait", img.naturalHeight > img.naturalWidth);
 }
 
-/**********************************************************
- * ANIMATION LOOP
- **********************************************************/
 function animateSphere() {
+  // 1. Calculate Rotation (Auto-spin or Drag)
   if (!isDragging) targetRotY += autoRotateSpeed;
 
   rotX += (targetRotX - rotX) * 0.1;
   rotY += (targetRotY - rotY) * 0.1;
 
-  // Rotate photo sphere
+  // 2. Rotate the Main Sphere Container
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-  // Lock center sphere to camera
-  // centerSphere.style.transform =
-   // `translate(-50%, -50%) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
-
-  // Camera-locked text ring (self-rotating only)
+  // 3. Animate the Text Ring (Start Screen)
   textOrbit += 0.01;
   textRing.style.transform = `translate(-50%, -50%)`;
-  textRingSvg.style.transform = `
-    translateZ(${TEXT_RING_DISTANCE}px)
-    rotateZ(${textOrbit}deg)
-  `;
+  // If your textRingSvg variable is defined, this spins it:
+  if (typeof textRingSvg !== 'undefined') {
+      textRingSvg.style.transform = `translateZ(${TEXT_RING_DISTANCE}px) rotateZ(${textOrbit}deg)`;
+  }
 
-  // Position photos
+  // 4. Position and Face the Photos
   photos.forEach((photo, i) => {
     const pos = positions[i];
     if (!pos) return;
-
-    // *** FINAL FIX: Set rotation to 0 ***
-    // Your CSS now handles the vertical shape. 
-    // Any rotation here will knock the tall image onto its side.
-    const portraitFix = 0;
 
     photo.style.transform = `
       translate(-50%, -50%)
       translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
       rotateY(${-rotY}deg)
       rotateX(${-rotX}deg)
-      rotateZ(${portraitFix}deg)
     `;
-
-    // DEBUG: Log first photo's transform once
-    if (i === 0 && !window.firstPhotoLogged) {
-      console.log("First photo transform (Fix: 0 deg):", photo.style.transform);
-      window.firstPhotoLogged = true;
-    }
   });
 
+  // 5. Loop
   requestAnimationFrame(animateSphere);
 }
-
 /**********************************************************
  * DRAG CONTROLS
  **********************************************************/
