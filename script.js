@@ -68,7 +68,7 @@ function applyOrientation(photo, img) {
 }
 
 /**********************************************************
- * ANIMATION LOOP (FIXED)
+ * ANIMATION LOOP
  **********************************************************/
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
@@ -91,13 +91,15 @@ function animateSphere() {
     rotateZ(${textOrbit}deg)
   `;
 
-  // Position photos - SINGLE, CORRECT LOOP
+  // Position photos - FIX APPLIED HERE
   photos.forEach((photo, i) => {
     const pos = positions[i];
     if (!pos) return;
 
-    // Use 90 degrees rotation for portrait images (or adjust to -90 if needed)
-    const portraitFix = photo.classList.contains("portrait") ? 90 : 0;
+    // *** FIX: If it is a portrait image, set rotation to 0. Otherwise, set to 0. ***
+    // We are deliberately setting both to 0 to test if the original image
+    // orientation is enough, without forcing a 90-degree Z-rotation.
+    const portraitFix = 0; 
 
     photo.style.transform = `
       translate(-50%, -50%)
@@ -107,18 +109,15 @@ function animateSphere() {
       rotateZ(${portraitFix}deg)
     `;
 
-    // DEBUG: Log first photo's transform once - 'i' is correctly scoped here
+    // DEBUG: Log first photo's transform once
     if (i === 0 && !window.firstPhotoLogged) {
-      console.log("First photo transform:", photo.style.transform);
+      console.log("First photo transform (Adjusted):", photo.style.transform);
       window.firstPhotoLogged = true;
     }
   });
 
   requestAnimationFrame(animateSphere);
 }
-
-animateSphere(); // Start the animation loop
-
 /**********************************************************
  * DRAG CONTROLS
  **********************************************************/
