@@ -292,7 +292,7 @@ function getPageContent(page) {
       <h1>About Peter Kopp Photography</h1>
       <p>Welcome to my photography portfolio. I specialize in capturing moments that tell stories through the lens.</p>
       <h2>My Journey</h2>
-      <p>Photography has been my passion for over a decade. From landscapes to wildlife, portraits to abstract art, I explore various genres to express creativity and emotion.</p>
+      <p>Photography has been my passion for over 5 years. From landscapes to wildlife, portraits to cars and motorsport, I explore various genres to express creativity and emotion.</p>
       <h2>Philosophy</h2>
       <p>Every photograph should evoke emotion and tell a story. I believe in capturing authentic moments that resonate with viewers.</p>
     `,
