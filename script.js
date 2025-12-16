@@ -64,6 +64,7 @@ photos.forEach(photo => {
 });
 
 function applyOrientation(photo, img) {
+  // If height > width, add portrait class
   photo.classList.toggle("portrait", img.naturalHeight > img.naturalWidth);
 }
 
@@ -96,8 +97,10 @@ function animateSphere() {
     const pos = positions[i];
     if (!pos) return;
 
-    // *** REVISED FIX: Try +90 degrees for portrait images. ***
-    const portraitFix = photo.classList.contains("portrait") ? 90 : 0;
+    // *** FINAL FIX: Set rotation to 0 ***
+    // Your CSS now handles the vertical shape. 
+    // Any rotation here will knock the tall image onto its side.
+    const portraitFix = 0;
 
     photo.style.transform = `
       translate(-50%, -50%)
@@ -109,7 +112,7 @@ function animateSphere() {
 
     // DEBUG: Log first photo's transform once
     if (i === 0 && !window.firstPhotoLogged) {
-      console.log("First photo transform (Portrait Fix Attempt +90):", photo.style.transform);
+      console.log("First photo transform (Fix: 0 deg):", photo.style.transform);
       window.firstPhotoLogged = true;
     }
   });
@@ -149,7 +152,6 @@ document.body.style.userSelect = "none";
 /**********************************************************
  * START SCREEN
  **********************************************************/
-// Added playHudHintsOnce function definition, which was missing but referenced
 function playHudHintsOnce() {
   if (!window.hudHintsPlayed) {
     playHudHints();
@@ -231,6 +233,6 @@ animateSphere();
 
 // Final console logs
 console.log("Script is running!");
-console.log("fixxxed (Final JS structure, testing +90 deg)");
+console.log("Final fix: 0 degrees rotation applied");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);

@@ -170,7 +170,8 @@ html, body {
   width: 200px; 
   height: 130px; 
 }
-/* Defines the frame size for a portrait photo (SWAPPED DIMENSIONS) */
+/* Defines the frame size for a portrait photo */
+/* SWAPPED DIMENSIONS: Tall and Thin */
 .photo.portrait { 
   width: 130px; 
   height: 200px; 
