@@ -68,7 +68,7 @@ function applyOrientation(photo, img) {
 }
 
 /**********************************************************
- * ANIMATION LOOP (FIX APPLIED FOR VERTICAL PORTRAITS)
+ * ANIMATION LOOP
  **********************************************************/
 function animateSphere() {
   if (!isDragging) targetRotY += autoRotateSpeed;
@@ -96,10 +96,8 @@ function animateSphere() {
     const pos = positions[i];
     if (!pos) return;
 
-    // *** FIX: Use -90 degrees for portrait to achieve vertical orientation. ***
-    // This assumes the core CSS/transform expects a horizontal alignment.
-    // Setting it to -90 effectively cancels the 90 degree tilt and keeps it vertical.
-    const portraitFix = photo.classList.contains("portrait") ? -90 : 0;
+    // *** REVISED FIX: Try +90 degrees for portrait images. ***
+    const portraitFix = photo.classList.contains("portrait") ? 90 : 0;
 
     photo.style.transform = `
       translate(-50%, -50%)
@@ -111,13 +109,14 @@ function animateSphere() {
 
     // DEBUG: Log first photo's transform once
     if (i === 0 && !window.firstPhotoLogged) {
-      console.log("First photo transform (Portrait Fix Attempt 2):", photo.style.transform);
+      console.log("First photo transform (Portrait Fix Attempt +90):", photo.style.transform);
       window.firstPhotoLogged = true;
     }
   });
 
   requestAnimationFrame(animateSphere);
 }
+
 /**********************************************************
  * DRAG CONTROLS
  **********************************************************/
@@ -227,8 +226,11 @@ window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
 
+// Start the animation loop
+animateSphere();
+
 // Final console logs
 console.log("Script is running!");
-console.log("fixxxed");
+console.log("fixxxed (Final JS structure, testing +90 deg)");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
