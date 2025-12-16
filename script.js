@@ -236,3 +236,152 @@ console.log("Script is running!");
 console.log("16x9 aspect ratio");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
+
+
+
+
+
+
+
+
+//**********************************************************
+//* PAGE CHANGE CODE
+//**********************************************************
+// ==========================================================
+// CORE ELEMENTS FOR PAGE SWITCHING (must match index.html IDs)
+// ==========================================================
+const mainMenu = document.getElementById("main-menu");
+const menuItems = document.querySelectorAll(".menu-item");
+// Query ALL page containers
+const pageSphere = document.getElementById("page-sphere");
+const pageAbout = document.getElementById("page-about");
+const pageContact = document.getElementById("page-contact");
+const pageGallery = document.getElementById("page-gallery"); // NEW PAGE
+const homeButtons = document.querySelectorAll(".home-button");
+
+// Helper to keep track of the current page's content state (optional but good practice)
+const contentCache = {}; 
+
+// ==========================================================
+// A) CONTENT LOADING (Adapted from your fetch logic)
+// ==========================================================
+// This replaces your old loadPage() function's fetch part.
+async function loadContent(pageId, url) {
+    // Check cache first
+    if (contentCache[pageId]) {
+        document.getElementById(`${pageId}-content`).innerHTML = contentCache[pageId];
+        return;
+    }
+    
+    try {
+        const response = await fetch(url);
+        const html = await response.text();
+        
+        // Use DOMParser to safely extract only the body content
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const content = doc.body.innerHTML; 
+
+        const targetDiv = document.getElementById(`${pageId}-content`);
+        targetDiv.innerHTML = content;
+        contentCache[pageId] = content;
+        
+        // If you need to observe fade-ins on the new page, call it here:
+        // observeFadeIns(); 
+        
+    } catch (error) {
+        console.error(`Could not load ${url}:`, error);
+        document.getElementById(`${pageId}-content`).innerHTML = `<p>Failed to load content.</p>`;
+    }
+}
+
+
+// ==========================================================
+// B) PAGE SWITCHING FUNCTION (The key to the slide effect)
+// ==========================================================
+function switchPage(targetPageId) {
+    // 1. Define all available pages
+    const pages = [pageSphere, pageAbout, pageContact, pageGallery]; 
+    
+    // 2. Hide/Show containers using the .active CSS class
+    pages.forEach(page => {
+        if (!page) return; // Safely ignore pages not found
+        const pageName = page.id.replace('page-', '');
+        const isActive = pageName === targetPageId;
+        
+        page.classList.toggle('active', isActive);
+    });
+
+    // 3. Handle 3D Sphere interaction
+    if (targetPageId === 'sphere') {
+        sphere.style.pointerEvents = 'auto'; 
+        window.menuOpen = false; // Resume auto-rotation
+    } else {
+        sphere.style.pointerEvents = 'none'; 
+        window.menuOpen = true; // Stop auto-rotation when on content pages
+        
+        // 4. Load content dynamically for the target page
+        if (targetPageId === 'about') {
+            loadContent('about', 'about.html');
+        } else if (targetPageId === 'contact') {
+            loadContent('contact', 'contact.html');
+        } else if (targetPageId === 'gallery') {
+            // Assume you have a gallery.html file to load
+            loadContent('gallery', 'gallery.html'); 
+        }
+    }
+}
+
+// ==========================================================
+// C) MENU & BUTTON HANDLERS
+// ==========================================================
+
+function toggleMenu() {
+    mainMenu.classList.toggle('open');
+    // Stop the 3D rotation while the menu is open (assuming animateSphere uses window.menuOpen)
+    window.menuOpen = mainMenu.classList.contains('open'); 
+}
+
+// 1. Center Sphere Button
+if (centerSphere) {
+    centerSphere.addEventListener('click', toggleMenu);
+}
+
+// 2. Menu Item Navigation
+menuItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        const target = e.target.getAttribute('data-target');
+        toggleMenu(); // Close the menu
+        
+        // Delay page switch to allow the menu to animate closed first
+        setTimeout(() => switchPage(target), 200); 
+    });
+});
+
+// 3. Home Buttons on content pages
+homeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        switchPage('sphere'); // Always return to the sphere page
+    });
+});
+
+// 4. Initialize to the sphere page on load
+window.addEventListener("load", () => {
+    switchPage('sphere');
+});
+
+
+// ==========================================================
+// D) MODIFICATION TO YOUR EXISTING ANIMATION LOOP
+// ==========================================================
+// You MUST update your existing animateSphere function to check a global flag:
+/*
+function animateSphere() {
+  // Check the new flag to stop rotation when menu or a content page is open
+  if (!isDragging && !window.menuOpen) targetRotY += autoRotateSpeed; 
+
+  // ... rest of your rotation logic ...
+
+  requestAnimationFrame(animateSphere);
+}
+*/
