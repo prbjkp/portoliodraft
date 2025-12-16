@@ -15,7 +15,7 @@ const closeMenuBtn = document.getElementById("close-menu");
 const contentOverlay = document.getElementById("content-overlay");
 const contentContainer = document.getElementById("content-container");
 const backButton = document.getElementById("back-button");
-
+const startContainer = document.getElementById("start-container");
 
 /**********************************************************
  * TEXT RING CONSTANTS
