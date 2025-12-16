@@ -233,6 +233,6 @@ animateSphere();
 
 // Final console logs
 console.log("Script is running!");
-console.log("Final fix: 0 degrees rotation applied");
+console.log("16x9 aspect ratio");
 console.log("Number of photos:", photos.length);
 console.log("Sphere radius:", sphereRadius);
