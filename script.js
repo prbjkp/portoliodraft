@@ -75,13 +75,6 @@ function animateSphere() {
 
   // Rotate photo sphere
   sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-  
-  // DEBUG: Log once
-  if (!window.debugLogged) {
-    console.log("rotX:", rotX, "rotY:", rotY);
-    console.log("First photo element:", photos[0]);
-    window.debugLogged = true;
-  }
 
   // Lock center sphere to camera
   centerSphere.style.transform =
@@ -95,6 +88,24 @@ function animateSphere() {
     rotateZ(${textOrbit}deg)
   `;
 
+  // Position photos
+  photos.forEach((photo, i) => {
+    const pos = positions[i];
+    if (!pos) return;
+
+    const portraitFix = photo.classList.contains("portrait") ? 90 : 0;
+
+    photo.style.transform = `
+      translate(-50%, -50%)
+      translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+      rotateY(${-rotY}deg)
+      rotateX(${-rotX}deg)
+      rotateZ(${portraitFix}deg)
+    `;
+  });
+
+  requestAnimationFrame(animateSphere);
+}
   // Position photos
 photos.forEach((photo, i) => {
   const pos = positions[i];
@@ -116,7 +127,7 @@ photos.forEach((photo, i) => {
       console.log("First photo transform:", photo.style.transform);
       window.firstPhotoLogged = true;
     }
-  };
+  ;
 
   requestAnimationFrame(animateSphere);
 
