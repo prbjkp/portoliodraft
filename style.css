@@ -138,7 +138,7 @@ html, body {
 #scene {
   position: absolute;
   inset: 0;
-  perspective: 1400px;
+  perspective: 1800px;
   display: flex;
   justify-content: center;
   align-items: center;

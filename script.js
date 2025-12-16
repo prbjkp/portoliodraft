@@ -31,7 +31,7 @@ const autoRotateSpeed = 0.02;
 /**********************************************************
  * SPHERE LAYOUT (PHOTO DISTRIBUTION)
  **********************************************************/
-const sphereRadius = 1200;
+const sphereRadius = 1800;
 const positions = [];
 
 function computePositions() {
@@ -96,29 +96,30 @@ function animateSphere() {
   `;
 
   // Position photos
-  photos.forEach((photo, i) => {
-    const pos = positions[i];
-    if (!pos) return;
+photos.forEach((photo, i) => {
+  const pos = positions[i];
+  if (!pos) return;
 
-    const portraitFix = photo.classList.contains("portrait") ? -90 : 0;
+  const portraitFix = photo.classList.contains("portrait") ? 90 : 0;  // Changed from -90 to 90
 
-    photo.style.transform = `
-      translate(-50%, -50%)
-      translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
-      rotateY(${-rotY}deg)
-      rotateX(${-rotX}deg)
-      rotateZ(${portraitFix}deg)
-    `;
+  photo.style.transform = `
+    translate(-50%, -50%)
+    translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px)
+    rotateY(${-rotY}deg)
+    rotateX(${-rotX}deg)
+    rotateZ(${portraitFix}deg)
+  `;
+});
     
     // DEBUG: Log first photo's transform once
     if (i === 0 && !window.firstPhotoLogged) {
       console.log("First photo transform:", photo.style.transform);
       window.firstPhotoLogged = true;
     }
-  });
+  };
 
   requestAnimationFrame(animateSphere);
-}
+
 
   // Position photos
   photos.forEach((photo, i) => {
