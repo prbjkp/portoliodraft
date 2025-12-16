@@ -153,7 +153,6 @@ html, body {
   transform-style: preserve-3d;
   cursor: grab;
 }
-
 #sphere:active {
   cursor: grabbing;
 }
