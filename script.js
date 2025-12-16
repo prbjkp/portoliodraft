@@ -31,7 +31,7 @@ const autoRotateSpeed = 0.02;
 /**********************************************************
  * SPHERE LAYOUT (PHOTO DISTRIBUTION)
  **********************************************************/
-const sphereRadius = 1800;
+const sphereRadius = 1200;
 const positions = [];
 
 function computePositions() {
@@ -216,3 +216,6 @@ function playHudHints() {
 window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
+console.log("Script is running!");
+console.log("Number of photos:", photos.length);
+console.log("Sphere radius:", sphereRadius);
