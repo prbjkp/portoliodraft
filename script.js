@@ -31,7 +31,7 @@ const autoRotateSpeed = 0.02;
 /**********************************************************
  * SPHERE LAYOUT (PHOTO DISTRIBUTION)
  **********************************************************/
-const sphereRadius = 2000;
+const sphereRadius = 2200;
 const positions = [];
 
 function computePositions() {
