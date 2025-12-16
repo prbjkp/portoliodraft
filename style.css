@@ -365,78 +365,99 @@ html, body {
   background: rgba(255, 255, 255, 1);
 }
 /* ==================================================
-   DROPDOWN MENU
+   DROPDOWN MENU (CURTAIN STYLE)
 ================================================== */
 #dropdown-menu {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.95);
-  border: 2px solid #333;
-  border-radius: 12px;
-  padding: 20px;
-  min-width: 200px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Covers entire screen */
+  background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 100%);
+  backdrop-filter: blur(5px); /* Adds a nice blur to the background photos */
   z-index: 200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
+  
+  /* Flexbox to center the list items */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px; /* Space between buttons */
+
+  /* ANIMATION SETTINGS */
+  transform: translateY(-100%); /* Hidden above the screen */
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth 'swipe' easing */
+  pointer-events: none; /* Let clicks pass through when hidden */
 }
 
 #dropdown-menu.active {
-  opacity: 1;
+  transform: translateY(0%); /* Slide down to cover screen */
   pointer-events: auto;
 }
 
+/* Optional: Hide the "Menu" title for a cleaner look */
 #dropdown-menu h3 {
-  margin: 0 0 15px 0;
-  font-size: 1.2rem;
-  text-align: center;
-  color: #333;
+  display: none; 
 }
 
+/* New Menu Item Styling (Big and Clean) */
 .menu-item {
-  padding: 12px 20px;
-  margin: 5px 0;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 15px 40px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.5rem; /* Larger text */
+  letter-spacing: 2px;
+  text-transform: uppercase;
   cursor: pointer;
+  transition: all 0.3s ease;
+  width: 200px;
   text-align: center;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  opacity: 0; /* Hidden initially for stagger effect */
+  transform: translateY(20px);
 }
+
+/* Stagger animation when menu opens */
+#dropdown-menu.active .menu-item {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
+}
+
+/* Add slight delay to subsequent items */
+#dropdown-menu.active .menu-item:nth-child(3) { transition-delay: 0.2s; }
+#dropdown-menu.active .menu-item:nth-child(4) { transition-delay: 0.3s; }
+#dropdown-menu.active .menu-item:nth-child(5) { transition-delay: 0.4s; }
 
 .menu-item:hover {
-  background: #e0e0e0;
-  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+  letter-spacing: 4px; /* Spreads out on hover */
 }
 
 .menu-item.active {
-  background: #333;
-  color: white;
-}
-
-#close-menu {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #666;
-  line-height: 1;
-  padding: 0;
-  width: 25px;
-  height: 25px;
-}
-
-#close-menu:hover {
+  background: #fff;
   color: #000;
 }
 
+/* The Close 'X' Button */
+#close-menu {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.3s ease, transform 0.3s ease;
+  padding: 10px;
+}
+
+#close-menu:hover {
+  color: #fff;
+  transform: rotate(90deg); /* Spins when hovered */
+}
 /* ==================================================
    CONTENT OVERLAY
 ================================================== */
