@@ -176,6 +176,7 @@ html, body {
   object-fit: contain;
 }
 
+
 .photo img:hover {
   transform: scale(1.05);
 }
