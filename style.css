@@ -258,6 +258,7 @@ html, body {
   cursor: pointer;
   z-index: 100;
   transition: transform 0.2s ease;
+  display: block; /* Ensure it's always visible by default */
 }
 
 #center-sphere:hover {
@@ -525,15 +526,22 @@ html, body {
     display: none !important;
   }
 
-  /* Position menu button at bottom center - KEEP IT VISIBLE */
+  /* Position menu button at bottom center - FORCE IT TO SHOW */
   #center-sphere {
-    display: block !important; /* Force display on mobile */
+    display: block !important;
+    visibility: visible !important;
     position: fixed !important;
     top: auto !important;
     bottom: 30px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    z-index: 100 !important;
+    z-index: 1000 !important; /* Higher z-index to be above everything */
+    pointer-events: auto !important;
+  }
+  
+  /* Override hover transform for mobile */
+  #center-sphere:hover {
+    transform: translateX(-50%) scale(1.1) !important;
   }
 
   /* Show hints above menu sphere on mobile */
