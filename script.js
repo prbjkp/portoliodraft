@@ -509,3 +509,102 @@ if (isMobile) {
   mobileContainer.addEventListener("touchstart", stopAutoScroll);
   mobileContainer.addEventListener("wheel", stopAutoScroll);
   mobileContainer.addEventListener("mousedown", stopAutoScroll);
+  /* ==================================================
+   MOBILE vs DESKTOP SWITCHER (Fixed Scope)
+================================================== */
+if (isMobile) {
+  console.log("Mobile mode: Active");
+
+  // 1. Get Container and Clear it
+  const mobileContainer = document.getElementById('mobile-gallery');
+  mobileContainer.innerHTML = ''; 
+
+  // 2. Clone images
+  photos.forEach(photoDiv => {
+    const originalImg = photoDiv.querySelector('img');
+    if (originalImg) {
+      const newImg = originalImg.cloneNode(true);
+      
+      // Click to zoom
+      newImg.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        overlayImg.src = newImg.src;
+        overlay.style.display = "flex";
+        overlay.style.pointerEvents = "auto";
+        requestAnimationFrame(() => overlay.style.opacity = "1");
+      });
+
+      mobileContainer.appendChild(newImg);
+    }
+  });
+
+  // 3. Setup Hints
+  const hudHintsContainer = document.getElementById('hud-hints');
+  if (hudHintsContainer) {
+      hudHintsContainer.style.display = 'block';
+      hudHintsContainer.style.pointerEvents = 'none'; 
+      
+      const hints = document.querySelectorAll('.hud-hint');
+      if (hints.length >= 3) {
+          hints[0].textContent = "Auto-scrolling...";
+          hints[1].textContent = "Touch to control";
+          hints[2].textContent = "Menu at bottom";
+      }
+  }
+
+  // ==================================================
+  // AUTO-SCROLL ENGINE (Scoped Correctly)
+  // ==================================================
+  let autoScrollActive = true;
+  let scrollSpeed = 1; // Speed: Higher is faster
+
+  function startAutoScroll() {
+      
+      function loop() {
+          // If user touched screen, stop loop
+          if (!autoScrollActive) return;
+
+          // Scroll down
+          if (mobileContainer) {
+              mobileContainer.scrollTop += scrollSpeed;
+
+              // INFINITE ROTATION: If we reach bottom, jump to top
+              if (mobileContainer.scrollTop + mobileContainer.clientHeight >= mobileContainer.scrollHeight - 5) {
+                  mobileContainer.scrollTop = 0;
+              }
+          }
+          
+          requestAnimationFrame(loop);
+      }
+      
+      // Start the loop
+      requestAnimationFrame(loop);
+  }
+
+  // Start after small delay
+  setTimeout(startAutoScroll, 1000);
+
+  // ==================================================
+  // STOP ON INTERACTION
+  // ==================================================
+  function stopScrolling() {
+      if (autoScrollActive) {
+          autoScrollActive = false;
+          console.log("User took control.");
+          const hints = document.querySelectorAll('.hud-hint');
+          if (hints.length > 0) hints[0].textContent = "Scroll to explore";
+      }
+  }
+
+  mobileContainer.addEventListener("touchstart", stopScrolling, { passive: true });
+  mobileContainer.addEventListener("wheel", stopScrolling, { passive: true });
+  mobileContainer.addEventListener("mousedown", stopScrolling);
+
+} else {
+  // DESKTOP MODE
+  console.log("Desktop mode: Starting 3D sphere");
+  animateSphere();
+}
+
+// Final Check
+console.log("Script loaded. Mobile mode:", isMobile);

@@ -503,18 +503,15 @@ html, body {
   background: #555;
 }
 
-/* ==================================================
-   MOBILE VIEW & SCROLLING (CLEAN VERSION)
-================================================== */
 
-/* 1. Base State (Hidden on Desktop) */
+/* ==================================================
+   MOBILE VIEW & SCROLLING (CLEAN SINGLE VERSION)
+================================================== */
 #mobile-gallery {
     display: none;
 }
 
-/* 2. Mobile State (Active on Phones) */
 @media (max-width: 768px) {
-    
     /* HIDE THE 3D SCENE */
     #sphere, #scene, #start-text-ring {
         display: none !important;
@@ -523,25 +520,23 @@ html, body {
     /* SHOW THE GALLERY CONTAINER */
     #mobile-gallery {
         display: block !important;
-        position: fixed !important; /* Locks container to the screen window */
+        position: fixed !important;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%; /* Full screen height */
-        z-index: 9999 !important; /* Sit on top of everything */
+        height: 100%;
+        z-index: 9999 !important;
         background: #f4f4f4;
         
         /* SCROLLING MECHANICS */
-        overflow-y: scroll !important; /* Force scrollbar */
-        -webkit-overflow-scrolling: touch !important; /* Smooth iOS momentum */
-        touch-action: pan-y !important; /* Allow finger dragging */
-        overscroll-behavior: contain; /* Stop page bounce */
+        overflow-y: scroll !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+        overscroll-behavior: contain;
         
         /* LAYOUT (Masonry Grid) */
         column-count: 3;
         column-gap: 8px;
-        
-        /* PADDING (Extra at bottom for menu button) */
         box-sizing: border-box;
         padding: 15px 8px 150px 8px; 
     }
@@ -553,11 +548,8 @@ html, body {
         margin-bottom: 8px !important;
         display: block !important;
         border-radius: 4px;
-        
-        /* PREVENT GLITCHES */
         break-inside: avoid !important;
         -webkit-column-break-inside: avoid !important;
-        transform: translateZ(0); /* Hardware acceleration */
     }
 
     /* MENU BUTTON POSITIONING */
@@ -568,6 +560,6 @@ html, body {
         left: 50% !important;
         transform: translateX(-50%) !important;
         margin: 0 !important;
-        z-index: 10000 !important; /* Above the gallery */
+        z-index: 10000 !important;
     }
 }
