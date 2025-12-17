@@ -612,7 +612,7 @@ body, html {
   padding: 10px;
   padding-bottom: 350px; /* Space for the sphere at the bottom */
   
-  background-color: #000; /* Ensures background is black, not transparent */
+  background-color: #ffffff; /* Ensures background is black, not transparent */
 }
 
 /* Force images to fit the grid cells */
