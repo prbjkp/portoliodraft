@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /**********************************************************
      * 2. SPHERE MATH VARIABLES
      **********************************************************/
-    const sphereRadius = 800; // Changed back to original distance
+    const sphereRadius = 2200; // Spread out images more (back to original spread)
     const positions = [];
     let rotX = 0, rotY = 0;
     let targetRotX = 0, targetRotY = 0;
