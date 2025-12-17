@@ -238,8 +238,20 @@ document.addEventListener("DOMContentLoaded", () => {
         centerSphere.addEventListener("click", (e) => {
             e.stopPropagation();
             console.log("Menu sphere clicked!");
-            dropdownMenu.classList.add("active");
-            dropdownMenu.style.display = "flex"; 
+            
+            // Add expanding animation class
+            centerSphere.classList.add("expanding");
+            
+            // Show menu after a brief delay to let expansion start
+            setTimeout(() => {
+                dropdownMenu.classList.add("active");
+                dropdownMenu.style.display = "flex";
+            }, 100);
+            
+            // Remove expanding class after animation completes
+            setTimeout(() => {
+                centerSphere.classList.remove("expanding");
+            }, 600);
         });
     }
 
