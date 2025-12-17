@@ -526,6 +526,7 @@ html, body {
         width: 100%;
         height: 100%;
         z-index: 9999 !important;
+        pointer-events: auto !important;
         background: #f4f4f4;
         
         /* SCROLLING MECHANICS */

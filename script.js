@@ -467,3 +467,125 @@ if (isMobile) {
   console.log("Desktop mode: Starting 3D sphere");
   animateSphere();
 }
+/* ==================================================
+   MASTER LOGIC: MOBILE, MENU & SCROLLING
+   (Paste this at the very bottom of script.js)
+================================================== */
+
+// --- 1. RESTORE MENU BUTTON FUNCTIONALITY ---
+if (centerSphere && dropdownMenu) {
+    centerSphere.addEventListener("click", (e) => {
+        e.stopPropagation(); // Stop click from hitting things behind it
+        const isHidden = dropdownMenu.style.display === "none" || dropdownMenu.style.display === "";
+        dropdownMenu.style.display = isHidden ? "flex" : "none";
+    });
+}
+
+// --- 2. RESTORE OVERLAY CLOSING ---
+if (overlay) {
+    overlay.addEventListener("click", () => {
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+            overlay.style.display = "none";
+            overlay.style.pointerEvents = "none"; 
+        }, 300);
+    });
+}
+
+// --- 3. MOBILE vs DESKTOP LOGIC ---
+if (isMobile) {
+    console.log("Mobile mode: Starting Master Logic");
+
+    // A. SETUP THE GALLERY CONTAINER
+    const gallery = document.getElementById('mobile-gallery');
+    
+    // Force CSS via JS to guarantee scrolling works
+    if (gallery) {
+        gallery.style.display = 'block';
+        gallery.style.overflowY = 'scroll';
+        gallery.style.pointerEvents = 'auto';
+        gallery.innerHTML = ''; // Clear duplicates
+    }
+
+    // B. CLONE PHOTOS & ADD CLICKS
+    if (gallery) {
+        photos.forEach(photoDiv => {
+            const originalImg = photoDiv.querySelector('img');
+            if (originalImg) {
+                const newImg = originalImg.cloneNode(true);
+                
+                // RESTORE CLICK TO ZOOM
+                newImg.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    // Stop auto-scroll when user clicks a photo
+                    isAutoScrolling = false; 
+                    
+                    overlayImg.src = newImg.src;
+                    overlay.style.display = "flex";
+                    overlay.style.pointerEvents = "auto";
+                    requestAnimationFrame(() => overlay.style.opacity = "1");
+                });
+
+                gallery.appendChild(newImg);
+            }
+        });
+    }
+
+    // C. SHOW HINTS
+    const hud = document.getElementById('hud-hints');
+    if (hud) {
+        hud.style.display = 'block';
+        hud.style.pointerEvents = 'none'; // Let clicks pass through text
+        const hints = document.querySelectorAll('.hud-hint');
+        if (hints.length >= 3) {
+            hints[0].textContent = "Auto-scrolling...";
+            hints[1].textContent = "Touch to control";
+            hints[2].textContent = "Menu at bottom";
+        }
+    }
+
+    // D. THE SCROLL ENGINE (Self-Contained)
+    let isAutoScrolling = true;
+    const speed = 1.0; 
+
+    function runScrollLoop() {
+        // Stop if gallery is missing or user took over
+        if (!gallery || !isAutoScrolling) return;
+
+        // Scroll Down
+        gallery.scrollTop += speed;
+
+        // Infinite Loop (Reset to top if at bottom)
+        if (gallery.scrollTop + gallery.clientHeight >= gallery.scrollHeight - 2) {
+            gallery.scrollTop = 0;
+        }
+
+        requestAnimationFrame(runScrollLoop);
+    }
+
+    // Start loop after 1 second
+    setTimeout(runScrollLoop, 1000);
+
+    // E. STOP SCROLL ON TOUCH
+    function stopTheScroll() {
+        if (isAutoScrolling) {
+            isAutoScrolling = false;
+            console.log("User took control");
+            const hints = document.querySelectorAll('.hud-hint');
+            if (hints.length > 0) hints[0].textContent = "Scroll to explore";
+        }
+    }
+
+    if (gallery) {
+        gallery.addEventListener("touchstart", stopTheScroll, { passive: true });
+        gallery.addEventListener("wheel", stopTheScroll, { passive: true });
+        gallery.addEventListener("mousedown", stopTheScroll);
+    }
+
+} else {
+    // DESKTOP MODE
+    console.log("Desktop mode: Starting 3D sphere");
+    if (typeof animateSphere === "function") {
+        animateSphere();
+    }
+}
