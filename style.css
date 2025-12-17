@@ -618,10 +618,25 @@ body, html {
     }
 
     /* Fix Menu Button for Desktop (Top Right) */
+    /* Fix Menu Button for Desktop (Top Right) */
     #center-sphere {
-        /* If you want the sphere gone and just the icon, hide sphere background here */
-        /* Otherwise, position the sphere: */
-        /* position: fixed; top: 30px; right: 30px; ... */
+        position: fixed !important;
+        top: 30px !important;
+        right: 30px !important;
+        
+        /* Reset Mobile Centering */
+        left: auto !important;
+        bottom: auto !important;
+        transform: none !important; 
+        margin: 0 !important;
+
+        /* Make it a comfortable size for clicking */
+        width: 70px !important;
+        height: 70px !important;
+        
+        z-index: 10000;
+        cursor: pointer;
+        pointer-events: auto !important;
     }
 
     /* If you want just the Hamburger Icon at top right on Desktop: */
@@ -643,4 +658,4 @@ body, html {
     #scene, #center-sphere, #menu-icon {
         pointer-events: auto;
     }
-}
+} 
