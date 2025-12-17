@@ -16,6 +16,7 @@ const contentOverlay = document.getElementById("content-overlay");
 const contentContainer = document.getElementById("content-container");
 const backButton = document.getElementById("back-button");
 const startContainer = document.getElementById("start-container");
+const isMobile = window.innerWidth < 768; // <--- ADD THIS LINE HERE
 
 /**********************************************************
  * TEXT RING CONSTANTS
@@ -376,39 +377,57 @@ document.addEventListener('submit', (e) => {
 window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
+/* ==================================================
+   MOBILE vs DESKTOP SWITCHER
+================================================== */
+// (We already defined 'const isMobile' at the top of the file)
 
 if (isMobile) {
   console.log("Mobile mode detected: Switching to high-density view");
 
   const mobileContainer = document.getElementById('mobile-gallery');
   
-  // Clone images
+  // 1. Clone images into the mobile container
   photos.forEach(photoDiv => {
     const originalImg = photoDiv.querySelector('img');
     if (originalImg) {
       const newImg = originalImg.cloneNode(true);
+      
+      // Add click-to-zoom functionality
       newImg.addEventListener('click', () => {
         overlayImg.src = newImg.src;
         overlay.style.display = "flex";
         overlay.style.pointerEvents = "auto";
         requestAnimationFrame(() => overlay.style.opacity = "1");
       });
+
       mobileContainer.appendChild(newImg);
     }
   });
 
-  // UPDATE HINTS FOR SCROLLING
-  const hints = document.querySelectorAll('.hud-hint');
-  if (hints.length >= 3) {
-      hints[0].textContent = "Scroll to explore gallery";
-      hints[1].textContent = "Tap to zoom";
-      hints[2].textContent = "Menu at bottom";
+  // 2. UPDATE & FORCE HINTS TO SHOW
+  const hudHintsContainer = document.getElementById('hud-hints'); // Get the main container
+  const hintTextElements = document.querySelectorAll('.hud-hint'); // Get the text lines
+
+  // Ensure the container is visible
+  if (hudHintsContainer) {
+      hudHintsContainer.style.display = 'block';
+      hudHintsContainer.style.pointerEvents = 'none'; // Let clicks pass through to photos
   }
-  
-  // Force hints to be visible
-  document.getElementById('hud-hints').style.display = 'block';
+
+  // Rewrite the text for mobile users
+  if (hintTextElements.length >= 3) {
+      hintTextElements[0].textContent = "Scroll to explore";
+      hintTextElements[1].textContent = "Tap photo to zoom";
+      hintTextElements[2].textContent = "Menu at bottom";
+  }
 
 } else {
+  // DESKTOP MODE: Start the 3D Animation Loop
   console.log("Desktop mode: Starting 3D sphere");
   animateSphere();
 }
+
+// Final console logs
+console.log("Script is running!");
+console.log("Number of photos:", photos.length);
