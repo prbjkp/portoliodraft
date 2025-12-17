@@ -378,22 +378,24 @@ window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
 /* ==================================================
-   MOBILE vs DESKTOP SWITCHER
+   MOBILE LOGIC (With Auto-Scroll)
 ================================================== */
-// (We already defined 'const isMobile' at the top of the file)
+// (Ensure 'const isMobile = ...' is defined at top of file)
 
 if (isMobile) {
-  console.log("Mobile mode detected: Switching to high-density view");
+  console.log("Mobile mode: Active");
 
+  // 1. Lock Body / Setup Container
+  document.body.classList.add('mobile-mode'); // Helps CSS lock the bg
   const mobileContainer = document.getElementById('mobile-gallery');
   
-  // 1. Clone images into the mobile container
+  // 2. Clone images
   photos.forEach(photoDiv => {
     const originalImg = photoDiv.querySelector('img');
     if (originalImg) {
       const newImg = originalImg.cloneNode(true);
       
-      // Add click-to-zoom functionality
+      // Zoom on click
       newImg.addEventListener('click', () => {
         overlayImg.src = newImg.src;
         overlay.style.display = "flex";
@@ -405,29 +407,60 @@ if (isMobile) {
     }
   });
 
-  // 2. UPDATE & FORCE HINTS TO SHOW
-  const hudHintsContainer = document.getElementById('hud-hints'); // Get the main container
-  const hintTextElements = document.querySelectorAll('.hud-hint'); // Get the text lines
-
-  // Ensure the container is visible
-  if (hudHintsContainer) {
-      hudHintsContainer.style.display = 'block';
-      hudHintsContainer.style.pointerEvents = 'none'; // Let clicks pass through to photos
+  // 3. SHOW HINTS
+  const hints = document.querySelectorAll('.hud-hint');
+  document.getElementById('hud-hints').style.display = 'block';
+  
+  if (hints.length >= 3) {
+      hints[0].textContent = "Auto-scrolling...";
+      hints[1].textContent = "Touch to take control";
+      hints[2].textContent = "Menu at bottom";
   }
 
-  // Rewrite the text for mobile users
-  if (hintTextElements.length >= 3) {
-      hintTextElements[0].textContent = "Scroll to explore";
-      hintTextElements[1].textContent = "Tap photo to zoom";
-      hintTextElements[2].textContent = "Click sphere to open menu";
+  // ==================================================
+  // AUTO-SCROLL ENGINE
+  // ==================================================
+  let autoScrollActive = true;
+  let scrollSpeed = 0.5; // Pixels per frame (Lower = Slower)
+
+  function autoScrollLoop() {
+    if (!autoScrollActive) return; // Stop if user took over
+
+    // 1. Move the scroll position down slightly
+    mobileContainer.scrollTop += scrollSpeed;
+
+    // 2. Check if we reached the bottom (Optional: Loop back to top?)
+    // If (scrollTop + clientHeight >= scrollHeight) { mobileContainer.scrollTop = 0; } 
+
+    // 3. Keep running
+    requestAnimationFrame(autoScrollLoop);
   }
+
+  // Start the engine
+  // Small timeout lets the images load/layout first
+  setTimeout(autoScrollLoop, 1000); 
+
+
+  // ==================================================
+  // USER INTERACTION (Stop Auto-Scroll)
+  // ==================================================
+  function stopAutoScroll() {
+    if (autoScrollActive) {
+      autoScrollActive = false;
+      console.log("User took control - stopping auto-scroll");
+      
+      // Update hint to reflect manual control
+      if (hints.length > 0) hints[0].textContent = "Scroll to explore";
+    }
+  }
+
+  // Listen for ANY user interaction on the gallery
+  mobileContainer.addEventListener("touchstart", stopAutoScroll);
+  mobileContainer.addEventListener("wheel", stopAutoScroll);
+  mobileContainer.addEventListener("mousedown", stopAutoScroll);
 
 } else {
-  // DESKTOP MODE: Start the 3D Animation Loop
+  // DESKTOP MODE
   console.log("Desktop mode: Starting 3D sphere");
   animateSphere();
 }
-
-// Final console logs
-console.log("Script is running!");
-console.log("Number of photos:", photos.length);
