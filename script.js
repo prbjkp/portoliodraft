@@ -290,18 +290,19 @@ document.addEventListener('submit', (e) => {
   }
 });
 
-/**********************************************************
- * 10. THE MASTER LOGIC SWITCHER (Mobile vs Desktop)
- **********************************************************/
+/* ==================================================
+   10. THE MASTER LOGIC SWITCHER (Mobile vs Desktop)
+================================================== */
 
 if (isMobile) {
     /* --- MOBILE MODE --- */
-    console.log("Starting Mobile Mode");
+    console.log("📱 Mobile Mode Detected");
 
     // 1. Setup Gallery
     const gallery = document.getElementById('mobile-gallery');
     
     if (gallery) {
+        console.log("✅ Gallery Container Found");
         gallery.innerHTML = ''; // Clean start
         
         // 2. Clone Photos
@@ -309,12 +310,12 @@ if (isMobile) {
             const originalImg = photoDiv.querySelector('img');
             if (originalImg) {
                 const newImg = originalImg.cloneNode(true);
-                newImg.loading = "lazy";
+                newImg.loading = "eager"; // Load immediately
                 
-                // Add Click Listener to new image
+                // Add Click Listener to new image (Opens Overlay)
                 newImg.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    isAutoScrolling = false; // Stop scroll on click
+                    isAutoScrolling = false; 
                     openOverlay(newImg.src);
                 });
 
@@ -322,49 +323,70 @@ if (isMobile) {
             }
         });
 
-        // 3. Start Auto-Scroll Engine
+        // 3. Define the Engine
+        let scrollSpeed = 1.5; // Slightly faster to be obvious
+        let animationFrameId;
+
         const runScrollLoop = function() {
-            if (!isAutoScrolling) return; // User stopped it?
+            if (!isAutoScrolling) {
+                // If stopped, check again in 100ms (Polling)
+                // This keeps the loop alive even if paused
+                animationFrameId = requestAnimationFrame(runScrollLoop);
+                return;
+            }
 
             // Move scrollbar
             gallery.scrollTop += scrollSpeed;
 
-            // Loop back to top if at bottom
-            if (gallery.scrollTop + gallery.clientHeight >= gallery.scrollHeight - 2) {
-                gallery.scrollTop = 0;
+            // Infinite Loop Logic
+            if (gallery.scrollTop + gallery.clientHeight >= gallery.scrollHeight - 5) {
+                gallery.scrollTop = 0; // Jump to top
             }
             
-            requestAnimationFrame(runScrollLoop);
+            animationFrameId = requestAnimationFrame(runScrollLoop);
         };
 
-        // Start scrolling after 1 second
-        setTimeout(runScrollLoop, 1000);
+        // 4. Start the Engine immediately
+        console.log("🚀 Starting Scroll Engine...");
+        cancelAnimationFrame(animationFrameId);
+        runScrollLoop();
 
-        // 4. Stop Auto-Scroll on User Interaction
-        const stopTheScroll = function() {
-            if (isAutoScrolling) {
-                isAutoScrolling = false;
-                console.log("User took control");
-                // Update Hints
-                if (hudHints.length > 0) hudHints[0].textContent = "Scroll to explore";
-            }
-        };
-
-        gallery.addEventListener("touchstart", stopTheScroll, { passive: true });
-        gallery.addEventListener("wheel", stopTheScroll, { passive: true });
-        gallery.addEventListener("mousedown", stopTheScroll);
+        // 5. Interaction Logic (Pause on Touch, Resume on Release)
+        let touchTimeout;
         
-        // 5. Update Hints Text for Mobile
+        const pauseScroll = function() {
+            isAutoScrolling = false;
+            // Update Text
+            if (hudHints.length > 0) hudHints[0].textContent = "Paused";
+            clearTimeout(touchTimeout);
+        };
+
+        const resumeScroll = function() {
+            // Wait 2 seconds after letting go, then resume
+            touchTimeout = setTimeout(() => {
+                isAutoScrolling = true;
+                if (hudHints.length > 0) hudHints[0].textContent = "Auto-scrolling...";
+            }, 2000);
+        };
+
+        gallery.addEventListener("touchstart", pauseScroll, { passive: true });
+        gallery.addEventListener("touchend", resumeScroll, { passive: true });
+        gallery.addEventListener("mousedown", pauseScroll);
+        gallery.addEventListener("mouseup", resumeScroll);
+        
+        // 6. Set Hints
         if (hudHints.length >= 3) {
             hudHints[0].textContent = "Auto-scrolling...";
-            hudHints[1].textContent = "Touch to control";
+            hudHints[1].textContent = "Tap to Pause";
             hudHints[2].textContent = "Menu at bottom";
         }
+    } else {
+        console.error("❌ Error: #mobile-gallery element missing in HTML");
     }
 
 } else {
     /* --- DESKTOP MODE --- */
-    console.log("Starting Desktop Mode");
+    console.log("💻 Desktop Mode Detected");
     
     // Add Click Listeners to original sphere photos
     photos.forEach(photo => {
@@ -378,4 +400,28 @@ if (isMobile) {
     animateSphere();
 }
 
-console.log("Script loaded completely. Mode:", isMobile ? "Mobile" : "Desktop");
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Select the empty gallery container
+  const galleryContainer = document.getElementById('mobile-gallery');
+  
+  // 2. Select all images currently inside the sphere
+  // We use .photo img to grab the actual image tags
+  const sphereImages = document.querySelectorAll('#sphere .photo img');
+
+  // 3. Loop through them and clone them into the gallery
+  sphereImages.forEach(img => {
+    const clone = img.cloneNode(true); // Create a copy
+    
+    // Optional: Add a click event to the clone if you want the zoom overlay to work
+    clone.addEventListener('click', () => {
+        // Trigger your existing overlay logic here
+        // For example:
+        const overlay = document.getElementById('overlay');
+        const overlayImg = document.getElementById('overlay-img');
+        overlayImg.src = clone.src;
+        overlay.style.display = 'flex';
+    });
+
+    galleryContainer.appendChild(clone); // Add to the background layer
+  });
+});

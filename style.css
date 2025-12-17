@@ -560,3 +560,43 @@ html, body {
         z-index: 10000 !important; /* <--- UPDATED: Above Gallery */
     }
 }
+
+/* 1. Make the Gallery fill the screen and scroll */
+#mobile-gallery {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll; /* Enables scrolling */
+  z-index: 1; /* Sends it to the back */
+  padding-bottom: 300px; /* Space at bottom so sphere doesn't cover last image */
+  
+  /* Layout for the images */
+  display: grid;
+  grid-template-columns: 1fr; /* 1 column for mobile */
+  gap: 15px;
+  padding: 15px;
+}
+
+#mobile-gallery img {
+  width: 100%;
+  display: block;
+}
+
+/* 2. Fix the Navigation Sphere Layer on top */
+#nav-layer {
+  position: fixed; /* Sticks to screen */
+  bottom: 20px;    /* Position at bottom */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  width: 300px;    /* Adjust size as needed */
+  height: 300px;
+  z-index: 10;     /* Brings it to the front */
+  pointer-events: none; /* Lets clicks pass through empty spaces */
+}
+
+/* 3. Ensure the Sphere and Controls interact */
+#scene, #center-sphere, #start-text-ring {
+  pointer-events: auto; /* Re-enable clicking on the actual sphere parts */
+}
