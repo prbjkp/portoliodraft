@@ -539,159 +539,108 @@ body, html {
 
 
 /* ==================================================
-   MOBILE VIEW & SCROLLING (CLEAN SINGLE VERSION)
+   MOBILE VIEW & SCROLLING (The Clean Version)
 ================================================== */
+
+/* 1. DEFAULT: Hide Mobile Gallery on Desktop */
 #mobile-gallery {
     display: none;
 }
 
+/* 2. MOBILE SPECIFIC RULES (Max Width 768px) */
 @media (max-width: 768px) {
-    /* Hide 3D elements */
-    #sphere, #scene, #start-text-ring {
+    
+    /* --- HIDE DESKTOP 3D ELEMENTS --- */
+    #sphere, 
+    #scene, 
+    #start-text-ring, 
+    #start-container {
         display: none !important;
     }
 
-    /* Configure Mobile Gallery */
+    /* --- SHOW & STYLE MOBILE GALLERY --- */
     #mobile-gallery {
-        display: block !important;
+        display: grid !important; /* Turn it ON */
+        grid-template-columns: repeat(3, 1fr); /* 3 Columns */
+        gap: 5px;
+        
         position: fixed !important;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: 5000 !important; /* <--- UPDATED: High, but below Menu/Start */
-        background: #f4f4f4;
         
-        /* Enable Smooth Scrolling */
-        overflow-y: scroll !important;
-        -webkit-overflow-scrolling: touch !important;
-        overscroll-behavior: contain;
+        background: #ffffff; /* White background */
+        padding: 5px;
+        padding-bottom: 150px; /* Space for the bottom menu button */
         
-        /* Grid Layout */
-        column-count: 3;
-        column-gap: 8px;
-        padding: 15px 8px 150px 8px; 
+        overflow-y: scroll !important; /* Enable Scroll */
+        -webkit-overflow-scrolling: touch !important; /* Smooth scroll iOS */
+        z-index: 5000 !important; /* Visible, but behind menu */
     }
 
-    #mobile-gallery img {
-        width: 100% !important;
-        display: block !important;
-        margin-bottom: 8px !important;
+    /* Ensure images look good */
+    #mobile-gallery .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
         border-radius: 4px;
-        -webkit-column-break-inside: avoid;
-        break-inside: avoid;
     }
-
-    /* Force Menu Button to be above Gallery */
+    
+    /* --- POSITION MENU BUTTON AT BOTTOM --- */
     #center-sphere {
         position: fixed !important;
         top: auto !important;
-        bottom: 30px !important;
+        bottom: 30px !important; /* Stick to bottom */
         left: 50% !important;
         transform: translateX(-50%) !important;
-        margin: 0 !important;
-        z-index: 10000 !important; /* <--- UPDATED: Above Gallery */
+        
+        width: 90px !important; /* Slightly smaller for mobile if desired */
+        height: 90px !important;
+        
+        z-index: 10000 !important; /* Float above the gallery */
+        pointer-events: auto !important;
+    }
+    
+    /* Ensure the Menu Icon lines are visible (White on Black Sphere) */
+    #menu-icon span {
+        background-color: #ffffff !important;
     }
 }
 
-/* 1. Make the Gallery fill the screen and scroll */
-/* --- MOBILE GALLERY STYLES (Default) --- */
-#mobile-gallery {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  z-index: 0; /* Keeps it behind the sphere */
-  
-  /* Create a clean grid layout instead of one giant image stack */
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 images side-by-side */
-  gap: 10px;
-  padding: 10px;
-  padding-bottom: 350px; /* Space for the sphere at the bottom */
-  
-  background-color: #ffffff; /* Ensures background is black, not transparent */
-}
-
-/* Force images to fit the grid cells */
-#mobile-gallery img {
-  width: 100%;
-  height: 200px; /* Force a consistent height */
-  object-fit: cover; /* Crops the image neatly so it doesn't stretch */
-  border-radius: 4px;
-  display: block;
-}
-
-/* --- DESKTOP MODE (The Kill Switch) --- */
-/* This rule activates ONLY when screen is wider than 768px (Desktop/Laptop) */
-@media (min-width: 768px) {
-  /* ... keep your other desktop rules ... */
-
-  /* 1. FORCE THE MENU TO TOP-RIGHT */
-  #menu-icon {
-    position: fixed;   /* Sticks to the browser window, ignores the wrapper */
-    top: 40px;         /* Distance from top */
-    right: 40px;       /* Distance from right */
-    bottom: auto;      /* Override mobile settings */
-    left: auto;        /* Override centering */
+/* 3. DESKTOP SPECIFIC RULES (Min Width 769px) */
+@media (min-width: 769px) {
     
-    /* 2. LAYER IT ABOVE THE 3D CANVAS */
-    z-index: 10000 !important; /* Extremely high number to beat the canvas */
+    /* Double check gallery is hidden */
+    #mobile-gallery {
+        display: none !important;
+    }
+
+    /* Fix Menu Button for Desktop (Top Right) */
+    #center-sphere {
+        /* If you want the sphere gone and just the icon, hide sphere background here */
+        /* Otherwise, position the sphere: */
+        /* position: fixed; top: 30px; right: 30px; ... */
+    }
+
+    /* If you want just the Hamburger Icon at top right on Desktop: */
+    #menu-icon {
+        position: fixed;
+        top: 40px;
+        right: 40px;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        z-index: 10000;
+        cursor: pointer;
+    }
     
-    /* 3. ENSURE IT IS CLICKABLE */
-    pointer-events: auto !important; /* Force clicks to register */
-    cursor: pointer;
-    display: block;
-    width: 40px;       /* Ensure it has a hit-box size */
-    height: 40px;
-  }
-
-  /* 4. PREVENT THE WRAPPER FROM STEALING CLICKS */
-  #scene-wrapper {
-    pointer-events: none; /* The wrapper itself must be "transparent" to clicks */
-  }
-}
-
-/* Re-enable clicking ONLY for the things you actually need to touch */
-#scene, #center-sphere, #menu-icon, #start-text-ring {
-  pointer-events: auto; 
-}
-
-
-/* --- DESKTOP RESET (Add this to the end of style.css) --- */
-
-  /* 2. Force the Menu Button to be clickable and positioned correctly */
-  #menu-icon {
-    position: fixed; /* Lock it to the screen corner */
-    top: 30px;       /* Move to TOP right (standard for desktop) */
-    right: 30px;
-    bottom: auto;    /* Override the mobile 'bottom' setting */
-    pointer-events: auto !important; /* FORCE it to be clickable */
-    z-index: 1000;   /* Ensure it's on top of everything */
-    display: block;  /* Make sure it's visible */
-  }
-
-  /* 3. Ensure the Sphere is clickable */
-  #scene {
-    pointer-events: auto !important;
-    /* You might want to position the sphere specifically for desktop here */
-    /* e.g., margin: 0 auto; or float: right; depending on your design */
-  }
-
-  /* 4. Hide the mobile-only background gallery */
-  #mobile-gallery {
-    display: none !important;
-  }
-  
-  /* 5. Hide mobile-only hints if they are annoying on desktop */
-  #hud-hints {
-    display: none;
-  }
-
-
-/* Add this anywhere in your main CSS */
-#menu-icon span {
-  pointer-events: none; /* Clicks pass through the lines to the button behind them */
+    /* Ensure inputs work */
+    #scene-wrapper {
+        pointer-events: none; 
+    }
+    #scene, #center-sphere, #menu-icon {
+        pointer-events: auto;
+    }
 }
