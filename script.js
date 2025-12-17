@@ -419,7 +419,7 @@ if (isMobile) {
   if (hintTextElements.length >= 3) {
       hintTextElements[0].textContent = "Scroll to explore";
       hintTextElements[1].textContent = "Tap photo to zoom";
-      hintTextElements[2].textContent = "Menu at bottom";
+      hintTextElements[2].textContent = "Click sphere to open menu";
   }
 
 } else {
