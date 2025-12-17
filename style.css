@@ -20,7 +20,7 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
+  z-index: 20000 !important; /* <--- UPDATED: Must be highest */
   pointer-events: auto;
 }
 
@@ -376,6 +376,7 @@ html, body {
   background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 100%);
   backdrop-filter: blur(5px); /* Adds a nice blur to the background photos */
   z-index: 200;
+  z-index: 15000 !important;
   
   /* Flexbox to center the list items */
   display: flex;
@@ -512,12 +513,12 @@ html, body {
 }
 
 @media (max-width: 768px) {
-    /* HIDE THE 3D SCENE */
+    /* Hide 3D elements */
     #sphere, #scene, #start-text-ring {
         display: none !important;
     }
 
-    /* SHOW THE GALLERY CONTAINER */
+    /* Configure Mobile Gallery */
     #mobile-gallery {
         display: block !important;
         position: fixed !important;
@@ -525,35 +526,30 @@ html, body {
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: 9999 !important;
-        pointer-events: auto !important;
+        z-index: 5000 !important; /* <--- UPDATED: High, but below Menu/Start */
         background: #f4f4f4;
         
-        /* SCROLLING MECHANICS */
+        /* Enable Smooth Scrolling */
         overflow-y: scroll !important;
         -webkit-overflow-scrolling: touch !important;
-        touch-action: pan-y !important;
         overscroll-behavior: contain;
         
-        /* LAYOUT (Masonry Grid) */
+        /* Grid Layout */
         column-count: 3;
         column-gap: 8px;
-        box-sizing: border-box;
         padding: 15px 8px 150px 8px; 
     }
 
-    /* IMAGE STYLING */
     #mobile-gallery img {
         width: 100% !important;
-        height: auto !important;
-        margin-bottom: 8px !important;
         display: block !important;
+        margin-bottom: 8px !important;
         border-radius: 4px;
-        break-inside: avoid !important;
-        -webkit-column-break-inside: avoid !important;
+        -webkit-column-break-inside: avoid;
+        break-inside: avoid;
     }
 
-    /* MENU BUTTON POSITIONING */
+    /* Force Menu Button to be above Gallery */
     #center-sphere {
         position: fixed !important;
         top: auto !important;
@@ -561,6 +557,6 @@ html, body {
         left: 50% !important;
         transform: translateX(-50%) !important;
         margin: 0 !important;
-        z-index: 10000 !important;
+        z-index: 10000 !important; /* <--- UPDATED: Above Gallery */
     }
 }
