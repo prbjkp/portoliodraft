@@ -505,58 +505,41 @@ html, body {
 
 
 /* ==================================================
-   MOBILE VIEW MODE
+   MOBILE VIEW MODE (Pinterest/Masonry Style)
 ================================================== */
 #mobile-gallery {
-  display: none; /* Hidden by default (for desktops) */
+  display: none; 
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  overflow-y: scroll; /* Allow vertical scrolling */
-  padding: 80px 20px 20px 20px; /* Top padding for menu button space */
+  overflow-y: scroll; 
+  /* Add space at bottom so the menu button doesn't cover the last photo */
+  padding: 20px 20px 120px 20px; 
   box-sizing: border-box;
-  background: #fff;
-  z-index: 5; /* Sit above the scene */
-  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+  background: #f0f0f0; /* Slight gray bg makes photos pop */
+  z-index: 5; 
+  -webkit-overflow-scrolling: touch;
+
+  /* --- THIS CREATES THE STAGGERED GRID --- */
+  column-count: 2;   /* 2 Columns */
+  column-gap: 15px;  /* Gaps between columns */
 }
 
 /* Style for images inside the mobile gallery */
 #mobile-gallery img {
   width: 100%;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Space below each image */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   display: block;
+  
+  /* CRITICAL: Keeps images from splitting across columns */
+  break-inside: avoid; 
+  -webkit-column-break-inside: avoid;
 }
 
-/* MOBILE SCREEN DETECTION */
-@media (max-width: 768px) {
-  /* On phones, show the gallery */
-  #mobile-gallery {
-    display: block;
-  }
-
-  /* Hide the 3D sphere wrapper, but keep the center-sphere (menu button) */
-  #sphere {
-    display: none !important;
-  }
-  
-  /* Adjust the menu button (center sphere) to be a fixed button */
-  #center-sphere {
-    position: fixed !important;
-    top: auto !important;
-    bottom: 30px !important; /* Move to bottom center */
-    left: 50% !important;
-    transform: translateX(-50%) scale(0.8) !important;
-    margin: 0 !important;
-    z-index: 100 !important;
-  }
-  
-  /* Hide the start text ring on mobile to avoid clutter */
-  #start-text-ring {
-    display: none !important;
-  }
-}
+/* On very small phones, you might want to adjust, 
+   but 2 columns usually looks best on modern phones. */

@@ -383,7 +383,7 @@ window.addEventListener("load", () => {
 const isMobile = window.innerWidth < 768; // Check if screen is narrow
 
 if (isMobile) {
-  console.log("Mobile mode detected: Switching to scroll view");
+  console.log("Mobile mode detected: Switching to masonry scroll view");
 
   // 1. Get the container
   const mobileContainer = document.getElementById('mobile-gallery');
@@ -394,7 +394,7 @@ if (isMobile) {
     if (originalImg) {
       const newImg = originalImg.cloneNode(true);
       
-      // Optional: Add click-to-zoom for mobile images too
+      // Add click-to-zoom for mobile images
       newImg.addEventListener('click', () => {
         overlayImg.src = newImg.src;
         overlay.style.display = "flex";
@@ -406,15 +406,20 @@ if (isMobile) {
     }
   });
 
-  // 3. Hide the hints on mobile (optional, as they might block view)
-  document.getElementById('hud-hints').style.display = 'none';
+  // 3. CHANGE THE HINTS (Don't hide them!)
+  // We need to update the text because "Drag to Rotate" is wrong for mobile
+  const hints = document.querySelectorAll('.hud-hint');
+  if (hints.length >= 3) {
+      hints[0].textContent = "Scroll to explore gallery";
+      hints[1].textContent = "Tap any photo to zoom";
+      hints[2].textContent = "Tap the bottom button for Menu";
+  }
+  
+  // Ensure the container is visible (just in case)
+  document.getElementById('hud-hints').style.display = 'block';
 
 } else {
   // DESKTOP MODE: Start the 3D Animation Loop
   console.log("Desktop mode: Starting 3D sphere");
   animateSphere();
 }
-
-// Final console logs
-console.log("Script is running!");
-console.log("Number of photos:", photos.length);
