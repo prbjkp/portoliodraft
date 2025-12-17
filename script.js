@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoScrollInterval = setInterval(() => {
                     if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
                         mobileGallery.scrollBy({
-                            top: 4,
+                            top: 1.5, // Slowed down from 4 to 1.5 for gentler scroll
                             behavior: 'auto'
                         });
                         
