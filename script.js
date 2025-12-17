@@ -381,18 +381,19 @@ window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
 /* ==================================================
-   MOBILE vs DESKTOP SWITCHER (Final Integration)
+   MOBILE vs DESKTOP SWITCHER (Self-Contained)
 ================================================== */
-
 if (isMobile) {
-  console.log("Mobile mode: Active");
+  console.log("Mobile mode: Active (Self-Contained)");
 
-  // 1. Assign the container (Using the variable from the top)
-  mobileContainer = document.getElementById('mobile-gallery');
+  // 1. Define everything LOCALLY to avoid scope errors
+  const galleryContainer = document.getElementById('mobile-gallery');
+  let isAutoScrolling = true;
+  const scrollSpeed = 1.0; 
 
-  if (mobileContainer) {
+  if (galleryContainer) {
       // Clear previous content
-      mobileContainer.innerHTML = ''; 
+      galleryContainer.innerHTML = ''; 
 
       // 2. Clone images
       photos.forEach(photoDiv => {
@@ -409,20 +410,45 @@ if (isMobile) {
             requestAnimationFrame(() => overlay.style.opacity = "1");
           });
 
-          mobileContainer.appendChild(newImg);
+          galleryContainer.appendChild(newImg);
         }
       });
       
-      // 3. Start Auto-Scroll (Function defined below)
-      setTimeout(startMobileScroll, 1000);
+      // 3. Define the Scroll Engine INSIDE this block
+      // This guarantees it can see 'galleryContainer'
+      const startLoop = function() {
+          if (!isAutoScrolling) return;
+
+          // Scroll down
+          galleryContainer.scrollTop += scrollSpeed;
+
+          // Infinite Reset: If we hit bottom, jump to top
+          if (galleryContainer.scrollTop + galleryContainer.clientHeight >= galleryContainer.scrollHeight - 5) {
+              galleryContainer.scrollTop = 0;
+          }
+          
+          requestAnimationFrame(startLoop);
+      };
+
+      // 4. Start the loop
+      setTimeout(startLoop, 1000);
       
-      // 4. Stop on interaction
-      mobileContainer.addEventListener("touchstart", stopMobileScroll, { passive: true });
-      mobileContainer.addEventListener("wheel", stopMobileScroll, { passive: true });
-      mobileContainer.addEventListener("mousedown", stopMobileScroll);
+      // 5. Stop on interaction
+      const stopLoop = function() {
+          if (isAutoScrolling) {
+              isAutoScrolling = false;
+              console.log("User took control");
+              const hints = document.querySelectorAll('.hud-hint');
+              if (hints.length > 0) hints[0].textContent = "Scroll to explore";
+          }
+      };
+
+      galleryContainer.addEventListener("touchstart", stopLoop, { passive: true });
+      galleryContainer.addEventListener("wheel", stopLoop, { passive: true });
+      galleryContainer.addEventListener("mousedown", stopLoop);
   }
 
-  // 5. Update Hints
+  // 6. Update Hints
   const hudHintsContainer = document.getElementById('hud-hints');
   if (hudHintsContainer) {
       hudHintsContainer.style.display = 'block';
@@ -440,40 +466,4 @@ if (isMobile) {
   // DESKTOP MODE
   console.log("Desktop mode: Starting 3D sphere");
   animateSphere();
-}
-
-/* ==================================================
-   HELPER FUNCTIONS
-================================================== */
-
-function startMobileScroll() {
-    // Check if container exists
-    if (!mobileContainer) return;
-
-    function loop() {
-        // Check global flag
-        if (!autoScrollActive) return;
-
-        // Scroll
-        mobileContainer.scrollTop += scrollSpeed;
-
-        // Reset to top if we hit bottom (Infinite Scroll effect)
-        if (mobileContainer.scrollTop + mobileContainer.clientHeight >= mobileContainer.scrollHeight - 5) {
-            mobileContainer.scrollTop = 0;
-        }
-
-        requestAnimationFrame(loop);
-    }
-    
-    requestAnimationFrame(loop);
-}
-
-function stopMobileScroll() {
-    if (autoScrollActive) {
-        autoScrollActive = false;
-        console.log("User took control - stopping auto-scroll");
-        
-        const hints = document.querySelectorAll('.hud-hint');
-        if (hints.length > 0) hints[0].textContent = "Scroll to explore";
-    }
 }
