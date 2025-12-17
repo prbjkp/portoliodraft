@@ -412,9 +412,9 @@ if (isMobile) {
   document.getElementById('hud-hints').style.display = 'block';
   
   if (hints.length >= 3) {
-      hints[0].textContent = "Auto-scrolling...";
-      hints[1].textContent = "Touch to take control";
-      hints[2].textContent = "Menu at bottom";
+      hints[0].textContent = "Scroll to explore";
+      hints[1].textContent = "Click images to zoom";
+      hints[2].textContent = "Click the sphere for menu";
   }
 
   // ==================================================
