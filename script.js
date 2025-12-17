@@ -134,8 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 30); // Scroll speed (lower = faster)
             }
             
-            // Start auto-scroll after hints finish (about 12 seconds)
-            setTimeout(startAutoScroll, 12000);
+            // Start auto-scroll immediately
+            startAutoScroll();
         }
 
         // --- B. MOBILE HINTS ---
