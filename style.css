@@ -546,3 +546,61 @@ html, body {
     column-count: 3;
   }
 }
+
+/* ==================================================
+   FORCE MOBILE LAYOUT (Paste at bottom of CSS)
+================================================== */
+@media (max-width: 768px) {
+
+    /* 1. FORCE HIDE THE 3D SPHERE */
+    #sphere, #scene, #start-text-ring {
+        display: none !important;
+    }
+
+    /* 2. FORCE SHOW THE GALLERY GRID */
+    #mobile-gallery {
+        display: block !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        background: #f4f4f4;
+        z-index: 50;
+        box-sizing: border-box;
+        
+        /* Padding: Top/Sides small, Bottom large (for menu button) */
+        padding: 15px 8px 100px 8px !important;
+
+        /* THE GRID SETTINGS */
+        column-count: 3 !important; /* Forces 3 columns */
+        column-gap: 8px !important; /* Space between columns */
+    }
+
+    /* 3. FORCE IMAGE SIZING */
+    #mobile-gallery img {
+        width: 100% !important;
+        height: auto !important;
+        margin-bottom: 8px !important;
+        display: block !important;
+        
+        /* Prevents images from being chopped in half */
+        break-inside: avoid !important;
+        -webkit-column-break-inside: avoid !important;
+        
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* 4. FORCE MENU BUTTON POSITION */
+    #center-sphere {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 30px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        margin: 0 !important;
+        z-index: 100 !important;
+    }
+}
