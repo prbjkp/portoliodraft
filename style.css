@@ -503,97 +503,64 @@ html, body {
   background: #555;
 }
 
-
 /* ==================================================
-   MOBILE VIEW MODE (High Density Masonry)
+   MOBILE VIEW & SCROLLING (CLEAN VERSION)
 ================================================== */
+
+/* 1. Base State (Hidden on Desktop) */
 #mobile-gallery {
-  display: none; 
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow-y: scroll; 
-  padding: 20px 10px 120px 10px; /* Tighter padding on sides */
-  box-sizing: border-box;
-  background: #f4f4f4;
-  z-index: 5; 
-  -webkit-overflow-scrolling: touch;
-
-  /* --- HIGH DENSITY PACKING --- */
-  column-count: 3;   /* 3 Columns for maximum density */
-  column-gap: 8px;   /* Very small gap between columns */
+    display: none;
 }
 
-/* Style for images inside the mobile gallery */
-#mobile-gallery img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 8px; /* Tighter spacing below images */
-  border-radius: 4px; /* Smaller radius for tighter look */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  display: block;
-  
-  /* CRITICAL: Keeps images from splitting across columns */
-  break-inside: avoid; 
-  -webkit-column-break-inside: avoid;
-}
-
-/* If the screen is slightly larger (large phones), keep 3 columns */
-@media (min-width: 450px) {
-  #mobile-gallery {
-    column-count: 3;
-  }
-}
-
-/* ==================================================
-   FORCE MOBILE LAYOUT (Paste at bottom of CSS)
-================================================== */
+/* 2. Mobile State (Active on Phones) */
 @media (max-width: 768px) {
-
-    /* 1. FORCE HIDE THE 3D SPHERE */
+    
+    /* HIDE THE 3D SCENE */
     #sphere, #scene, #start-text-ring {
         display: none !important;
     }
 
-    /* 2. FORCE SHOW THE GALLERY GRID */
+    /* SHOW THE GALLERY CONTAINER */
     #mobile-gallery {
         display: block !important;
-        position: absolute;
+        position: fixed !important; /* Locks container to the screen window */
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
-        overflow-y: scroll;
+        height: 100%; /* Full screen height */
+        z-index: 9999 !important; /* Sit on top of everything */
         background: #f4f4f4;
-        z-index: 50;
-        box-sizing: border-box;
         
-        /* Padding: Top/Sides small, Bottom large (for menu button) */
-        padding: 15px 8px 100px 8px !important;
-
-        /* THE GRID SETTINGS */
-        column-count: 3 !important; /* Forces 3 columns */
-        column-gap: 8px !important; /* Space between columns */
+        /* SCROLLING MECHANICS */
+        overflow-y: scroll !important; /* Force scrollbar */
+        -webkit-overflow-scrolling: touch !important; /* Smooth iOS momentum */
+        touch-action: pan-y !important; /* Allow finger dragging */
+        overscroll-behavior: contain; /* Stop page bounce */
+        
+        /* LAYOUT (Masonry Grid) */
+        column-count: 3;
+        column-gap: 8px;
+        
+        /* PADDING (Extra at bottom for menu button) */
+        box-sizing: border-box;
+        padding: 15px 8px 150px 8px; 
     }
 
-    /* 3. FORCE IMAGE SIZING */
+    /* IMAGE STYLING */
     #mobile-gallery img {
         width: 100% !important;
         height: auto !important;
         margin-bottom: 8px !important;
         display: block !important;
+        border-radius: 4px;
         
-        /* Prevents images from being chopped in half */
+        /* PREVENT GLITCHES */
         break-inside: avoid !important;
         -webkit-column-break-inside: avoid !important;
-        
-        border-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transform: translateZ(0); /* Hardware acceleration */
     }
 
-    /* 4. FORCE MENU BUTTON POSITION */
+    /* MENU BUTTON POSITIONING */
     #center-sphere {
         position: fixed !important;
         top: auto !important;
@@ -601,30 +568,6 @@ html, body {
         left: 50% !important;
         transform: translateX(-50%) !important;
         margin: 0 !important;
-        z-index: 100 !important;
+        z-index: 10000 !important; /* Above the gallery */
     }
-}
-
-/* ==================================================
-   MOBILE SCROLLING FIXES
-================================================== */
-#mobile-gallery {
-    /* ... (Keep your existing settings like display, position, etc) ... */
-    
-    /* CRITICAL FOR SCROLLING: */
-    overflow-y: auto !important; 
-    -webkit-overflow-scrolling: touch !important; /* Smooth momentum scroll on iOS */
-    pointer-events: auto !important; /* Ensure fingers can grab it */
-    overscroll-behavior: contain; /* Prevents "pull to refresh" glitches */
-    
-    /* Ensure there is enough space to actually scroll */
-    padding-bottom: 150px !important; 
-}
-
-/* Ensure the body doesn't fight the gallery */
-body.mobile-mode {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* Lock the background, let gallery scroll */
 }

@@ -378,25 +378,29 @@ window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
 /* ==================================================
-   MOBILE LOGIC (With Auto-Scroll)
+   MOBILE LOGIC (Final Scroll Fix)
 ================================================== */
-// (Ensure 'const isMobile = ...' is defined at top of file)
-
 if (isMobile) {
   console.log("Mobile mode: Active");
 
-  // 1. Lock Body / Setup Container
-  document.body.classList.add('mobile-mode'); // Helps CSS lock the bg
+  // 1. Setup Container
+  // We DO NOT lock document.body overflow here, allowing the fixed gallery to handle it.
   const mobileContainer = document.getElementById('mobile-gallery');
   
-  // 2. Clone images
-  photos.forEach(photoDiv => {
+  // 2. Clear previous content (safety check) & Clone Images
+  mobileContainer.innerHTML = ''; 
+  
+  photos.forEach((photoDiv, index) => {
     const originalImg = photoDiv.querySelector('img');
     if (originalImg) {
       const newImg = originalImg.cloneNode(true);
       
-      // Zoom on click
-      newImg.addEventListener('click', () => {
+      // Ensure image is fully loaded before calculating layout (optional optimization)
+      newImg.loading = "lazy"; 
+      
+      // Click to zoom
+      newImg.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent stopping scroll on simple tap
         overlayImg.src = newImg.src;
         overlay.style.display = "flex";
         overlay.style.pointerEvents = "auto";
@@ -409,14 +413,61 @@ if (isMobile) {
 
   // 3. SHOW HINTS
   const hints = document.querySelectorAll('.hud-hint');
-  document.getElementById('hud-hints').style.display = 'block';
+  const hudContainer = document.getElementById('hud-hints');
+  
+  if (hudContainer) {
+      hudContainer.style.display = 'block';
+      // Allow clicks to pass through hints so they don't block scrolling
+      hudContainer.style.pointerEvents = 'none'; 
+  }
   
   if (hints.length >= 3) {
-      hints[0].textContent = "Scroll to explore";
-      hints[1].textContent = "Click images to zoom";
-      hints[2].textContent = "Click the sphere for menu";
+      hints[0].textContent = "Auto-scrolling...";
+      hints[1].textContent = "Touch to control";
+      hints[2].textContent = "Menu at bottom";
   }
 
+  // ==================================================
+  // AUTO-SCROLL ENGINE
+  // ==================================================
+  let autoScrollActive = true;
+  let scrollSpeed = 0.8; // Slightly faster to be noticeable
+
+  function autoScrollLoop() {
+    if (!autoScrollActive) return;
+
+    // Check if we can actually scroll (content exists)
+    if (mobileContainer.scrollHeight > mobileContainer.clientHeight) {
+        mobileContainer.scrollTop += scrollSpeed;
+    }
+    
+    requestAnimationFrame(autoScrollLoop);
+  }
+
+  // Start after a brief delay to let images render
+  setTimeout(autoScrollLoop, 500);
+
+  // ==================================================
+  // USER CONTROL HANDLER
+  // ==================================================
+  function stopAutoScroll() {
+    if (autoScrollActive) {
+      autoScrollActive = false;
+      console.log("User took control.");
+      if (hints.length > 0) hints[0].textContent = "Scroll to explore";
+    }
+  }
+
+  // Stop auto-scroll on ANY interaction
+  mobileContainer.addEventListener("touchstart", stopAutoScroll, { passive: true });
+  mobileContainer.addEventListener("wheel", stopAutoScroll, { passive: true });
+  mobileContainer.addEventListener("mousedown", stopAutoScroll);
+
+} else {
+  // DESKTOP MODE
+  console.log("Desktop mode: Starting 3D sphere");
+  animateSphere();
+}
   // ==================================================
   // AUTO-SCROLL ENGINE
   // ==================================================
@@ -458,9 +509,3 @@ if (isMobile) {
   mobileContainer.addEventListener("touchstart", stopAutoScroll);
   mobileContainer.addEventListener("wheel", stopAutoScroll);
   mobileContainer.addEventListener("mousedown", stopAutoScroll);
-
-} else {
-  // DESKTOP MODE
-  console.log("Desktop mode: Starting 3D sphere");
-  animateSphere();
-}
