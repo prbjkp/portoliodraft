@@ -9,14 +9,14 @@ html, body {
   overflow: hidden;
   font-family: Inter, sans-serif;
   background: #ffffff; /* white background */
-  color: black;        /* default text black */
+  color: rgb(255, 255, 255);        /* default text black */
 }
 body, html {
   /* On mobile, we scroll the #mobile-gallery div, not the body */
   /* But we need to make sure the body doesn't block it */
   margin: 0;
   padding: 0;
-  background-color: #000;
+  background-color: #ffffff;
   height: 100%;
   overflow: hidden; /* This is fine because #mobile-gallery handles the scroll */
 }
