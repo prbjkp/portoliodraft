@@ -96,6 +96,46 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             console.log(`✅ Added ${mobileGallery.children.length} images to mobile gallery`);
+            
+            // --- AUTO-SCROLL FUNCTION ---
+            let autoScrollInterval;
+            let isUserScrolling = false;
+            let scrollTimeout;
+            
+            // Detect user scrolling
+            mobileGallery.addEventListener('scroll', () => {
+                isUserScrolling = true;
+                clearInterval(autoScrollInterval);
+                clearTimeout(scrollTimeout);
+                
+                // Resume auto-scroll after 3 seconds of no user interaction
+                scrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                    startAutoScroll();
+                }, 3000);
+            });
+            
+            // Auto-scroll function
+            function startAutoScroll() {
+                autoScrollInterval = setInterval(() => {
+                    if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
+                        mobileGallery.scrollBy({
+                            top: 1,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Reset to top when reaching bottom
+                        if (mobileGallery.scrollTop + mobileGallery.clientHeight >= mobileGallery.scrollHeight - 10) {
+                            setTimeout(() => {
+                                mobileGallery.scrollTo({ top: 0, behavior: 'smooth' });
+                            }, 2000);
+                        }
+                    }
+                }, 30); // Scroll speed (lower = faster)
+            }
+            
+            // Start auto-scroll after hints finish (about 12 seconds)
+            setTimeout(startAutoScroll, 12000);
         }
 
         // --- B. MOBILE HINTS ---
