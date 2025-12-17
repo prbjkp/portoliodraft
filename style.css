@@ -654,3 +654,47 @@ body, html {
 #scene, #center-sphere, #menu-icon, #start-text-ring {
   pointer-events: auto; 
 }}
+
+
+/* --- DESKTOP RESET (Add this to the end of style.css) --- */
+@media (min-width: 768px) {
+
+  /* 1. Reset the wrapper so it doesn't block the screen */
+  #scene-wrapper {
+    position: static; /* Stop floating on top */
+    width: 100%;
+    height: 100vh;
+    background: none; /* Remove the dark gradient */
+    display: block;   /* Stop forcing things to the bottom */
+    pointer-events: none; /* Let clicks pass through the empty container */
+    z-index: 1;
+  }
+
+  /* 2. Force the Menu Button to be clickable and positioned correctly */
+  #menu-icon {
+    position: fixed; /* Lock it to the screen corner */
+    top: 30px;       /* Move to TOP right (standard for desktop) */
+    right: 30px;
+    bottom: auto;    /* Override the mobile 'bottom' setting */
+    pointer-events: auto !important; /* FORCE it to be clickable */
+    z-index: 1000;   /* Ensure it's on top of everything */
+    display: block;  /* Make sure it's visible */
+  }
+
+  /* 3. Ensure the Sphere is clickable */
+  #scene {
+    pointer-events: auto !important;
+    /* You might want to position the sphere specifically for desktop here */
+    /* e.g., margin: 0 auto; or float: right; depending on your design */
+  }
+
+  /* 4. Hide the mobile-only background gallery */
+  #mobile-gallery {
+    display: none !important;
+  }
+  
+  /* 5. Hide mobile-only hints if they are annoying on desktop */
+  #hud-hints {
+    display: none;
+  }
+}
