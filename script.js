@@ -19,14 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const contentOverlay = document.getElementById("content-overlay");
     const contentContainer = document.getElementById("content-container");
     const backButton = document.getElementById("back-button");
-    const startContainer = document.getElementById("start-container");
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
 
     /**********************************************************
-     * 2. SPHERE MATH VARIABLES (Moved Up!)
+     * 2. SPHERE MATH VARIABLES
      **********************************************************/
-    // These must be defined BEFORE the Desktop Logic runs
     const sphereRadius = 2200;
     const positions = [];
     let rotX = 0, rotY = 0;
@@ -36,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let textOrbit = 0;
     const TEXT_RING_DISTANCE = 95;
 
-    // Define the function here so it is ready to be used
     function computePositions() {
         positions.length = 0;
         const total = photos.length;
@@ -52,7 +49,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**********************************************************
-     * 3. LOGIC SWITCHER (MOBILE VS DESKTOP)
+     * 3. HUD HINTS - AUTO SHOW ON LOAD
+     **********************************************************/
+    function showHints() {
+        let index = 0;
+        function showNextHint() {
+            if (index >= hudHints.length) {
+                // All hints shown, fade out scene dimming
+                if (scene) scene.classList.remove("dimmed");
+                return;
+            }
+            if (index === 0 && scene) scene.classList.add("dimmed");
+            if (index > 0) hudHints[index - 1].classList.remove("active");
+            
+            hudHints[index].classList.add("active");
+            
+            setTimeout(() => {
+                hudHints[index].classList.remove("active");
+                index++;
+                setTimeout(showNextHint, 500);
+            }, 3000);
+        }
+        setTimeout(showNextHint, 2000); // Start 2 seconds after load
+    }
+
+    /**********************************************************
+     * 4. LOGIC SWITCHER (MOBILE VS DESKTOP)
      **********************************************************/
     if (isMobile) {
         console.log("📱 Mobile Mode Active");
@@ -63,38 +85,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
             photos.forEach(photoDiv => {
                 const originalImg = photoDiv.querySelector('img');
-                if (originalImg) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'gallery-item';
-                    
-                    const newImg = originalImg.cloneNode(true);
-                    newImg.removeAttribute('id');
+                if (originalImg && originalImg.src) {
+                    const newImg = document.createElement('img');
+                    newImg.src = originalImg.src;
+                    newImg.alt = originalImg.alt || 'Gallery image';
                     
                     newImg.addEventListener('click', () => {
                         openOverlay(newImg.src);
                     });
 
-                    wrapper.appendChild(newImg);
-                    mobileGallery.appendChild(wrapper);
+                    mobileGallery.appendChild(newImg);
                 }
             });
+
+            console.log(`✅ Added ${mobileGallery.children.length} images to mobile gallery`);
         }
 
         // --- B. MOBILE HINTS ---
         if (hudHints.length >= 3) {
-            hudHints[0].textContent = "Scroll to view";
-            hudHints[1].textContent = "Tap to enlarge";
-            hudHints[2].textContent = "Menu at bottom";
+            hudHints[0].textContent = "Scroll to view all photos";
+            hudHints[1].textContent = "Tap any photo to enlarge";
+            hudHints[2].textContent = "Menu button at bottom";
         }
+
+        // Hide text ring on mobile
+        if (textRing) textRing.style.display = "none";
 
     } else {
         console.log("💻 Desktop Mode Active");
         
-        // NOW this works because computePositions is defined above!
         computePositions();
         animateSphere();
+        showHints(); // Start HUD hints on desktop
         
-        // Desktop Listeners
+        // Desktop Photo Listeners
         photos.forEach(photo => {
             const img = photo.querySelector("img");
             if (img) {
@@ -106,7 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener("resize", computePositions);
         
         // Mouse Drag Logic
-        window.addEventListener("mousedown", e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
+        window.addEventListener("mousedown", e => { 
+            isDragging = true; 
+            lastX = e.clientX; 
+            lastY = e.clientY; 
+        });
         window.addEventListener("mouseup", () => isDragging = false);
         window.addEventListener("mouseleave", () => isDragging = false);
         window.addEventListener("mousemove", e => {
@@ -119,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**********************************************************
-     * 4. SHARED FUNCTIONS
+     * 5. SHARED FUNCTIONS
      **********************************************************/
 
     function animateSphere() {
@@ -165,10 +193,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- MENU LOGIC ---
+    // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
     if (centerSphere) {
         centerSphere.addEventListener("click", (e) => {
             e.stopPropagation();
+            console.log("Menu sphere clicked!");
             dropdownMenu.classList.add("active");
             dropdownMenu.style.display = "flex"; 
         });
@@ -191,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 contentOverlay.classList.add("active");
             }
             dropdownMenu.classList.remove("active");
+            setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
         });
     });
 
@@ -199,34 +229,13 @@ document.addEventListener("DOMContentLoaded", () => {
             contentOverlay.classList.remove("active");
         });
     }
-
-    // --- START SCREEN ---
-    if (startContainer) {
-        startContainer.addEventListener("click", () => {
-            if(textRing) textRing.style.opacity = "0";
-            if(scene) scene.style.opacity = "1";
-            
-            let index = 0;
-            function showNextHint() {
-                if (index >= hudHints.length) return;
-                if (index > 0) hudHints[index - 1].classList.remove("active");
-                hudHints[index].classList.add("active");
-                setTimeout(() => {
-                    hudHints[index].classList.remove("active");
-                    index++;
-                    setTimeout(showNextHint, 500);
-                }, 4000);
-            }
-            setTimeout(showNextHint, 1000);
-        });
-    }
 });
 
 // --- HELPER: PAGE CONTENT ---
 function getPageContent(page) {
     const contents = {
-        about: `<h1>About Peter Kopp</h1><p>Welcome to my portfolio.</p>`,
-        contact: `<h1>Contact Me</h1><p>Email: peter@example.com</p>`
+        about: `<h1>About Peter Kopp</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
+        contact: `<h1>Contact Me</h1><p>Email: peter@example.com</p><p>Instagram: @peterkoppphotography</p>`
     };
     return contents[page] || '<h1>Page Not Found</h1>';
 }
