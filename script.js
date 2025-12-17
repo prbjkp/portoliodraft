@@ -368,3 +368,53 @@ document.addEventListener('submit', (e) => {
     });
   }
 });
+
+
+// ... (Your existing HUD Hint code is above here) ...
+
+// auto-fire 2 seconds after page load
+window.addEventListener("load", () => {
+  setTimeout(playHudHints, HINT_START_DELAY);
+});
+
+/* ==================================================
+   MOBILE vs DESKTOP SWITCHER
+================================================== */
+const isMobile = window.innerWidth < 768; // Check if screen is narrow
+
+if (isMobile) {
+  console.log("Mobile mode detected: Switching to scroll view");
+
+  // 1. Get the container
+  const mobileContainer = document.getElementById('mobile-gallery');
+  
+  // 2. Clone every image from the 3D sphere and put it in the mobile gallery
+  photos.forEach(photoDiv => {
+    const originalImg = photoDiv.querySelector('img');
+    if (originalImg) {
+      const newImg = originalImg.cloneNode(true);
+      
+      // Optional: Add click-to-zoom for mobile images too
+      newImg.addEventListener('click', () => {
+        overlayImg.src = newImg.src;
+        overlay.style.display = "flex";
+        overlay.style.pointerEvents = "auto";
+        requestAnimationFrame(() => overlay.style.opacity = "1");
+      });
+
+      mobileContainer.appendChild(newImg);
+    }
+  });
+
+  // 3. Hide the hints on mobile (optional, as they might block view)
+  document.getElementById('hud-hints').style.display = 'none';
+
+} else {
+  // DESKTOP MODE: Start the 3D Animation Loop
+  console.log("Desktop mode: Starting 3D sphere");
+  animateSphere();
+}
+
+// Final console logs
+console.log("Script is running!");
+console.log("Number of photos:", photos.length);
