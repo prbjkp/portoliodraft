@@ -118,18 +118,19 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Detect user scrolling
             mobileGallery.addEventListener('scroll', () => {
-                isUserScrolling = true;
-                clearInterval(autoScrollInterval);
-                clearTimeout(scrollTimeout);
-                
                 // Check if we need to loop manually when user scrolls
                 handleInfiniteScroll();
-                
-                // Resume auto-scroll after 3 seconds of no user interaction
-                scrollTimeout = setTimeout(() => {
-                    isUserScrolling = false;
-                    startAutoScroll();
-                }, 3000);
+            });
+            
+            // Detect when user is actively touching/scrolling
+            mobileGallery.addEventListener('touchstart', () => {
+                isUserScrolling = true;
+                clearInterval(autoScrollInterval);
+            });
+            
+            mobileGallery.addEventListener('touchend', () => {
+                isUserScrolling = false;
+                startAutoScroll();
             });
             
             // Handle infinite scroll loop
@@ -153,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoScrollInterval = setInterval(() => {
                     if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
                         mobileGallery.scrollBy({
-                            top: 4, // Increased from 2 to 4 for much faster scroll
+                            top: 4,
                             behavior: 'auto'
                         });
                         
