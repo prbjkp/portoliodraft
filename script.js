@@ -120,8 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoScrollInterval = setInterval(() => {
                     if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
                         mobileGallery.scrollBy({
-                            top: 1,
-                            behavior: 'smooth'
+                            top: 2, // Increased from 1 to 2 for faster scroll
+                            behavior: 'auto' // Changed from 'smooth' to 'auto' for smoother animation
                         });
                         
                         // Reset to top when reaching bottom
@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             }, 2000);
                         }
                     }
-                }, 30); // Scroll speed (lower = faster)
+                }, 16); // Changed from 30 to 16 (60fps) for smoother animation
             }
             
             // Start auto-scroll immediately
