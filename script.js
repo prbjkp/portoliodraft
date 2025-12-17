@@ -17,7 +17,10 @@ const contentContainer = document.getElementById("content-container");
 const backButton = document.getElementById("back-button");
 const startContainer = document.getElementById("start-container");
 const isMobile = window.innerWidth < 768; // <--- ADD THIS LINE HERE
-
+/* At the top of your file */
+let mobileContainer = null;
+let autoScrollActive = true;
+let scrollSpeed = 1.0;
 /**********************************************************
  * TEXT RING CONSTANTS
  **********************************************************/
@@ -378,167 +381,48 @@ window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
 /* ==================================================
-   MOBILE LOGIC (Final Scroll Fix)
+   MOBILE vs DESKTOP SWITCHER (Final Integration)
 ================================================== */
+
 if (isMobile) {
   console.log("Mobile mode: Active");
 
-  // 1. Setup Container
-  // We DO NOT lock document.body overflow here, allowing the fixed gallery to handle it.
-  const mobileContainer = document.getElementById('mobile-gallery');
-  
-  // 2. Clear previous content (safety check) & Clone Images
-  mobileContainer.innerHTML = ''; 
-  
-  photos.forEach((photoDiv, index) => {
-    const originalImg = photoDiv.querySelector('img');
-    if (originalImg) {
-      const newImg = originalImg.cloneNode(true);
-      
-      // Ensure image is fully loaded before calculating layout (optional optimization)
-      newImg.loading = "lazy"; 
-      
-      // Click to zoom
-      newImg.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent stopping scroll on simple tap
-        overlayImg.src = newImg.src;
-        overlay.style.display = "flex";
-        overlay.style.pointerEvents = "auto";
-        requestAnimationFrame(() => overlay.style.opacity = "1");
+  // 1. Assign the container (Using the variable from the top)
+  mobileContainer = document.getElementById('mobile-gallery');
+
+  if (mobileContainer) {
+      // Clear previous content
+      mobileContainer.innerHTML = ''; 
+
+      // 2. Clone images
+      photos.forEach(photoDiv => {
+        const originalImg = photoDiv.querySelector('img');
+        if (originalImg) {
+          const newImg = originalImg.cloneNode(true);
+          
+          // Click-to-zoom logic
+          newImg.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            overlayImg.src = newImg.src;
+            overlay.style.display = "flex";
+            overlay.style.pointerEvents = "auto";
+            requestAnimationFrame(() => overlay.style.opacity = "1");
+          });
+
+          mobileContainer.appendChild(newImg);
+        }
       });
-
-      mobileContainer.appendChild(newImg);
-    }
-  });
-
-  // 3. SHOW HINTS
-  const hints = document.querySelectorAll('.hud-hint');
-  const hudContainer = document.getElementById('hud-hints');
-  
-  if (hudContainer) {
-      hudContainer.style.display = 'block';
-      // Allow clicks to pass through hints so they don't block scrolling
-      hudContainer.style.pointerEvents = 'none'; 
-  }
-  
-  if (hints.length >= 3) {
-      hints[0].textContent = "Auto-scrolling...";
-      hints[1].textContent = "Touch to control";
-      hints[2].textContent = "Menu at bottom";
-  }
-
-  // ==================================================
-  // AUTO-SCROLL ENGINE
-  // ==================================================
-  let autoScrollActive = true;
-  let scrollSpeed = 0.8; // Slightly faster to be noticeable
-
-  function autoScrollLoop() {
-    if (!autoScrollActive) return;
-
-    // Check if we can actually scroll (content exists)
-    if (mobileContainer.scrollHeight > mobileContainer.clientHeight) {
-        mobileContainer.scrollTop += scrollSpeed;
-    }
-    
-    requestAnimationFrame(autoScrollLoop);
-  }
-
-  // Start after a brief delay to let images render
-  setTimeout(autoScrollLoop, 500);
-
-  // ==================================================
-  // USER CONTROL HANDLER
-  // ==================================================
-  function stopAutoScroll() {
-    if (autoScrollActive) {
-      autoScrollActive = false;
-      console.log("User took control.");
-      if (hints.length > 0) hints[0].textContent = "Scroll to explore";
-    }
-  }
-
-  // Stop auto-scroll on ANY interaction
-  mobileContainer.addEventListener("touchstart", stopAutoScroll, { passive: true });
-  mobileContainer.addEventListener("wheel", stopAutoScroll, { passive: true });
-  mobileContainer.addEventListener("mousedown", stopAutoScroll);
-
-} else {
-  // DESKTOP MODE
-  console.log("Desktop mode: Starting 3D sphere");
-  animateSphere();
-}
-  // ==================================================
-  // AUTO-SCROLL ENGINE
-  // ==================================================
-  let autoScrollActive = true;
-  let scrollSpeed = 0.5; // Pixels per frame (Lower = Slower)
-
-  function autoScrollLoop() {
-    if (!autoScrollActive) return; // Stop if user took over
-
-    // 1. Move the scroll position down slightly
-    mobileContainer.scrollTop += scrollSpeed;
-
-    // 2. Check if we reached the bottom (Optional: Loop back to top?)
-    // If (scrollTop + clientHeight >= scrollHeight) { mobileContainer.scrollTop = 0; } 
-
-    // 3. Keep running
-    requestAnimationFrame(autoScrollLoop);
-  }
-
-  // Start the engine
-  // Small timeout lets the images load/layout first
-  setTimeout(autoScrollLoop, 1000); 
-
-
-  // ==================================================
-  // USER INTERACTION (Stop Auto-Scroll)
-  // ==================================================
-  function stopAutoScroll() {
-    if (autoScrollActive) {
-      autoScrollActive = false;
-      console.log("User took control - stopping auto-scroll");
       
-      // Update hint to reflect manual control
-      if (hints.length > 0) hints[0].textContent = "Scroll to explore";
-    }
+      // 3. Start Auto-Scroll (Function defined below)
+      setTimeout(startMobileScroll, 1000);
+      
+      // 4. Stop on interaction
+      mobileContainer.addEventListener("touchstart", stopMobileScroll, { passive: true });
+      mobileContainer.addEventListener("wheel", stopMobileScroll, { passive: true });
+      mobileContainer.addEventListener("mousedown", stopMobileScroll);
   }
 
-  // Listen for ANY user interaction on the gallery
-  mobileContainer.addEventListener("touchstart", stopAutoScroll);
-  mobileContainer.addEventListener("wheel", stopAutoScroll);
-  mobileContainer.addEventListener("mousedown", stopAutoScroll);
-  /* ==================================================
-   MOBILE vs DESKTOP SWITCHER (Fixed Scope)
-================================================== */
-if (isMobile) {
-  console.log("Mobile mode: Active");
-
-  // 1. Get Container and Clear it
-  const mobileContainer = document.getElementById('mobile-gallery');
-  mobileContainer.innerHTML = ''; 
-
-  // 2. Clone images
-  photos.forEach(photoDiv => {
-    const originalImg = photoDiv.querySelector('img');
-    if (originalImg) {
-      const newImg = originalImg.cloneNode(true);
-      
-      // Click to zoom
-      newImg.addEventListener('click', (e) => {
-        e.stopPropagation(); 
-        overlayImg.src = newImg.src;
-        overlay.style.display = "flex";
-        overlay.style.pointerEvents = "auto";
-        requestAnimationFrame(() => overlay.style.opacity = "1");
-      });
-
-      mobileContainer.appendChild(newImg);
-    }
-  });
-
-  // 3. Setup Hints
+  // 5. Update Hints
   const hudHintsContainer = document.getElementById('hud-hints');
   if (hudHintsContainer) {
       hudHintsContainer.style.display = 'block';
@@ -552,59 +436,44 @@ if (isMobile) {
       }
   }
 
-  // ==================================================
-  // AUTO-SCROLL ENGINE (Scoped Correctly)
-  // ==================================================
-  let autoScrollActive = true;
-  let scrollSpeed = 1; // Speed: Higher is faster
-
-  function startAutoScroll() {
-      
-      function loop() {
-          // If user touched screen, stop loop
-          if (!autoScrollActive) return;
-
-          // Scroll down
-          if (mobileContainer) {
-              mobileContainer.scrollTop += scrollSpeed;
-
-              // INFINITE ROTATION: If we reach bottom, jump to top
-              if (mobileContainer.scrollTop + mobileContainer.clientHeight >= mobileContainer.scrollHeight - 5) {
-                  mobileContainer.scrollTop = 0;
-              }
-          }
-          
-          requestAnimationFrame(loop);
-      }
-      
-      // Start the loop
-      requestAnimationFrame(loop);
-  }
-
-  // Start after small delay
-  setTimeout(startAutoScroll, 1000);
-
-  // ==================================================
-  // STOP ON INTERACTION
-  // ==================================================
-  function stopScrolling() {
-      if (autoScrollActive) {
-          autoScrollActive = false;
-          console.log("User took control.");
-          const hints = document.querySelectorAll('.hud-hint');
-          if (hints.length > 0) hints[0].textContent = "Scroll to explore";
-      }
-  }
-
-  mobileContainer.addEventListener("touchstart", stopScrolling, { passive: true });
-  mobileContainer.addEventListener("wheel", stopScrolling, { passive: true });
-  mobileContainer.addEventListener("mousedown", stopScrolling);
-
 } else {
   // DESKTOP MODE
   console.log("Desktop mode: Starting 3D sphere");
   animateSphere();
 }
 
-// Final Check
-console.log("Script loaded. Mobile mode:", isMobile);
+/* ==================================================
+   HELPER FUNCTIONS
+================================================== */
+
+function startMobileScroll() {
+    // Check if container exists
+    if (!mobileContainer) return;
+
+    function loop() {
+        // Check global flag
+        if (!autoScrollActive) return;
+
+        // Scroll
+        mobileContainer.scrollTop += scrollSpeed;
+
+        // Reset to top if we hit bottom (Infinite Scroll effect)
+        if (mobileContainer.scrollTop + mobileContainer.clientHeight >= mobileContainer.scrollHeight - 5) {
+            mobileContainer.scrollTop = 0;
+        }
+
+        requestAnimationFrame(loop);
+    }
+    
+    requestAnimationFrame(loop);
+}
+
+function stopMobileScroll() {
+    if (autoScrollActive) {
+        autoScrollActive = false;
+        console.log("User took control - stopping auto-scroll");
+        
+        const hints = document.querySelectorAll('.hud-hint');
+        if (hints.length > 0) hints[0].textContent = "Scroll to explore";
+    }
+}
