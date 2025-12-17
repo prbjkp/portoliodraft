@@ -55,11 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let index = 0;
         function showNextHint() {
             if (index >= hudHints.length) {
-                // All hints shown, fade out scene dimming
-                if (scene) scene.classList.remove("dimmed");
                 return;
             }
-            if (index === 0 && scene) scene.classList.add("dimmed");
             if (index > 0) hudHints[index - 1].classList.remove("active");
             
             hudHints[index].classList.add("active");
@@ -105,8 +102,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (hudHints.length >= 3) {
             hudHints[0].textContent = "Scroll to view all photos";
             hudHints[1].textContent = "Tap any photo to enlarge";
-            hudHints[2].textContent = "Menu button at bottom";
+            hudHints[2].textContent = "Menu button below";
         }
+
+        // Show hints on mobile too
+        showHints();
 
         // Hide text ring on mobile
         if (textRing) textRing.style.display = "none";
