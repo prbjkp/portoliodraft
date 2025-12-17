@@ -11,6 +11,22 @@ html, body {
   background: #ffffff; /* white background */
   color: black;        /* default text black */
 }
+body, html {
+  /* On mobile, we scroll the #mobile-gallery div, not the body */
+  /* But we need to make sure the body doesn't block it */
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  height: 100%;
+  overflow: hidden; /* This is fine because #mobile-gallery handles the scroll */
+}
+
+/* Ensure mobile gallery allows scrolling */
+#mobile-gallery {
+  /* ... keep your existing settings ... */
+  overflow-y: auto; 
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iPhone */
+}
 
 /* ==================================================
    START BUTTON SPHERE & GROUP
@@ -82,14 +98,31 @@ html, body {
 /* ==================================================
    HUD HINTS (FIXED VERSION)
 ================================================== */
+/* --- FIX HINTS --- */
 #hud-hints {
-  position: fixed;
-  top: calc(50% + 120px);
+  position: absolute;
+  /* Position them above the sphere area */
+  bottom: 350px; 
   left: 50%;
   transform: translateX(-50%);
-  z-index: 60;
-  pointer-events: none;
+  width: 80%;
   text-align: center;
+  z-index: 20; /* Ensure they sit on top of everything */
+  pointer-events: none; /* Text shouldn't block touches either */
+}
+
+.hud-hint {
+  color: white; /* Ensure text is white */
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for readability */
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 20px;
+  font-size: 14px;
+  opacity: 1; /* Force visibility */
+  transition: opacity 0.5s;
+  
+  /* Ensure it's not hidden by display:none property from elsewhere */
+  display: block; 
 }
 
 .hud-hint {
@@ -597,14 +630,27 @@ html, body {
   #mobile-gallery {
     display: none !important; /* Instantly hides the mobile gallery */
   }
-
-  /* Reset the sphere wrapper so it doesn't stick to the bottom on desktop */
-  #scene-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background: none;
-    pointer-events: auto;
-    z-index: auto;
-  }
+  /* --- FIX SCROLLING --- */
+#scene-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh; /* Allow it to be full height for layout purposes... */
+  z-index: 10;
+  
+  /* CRITICAL: This lets you click/scroll "through" the empty parts of this layer */
+  pointer-events: none; 
+  
+  /* Layout centering */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Pushes everything to bottom */
+  align-items: center;
+  padding-bottom: 20px;
 }
+
+/* Re-enable clicking ONLY for the things you actually need to touch */
+#scene, #center-sphere, #menu-icon, #start-text-ring {
+  pointer-events: auto; 
+}}
