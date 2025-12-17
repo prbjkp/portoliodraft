@@ -57,17 +57,13 @@ html, body {
   object-fit: contain;
 }
 
-/* Stagger images left and right */
-#mobile-gallery img:nth-child(3n+1) {
+/* Alternate images between left and right */
+#mobile-gallery img:nth-child(odd) {
   align-self: flex-start;
   margin-left: 5%;
 }
 
-#mobile-gallery img:nth-child(3n+2) {
-  align-self: center;
-}
-
-#mobile-gallery img:nth-child(3n+3) {
+#mobile-gallery img:nth-child(even) {
   align-self: flex-end;
   margin-right: 5%;
 }
