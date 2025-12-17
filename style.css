@@ -505,7 +505,7 @@ html, body {
 
 
 /* ==================================================
-   MOBILE VIEW MODE (Pinterest/Masonry Style)
+   MOBILE VIEW MODE (High Density Masonry)
 ================================================== */
 #mobile-gallery {
   display: none; 
@@ -515,25 +515,24 @@ html, body {
   width: 100%;
   height: 100%;
   overflow-y: scroll; 
-  /* Add space at bottom so the menu button doesn't cover the last photo */
-  padding: 20px 20px 120px 20px; 
+  padding: 20px 10px 120px 10px; /* Tighter padding on sides */
   box-sizing: border-box;
-  background: #f0f0f0; /* Slight gray bg makes photos pop */
+  background: #f4f4f4;
   z-index: 5; 
   -webkit-overflow-scrolling: touch;
 
-  /* --- THIS CREATES THE STAGGERED GRID --- */
-  column-count: 2;   /* 2 Columns */
-  column-gap: 15px;  /* Gaps between columns */
+  /* --- HIGH DENSITY PACKING --- */
+  column-count: 3;   /* 3 Columns for maximum density */
+  column-gap: 8px;   /* Very small gap between columns */
 }
 
 /* Style for images inside the mobile gallery */
 #mobile-gallery img {
   width: 100%;
   height: auto;
-  margin-bottom: 15px; /* Space below each image */
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  margin-bottom: 8px; /* Tighter spacing below images */
+  border-radius: 4px; /* Smaller radius for tighter look */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   display: block;
   
   /* CRITICAL: Keeps images from splitting across columns */
@@ -541,5 +540,9 @@ html, body {
   -webkit-column-break-inside: avoid;
 }
 
-/* On very small phones, you might want to adjust, 
-   but 2 columns usually looks best on modern phones. */
+/* If the screen is slightly larger (large phones), keep 3 columns */
+@media (min-width: 450px) {
+  #mobile-gallery {
+    column-count: 3;
+  }
+}

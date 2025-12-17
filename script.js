@@ -377,49 +377,38 @@ window.addEventListener("load", () => {
   setTimeout(playHudHints, HINT_START_DELAY);
 });
 
-/* ==================================================
-   MOBILE vs DESKTOP SWITCHER
-================================================== */
-const isMobile = window.innerWidth < 768; // Check if screen is narrow
-
 if (isMobile) {
-  console.log("Mobile mode detected: Switching to masonry scroll view");
+  console.log("Mobile mode detected: Switching to high-density view");
 
-  // 1. Get the container
   const mobileContainer = document.getElementById('mobile-gallery');
   
-  // 2. Clone every image from the 3D sphere and put it in the mobile gallery
+  // Clone images
   photos.forEach(photoDiv => {
     const originalImg = photoDiv.querySelector('img');
     if (originalImg) {
       const newImg = originalImg.cloneNode(true);
-      
-      // Add click-to-zoom for mobile images
       newImg.addEventListener('click', () => {
         overlayImg.src = newImg.src;
         overlay.style.display = "flex";
         overlay.style.pointerEvents = "auto";
         requestAnimationFrame(() => overlay.style.opacity = "1");
       });
-
       mobileContainer.appendChild(newImg);
     }
   });
 
-  // 3. CHANGE THE HINTS (Don't hide them!)
-  // We need to update the text because "Drag to Rotate" is wrong for mobile
+  // UPDATE HINTS FOR SCROLLING
   const hints = document.querySelectorAll('.hud-hint');
   if (hints.length >= 3) {
       hints[0].textContent = "Scroll to explore gallery";
-      hints[1].textContent = "Tap any photo to zoom";
-      hints[2].textContent = "Tap the bottom button for Menu";
+      hints[1].textContent = "Tap to zoom";
+      hints[2].textContent = "Menu at bottom";
   }
   
-  // Ensure the container is visible (just in case)
+  // Force hints to be visible
   document.getElementById('hud-hints').style.display = 'block';
 
 } else {
-  // DESKTOP MODE: Start the 3D Animation Loop
   console.log("Desktop mode: Starting 3D sphere");
   animateSphere();
 }
