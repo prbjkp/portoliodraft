@@ -53,6 +53,38 @@ function computePositions() {
 computePositions();
 window.addEventListener("resize", computePositions);
 
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const galleryContainer = document.getElementById('mobile-gallery');
+  const sphereImages = document.querySelectorAll('#sphere .photo img');
+
+  // If no images found, stop.
+  if (sphereImages.length === 0) return;
+
+  sphereImages.forEach(img => {
+    // Clone the image
+    const clone = img.cloneNode(true);
+    
+    // Make sure the clone doesn't have ID conflicts (optional but safe)
+    clone.removeAttribute('id'); 
+    
+    // Add click event for full screen (re-using your overlay logic)
+    clone.addEventListener('click', () => {
+       const overlay = document.getElementById('overlay');
+       const overlayImg = document.getElementById('overlay-img');
+       // Only if overlay elements exist
+       if(overlay && overlayImg) {
+         overlayImg.src = clone.src;
+         overlay.style.display = 'flex';
+       }
+    });
+
+    galleryContainer.appendChild(clone);
+  });
+});
+
 /**********************************************************
  * 3. IMAGE HANDLING (Orientation & Dragging)
  **********************************************************/

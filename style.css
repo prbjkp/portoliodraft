@@ -562,41 +562,49 @@ html, body {
 }
 
 /* 1. Make the Gallery fill the screen and scroll */
+/* --- MOBILE GALLERY STYLES (Default) --- */
 #mobile-gallery {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  overflow-y: scroll; /* Enables scrolling */
-  z-index: 1; /* Sends it to the back */
-  padding-bottom: 300px; /* Space at bottom so sphere doesn't cover last image */
+  overflow-y: auto;
+  z-index: 0; /* Keeps it behind the sphere */
   
-  /* Layout for the images */
+  /* Create a clean grid layout instead of one giant image stack */
   display: grid;
-  grid-template-columns: 1fr; /* 1 column for mobile */
-  gap: 15px;
-  padding: 15px;
+  grid-template-columns: repeat(2, 1fr); /* 2 images side-by-side */
+  gap: 10px;
+  padding: 10px;
+  padding-bottom: 350px; /* Space for the sphere at the bottom */
+  
+  background-color: #000; /* Ensures background is black, not transparent */
 }
 
+/* Force images to fit the grid cells */
 #mobile-gallery img {
   width: 100%;
+  height: 200px; /* Force a consistent height */
+  object-fit: cover; /* Crops the image neatly so it doesn't stretch */
+  border-radius: 4px;
   display: block;
 }
 
-/* 2. Fix the Navigation Sphere Layer on top */
-#nav-layer {
-  position: fixed; /* Sticks to screen */
-  bottom: 20px;    /* Position at bottom */
-  left: 50%;
-  transform: translateX(-50%); /* Center horizontally */
-  width: 300px;    /* Adjust size as needed */
-  height: 300px;
-  z-index: 10;     /* Brings it to the front */
-  pointer-events: none; /* Lets clicks pass through empty spaces */
-}
+/* --- DESKTOP MODE (The Kill Switch) --- */
+/* This rule activates ONLY when screen is wider than 768px (Desktop/Laptop) */
+@media (min-width: 768px) {
+  #mobile-gallery {
+    display: none !important; /* Instantly hides the mobile gallery */
+  }
 
-/* 3. Ensure the Sphere and Controls interact */
-#scene, #center-sphere, #start-text-ring {
-  pointer-events: auto; /* Re-enable clicking on the actual sphere parts */
+  /* Reset the sphere wrapper so it doesn't stick to the bottom on desktop */
+  #scene-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: none;
+    pointer-events: auto;
+    z-index: auto;
+  }
 }
