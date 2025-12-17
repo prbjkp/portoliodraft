@@ -80,33 +80,50 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mobileGallery && photos.length > 0) {
             mobileGallery.innerHTML = ''; // Clean start
 
+            // Create array of images to duplicate
+            const imageArray = [];
+            
             photos.forEach(photoDiv => {
                 const originalImg = photoDiv.querySelector('img');
                 if (originalImg && originalImg.src) {
+                    imageArray.push(originalImg.src);
+                }
+            });
+
+            // Duplicate images 3 times for infinite scroll effect
+            const duplicateCount = 3;
+            for (let i = 0; i < duplicateCount; i++) {
+                imageArray.forEach(src => {
                     const newImg = document.createElement('img');
-                    newImg.src = originalImg.src;
-                    newImg.alt = originalImg.alt || 'Gallery image';
+                    newImg.src = src;
+                    newImg.alt = 'Gallery image';
                     
                     newImg.addEventListener('click', () => {
                         openOverlay(newImg.src);
                     });
 
                     mobileGallery.appendChild(newImg);
-                }
-            });
+                });
+            }
 
-            console.log(`✅ Added ${mobileGallery.children.length} images to mobile gallery`);
+            console.log(`✅ Added ${mobileGallery.children.length} images to mobile gallery (with duplicates)`);
             
-            // --- AUTO-SCROLL FUNCTION ---
+            // --- INFINITE AUTO-SCROLL FUNCTION ---
             let autoScrollInterval;
             let isUserScrolling = false;
             let scrollTimeout;
+            
+            // Calculate when to reset scroll position (1/3 through since we have 3 copies)
+            const resetPoint = mobileGallery.scrollHeight / duplicateCount;
             
             // Detect user scrolling
             mobileGallery.addEventListener('scroll', () => {
                 isUserScrolling = true;
                 clearInterval(autoScrollInterval);
                 clearTimeout(scrollTimeout);
+                
+                // Check if we need to loop manually when user scrolls
+                handleInfiniteScroll();
                 
                 // Resume auto-scroll after 3 seconds of no user interaction
                 scrollTimeout = setTimeout(() => {
@@ -115,24 +132,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 3000);
             });
             
+            // Handle infinite scroll loop
+            function handleInfiniteScroll() {
+                const scrollPos = mobileGallery.scrollTop;
+                const maxScroll = mobileGallery.scrollHeight - mobileGallery.clientHeight;
+                
+                // If scrolled to bottom, jump back to middle section
+                if (scrollPos >= maxScroll - 10) {
+                    mobileGallery.scrollTop = resetPoint;
+                }
+                
+                // If scrolled to top, jump to middle section
+                if (scrollPos <= 10) {
+                    mobileGallery.scrollTop = resetPoint;
+                }
+            }
+            
             // Auto-scroll function
             function startAutoScroll() {
                 autoScrollInterval = setInterval(() => {
                     if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
                         mobileGallery.scrollBy({
-                            top: 2, // Increased from 1 to 2 for faster scroll
-                            behavior: 'auto' // Changed from 'smooth' to 'auto' for smoother animation
+                            top: 2,
+                            behavior: 'auto'
                         });
                         
-                        // Reset to top when reaching bottom
-                        if (mobileGallery.scrollTop + mobileGallery.clientHeight >= mobileGallery.scrollHeight - 10) {
-                            setTimeout(() => {
-                                mobileGallery.scrollTo({ top: 0, behavior: 'smooth' });
-                            }, 2000);
-                        }
+                        // Handle infinite loop for auto-scroll
+                        handleInfiniteScroll();
                     }
-                }, 16); // Changed from 30 to 16 (60fps) for smoother animation
+                }, 16);
             }
+            
+            // Start at middle section for seamless looping
+            mobileGallery.scrollTop = resetPoint;
             
             // Start auto-scroll immediately
             startAutoScroll();
