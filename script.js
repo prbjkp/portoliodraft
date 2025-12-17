@@ -1,13 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     /**********************************************************
-     * 1. CORE VARIABLES & SETUP
+     * 1. CORE VARIABLES & DOM ELEMENTS
      **********************************************************/
     const isMobile = window.innerWidth < 768;
     
-    // Select elements INSIDE the listener to ensure they exist
     const sphere = document.getElementById("sphere");
-    const photos = document.querySelectorAll(".photo"); // Now this will find them!
+    const photos = document.querySelectorAll(".photo");
     const scene = document.getElementById("scene");
     const textRing = document.getElementById("start-text-ring");
     const textRingSvg = document.getElementById("text-ring-svg");
@@ -25,7 +24,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileGallery = document.getElementById('mobile-gallery');
 
     /**********************************************************
-     * 2. LOGIC SWITCHER (MOBILE VS DESKTOP)
+     * 2. SPHERE MATH VARIABLES (Moved Up!)
+     **********************************************************/
+    // These must be defined BEFORE the Desktop Logic runs
+    const sphereRadius = 2200;
+    const positions = [];
+    let rotX = 0, rotY = 0;
+    let targetRotX = 0, targetRotY = 0;
+    let isDragging = false;
+    let lastX = 0, lastY = 0;
+    let textOrbit = 0;
+    const TEXT_RING_DISTANCE = 95;
+
+    // Define the function here so it is ready to be used
+    function computePositions() {
+        positions.length = 0;
+        const total = photos.length;
+        photos.forEach((_, i) => {
+            const phi = Math.acos(1 - 2 * (i + 0.5) / total);
+            const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
+            positions.push({
+                x: sphereRadius * Math.sin(phi) * Math.cos(theta),
+                y: sphereRadius * Math.cos(phi),
+                z: -sphereRadius * Math.sin(phi) * Math.sin(theta)
+            });
+        });
+    }
+
+    /**********************************************************
+     * 3. LOGIC SWITCHER (MOBILE VS DESKTOP)
      **********************************************************/
     if (isMobile) {
         console.log("📱 Mobile Mode Active");
@@ -37,15 +64,12 @@ document.addEventListener("DOMContentLoaded", () => {
             photos.forEach(photoDiv => {
                 const originalImg = photoDiv.querySelector('img');
                 if (originalImg) {
-                    // Create wrapper
                     const wrapper = document.createElement('div');
                     wrapper.className = 'gallery-item';
                     
-                    // Clone Image
                     const newImg = originalImg.cloneNode(true);
                     newImg.removeAttribute('id');
                     
-                    // Add Click for Overlay
                     newImg.addEventListener('click', () => {
                         openOverlay(newImg.src);
                     });
@@ -66,23 +90,22 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         console.log("💻 Desktop Mode Active");
         
-        // Initialize Desktop Sphere
+        // NOW this works because computePositions is defined above!
         computePositions();
         animateSphere();
         
-        // Add click listeners to original sphere photos
+        // Desktop Listeners
         photos.forEach(photo => {
             const img = photo.querySelector("img");
             if (img) {
                 photo.addEventListener("click", () => openOverlay(img.src));
             }
-            // Prevent default drag
             photo.ondragstart = e => e.preventDefault();
         });
         
         window.addEventListener("resize", computePositions);
         
-        // Desktop Mouse Events
+        // Mouse Drag Logic
         window.addEventListener("mousedown", e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
         window.addEventListener("mouseup", () => isDragging = false);
         window.addEventListener("mouseleave", () => isDragging = false);
@@ -96,32 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**********************************************************
-     * 3. SHARED FUNCTIONS (Menu, Overlay, Pages)
+     * 4. SHARED FUNCTIONS
      **********************************************************/
-    
-    // --- SPHERE MATH (Desktop Only) ---
-    const sphereRadius = 2200;
-    const positions = [];
-    let rotX = 0, rotY = 0;
-    let targetRotX = 0, targetRotY = 0;
-    let isDragging = false;
-    let lastX = 0, lastY = 0;
-    let textOrbit = 0;
-    const TEXT_RING_DISTANCE = 95;
-
-    function computePositions() {
-        positions.length = 0;
-        const total = photos.length;
-        photos.forEach((_, i) => {
-            const phi = Math.acos(1 - 2 * (i + 0.5) / total);
-            const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
-            positions.push({
-                x: sphereRadius * Math.sin(phi) * Math.cos(theta),
-                y: sphereRadius * Math.cos(phi),
-                z: -sphereRadius * Math.sin(phi) * Math.sin(theta)
-            });
-        });
-    }
 
     function animateSphere() {
         if (isMobile) return; 
@@ -132,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if(sphere) sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-        // Animate Text Ring
         textOrbit += 0.01;
         if (textRing) textRing.style.transform = `translate(-50%, -50%)`;
         if (textRingSvg) textRingSvg.style.transform = `translateZ(${TEXT_RING_DISTANCE}px) rotateZ(${textOrbit}deg)`;
@@ -142,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!pos) return;
             photo.style.transform = `translate(-50%, -50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
             
-            // Apply Orientation
             const img = photo.querySelector("img");
             if(img) photo.classList.toggle("portrait", img.naturalHeight > img.naturalWidth);
         });
@@ -184,7 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    // Page Navigation
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', () => {
             const page = item.dataset.page;
@@ -210,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if(textRing) textRing.style.opacity = "0";
             if(scene) scene.style.opacity = "1";
             
-            // Show HUD Hints
             let index = 0;
             function showNextHint() {
                 if (index >= hudHints.length) return;
