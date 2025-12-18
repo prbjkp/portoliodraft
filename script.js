@@ -414,7 +414,7 @@ document.addEventListener("keydown", (e) => {
 // --- HELPER: PAGE CONTENT ---
 function getPageContent(page) {
     const contents = {
-        about: `<h1>About Peter Kopp</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
+        about: `<h1>Hello fellow photo enjoyers!</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
         contact: `
             <h1>Contact Me</h1>
             <form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
