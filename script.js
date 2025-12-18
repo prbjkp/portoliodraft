@@ -361,8 +361,10 @@ function getPageContent(page) {
    <br>
      <input type="email" name="email">
    </label>
+   <br>
 <br>
    <label>Your Message:
+   <br>
    <br>
      <textarea name="message"></textarea>
    </label>
