@@ -534,9 +534,10 @@ html, body {
     width: 110px !important;
     height: 110px !important;
     
-    /* Force the sphere styling */
+    /* Force the sphere styling with bright test border */
     background: radial-gradient(circle at 40% 30%, #444 0%, #111 35%, #000 85%) !important;
     border-radius: 50% !important;
+    border: 5px solid red !important; /* TEMPORARY - bright red border to see if it's there */
     box-shadow: inset -30px -30px 60px rgba(0,0,0,0.95),
                 inset 12px 12px 24px rgba(255,255,255,0.03),
                 0 60px 120px rgba(0,0,0,0.95) !important;
