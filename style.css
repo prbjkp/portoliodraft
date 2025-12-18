@@ -279,15 +279,15 @@ html, body {
 
 @keyframes sphereExpand {
   0% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, 0) scale(1);
     opacity: 1;
   }
   50% {
-    transform: translate(-50%, -50%) scale(25);
+    transform: translate(-50%, 0) scale(25);
     opacity: 0.8;
   }
   100% {
-    transform: translate(-50%, -50%) scale(50);
+    transform: translate(-50%, 0) scale(50);
     opacity: 0;
   }
 }
