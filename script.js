@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
      **********************************************************/
     const isMobile = window.innerWidth < 768;
     
+    console.log("🔍 Debug Info:");
+    console.log("Is Mobile:", isMobile);
+    console.log("Window Width:", window.innerWidth);
+    
     const sphere = document.getElementById("sphere");
     const photos = document.querySelectorAll(".photo");
     const scene = document.getElementById("scene");
@@ -21,6 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const backButton = document.getElementById("back-button");
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
+    
+    console.log("Center Sphere Element:", centerSphere);
+    if (centerSphere) {
+        console.log("Center Sphere computed style:", window.getComputedStyle(centerSphere).display);
+        console.log("Center Sphere position:", window.getComputedStyle(centerSphere).position);
+        console.log("Center Sphere z-index:", window.getComputedStyle(centerSphere).zIndex);
+    }
 
     /**********************************************************
      * 2. SPHERE MATH VARIABLES
