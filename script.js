@@ -275,6 +275,18 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => overlay.style.opacity = "1", 10);
         }
     }
+setTimeout(() => { 
+    overlay.style.display = "none"; 
+    if (centerSphere) centerSphere.style.display = "block"; // <-- show again
+}, 300);
+
+if (centerSphere) {
+    centerSphere.style.transition = "opacity 0.3s ease";
+    centerSphere.style.opacity = "0"; // hide
+}
+
+// then show
+centerSphere.style.opacity = "1";
 
     if(overlayClose) {
         overlayClose.addEventListener("click", () => {
