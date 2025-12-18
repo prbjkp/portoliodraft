@@ -248,32 +248,50 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(animateSphere);
     }
 
-    // --- OVERLAY LOGIC ---
-    function openOverlay(src) {
-        if(overlay && overlayImg) {
-            overlayImg.src = src;
-            overlay.style.display = "flex";
-            overlay.style.pointerEvents = "auto";
-            setTimeout(() => overlay.style.opacity = "1", 10);
-            
-            // Hide sphere and text ring when viewing image
-            if (centerSphere) centerSphere.style.display = "none";
-            if (textRing) textRing.style.display = "none";
-        }
+// --- OVERLAY LOGIC ---
+function openOverlay(src) {
+    if(overlay && overlayImg) {
+        overlayImg.src = src;
+        
+        // Use the class defined in your CSS for the transition
+        overlay.classList.add("active");
+        
+        // Hide sphere and text ring so they don't peak through the edges
+        if (centerSphere) centerSphere.style.opacity = "0";
+        if (textRing) textRing.style.opacity = "0";
+        
+        // Optional: Disable scrolling on mobile while viewing image
+        if (isMobile) document.body.style.overflow = "hidden";
     }
+}
 
-    if(overlayClose) {
-        overlayClose.addEventListener("click", () => {
-            overlay.style.opacity = "0";
-            overlay.style.pointerEvents = "none";
-            setTimeout(() => { 
-                overlay.style.display = "none";
-                // Show sphere and text ring again
-                if (centerSphere) centerSphere.style.display = "block";
-                if (textRing) textRing.style.display = "block";
-            }, 300);
-        });
+if(overlayClose) {
+    overlayClose.addEventListener("click", () => {
+        overlay.classList.remove("active");
+        
+        // Show sphere and text ring again
+        if (centerSphere) centerSphere.style.opacity = "1";
+        if (textRing) textRing.style.opacity = "1";
+        
+        // Re-enable scrolling
+        if (isMobile) document.body.style.overflow = "auto";
+        
+        // Clear the image after it fades out to keep things clean
+        setTimeout(() => { overlayImg.src = ""; }, 400);
+    });
+}
+// Close when clicking the dark area of the overlay
+overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+        overlayClose.click(); // Trigger the same close logic
     }
+});
+// Close overlay on Escape key
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && overlay.classList.contains("active")) {
+        overlayClose.click();
+    }
+});
 
     // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
     if (centerSphere) {
