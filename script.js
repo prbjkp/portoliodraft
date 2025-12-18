@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /**********************************************************
      * 2. SPHERE MATH VARIABLES
      **********************************************************/
-    const sphereRadius = 2200; // Spread out images more (back to original spread)
+    const sphereRadius = 2200;
     const positions = [];
     let rotX = 0, rotY = 0;
     let targetRotX = 0, targetRotY = 0;
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(showNextHint, 500);
             }, 3000);
         }
-        setTimeout(showNextHint, 2000); // Start 2 seconds after load
+        setTimeout(showNextHint, 2000);
     }
 
     /**********************************************************
@@ -89,9 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // --- A. POPULATE MOBILE GALLERY ---
         if (mobileGallery && photos.length > 0) {
-            mobileGallery.innerHTML = ''; // Clean start
+            mobileGallery.innerHTML = '';
 
-            // Create array of images to duplicate
             const imageArray = [];
             
             photos.forEach(photoDiv => {
@@ -101,7 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // Duplicate images 3 times for infinite scroll effect
             const duplicateCount = 3;
             for (let i = 0; i < duplicateCount; i++) {
                 imageArray.forEach(src => {
@@ -122,18 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // --- INFINITE AUTO-SCROLL FUNCTION ---
             let autoScrollInterval;
             let isUserScrolling = false;
-            let scrollTimeout;
             
-            // Calculate when to reset scroll position (1/3 through since we have 3 copies)
             const resetPoint = mobileGallery.scrollHeight / duplicateCount;
             
-            // Detect user scrolling
             mobileGallery.addEventListener('scroll', () => {
-                // Check if we need to loop manually when user scrolls
                 handleInfiniteScroll();
             });
             
-            // Detect when user is actively touching/scrolling
             mobileGallery.addEventListener('touchstart', () => {
                 isUserScrolling = true;
                 clearInterval(autoScrollInterval);
@@ -144,41 +137,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 startAutoScroll();
             });
             
-            // Handle infinite scroll loop
             function handleInfiniteScroll() {
                 const scrollPos = mobileGallery.scrollTop;
                 const maxScroll = mobileGallery.scrollHeight - mobileGallery.clientHeight;
                 
-                // If scrolled to bottom, jump back to middle section
                 if (scrollPos >= maxScroll - 10) {
                     mobileGallery.scrollTop = resetPoint;
                 }
                 
-                // If scrolled to top, jump to middle section
                 if (scrollPos <= 10) {
                     mobileGallery.scrollTop = resetPoint;
                 }
             }
             
-            // Auto-scroll function
             function startAutoScroll() {
                 autoScrollInterval = setInterval(() => {
                     if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
                         mobileGallery.scrollBy({
-                            top: 1.5, // Slowed down from 4 to 1.5 for gentler scroll
+                            top: 1.5,
                             behavior: 'auto'
                         });
                         
-                        // Handle infinite loop for auto-scroll
                         handleInfiniteScroll();
                     }
                 }, 16);
             }
             
-            // Start at middle section for seamless looping
             mobileGallery.scrollTop = resetPoint;
-            
-            // Start auto-scroll immediately
             startAutoScroll();
         }
 
@@ -186,16 +171,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (hudHints.length >= 3) {
             hudHints[0].textContent = "Scroll to view all photos";
             hudHints[1].textContent = "Tap any photo to enlarge";
-            hudHints[2].textContent = "Menu button below";
+            hudHints[2].textContent = "Tap sphere below for menu";
         }
 
-        // Show hints on mobile too
         showHints();
 
         // Animate text ring on mobile
         function animateMobileTextRing() {
             if (textRingSvg) {
-                textOrbit += 0.002; // Slowed down from 0.01 to 0.002 (5x slower)
+                textOrbit += 0.002;
                 textRingSvg.style.transform = `rotateZ(${textOrbit * 57.2958}deg)`;
             }
             requestAnimationFrame(animateMobileTextRing);
@@ -207,9 +191,8 @@ document.addEventListener("DOMContentLoaded", () => {
         
         computePositions();
         animateSphere();
-        showHints(); // Start HUD hints on desktop
+        showHints();
         
-        // Desktop Photo Listeners
         photos.forEach(photo => {
             const img = photo.querySelector("img");
             if (img) {
@@ -220,7 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         window.addEventListener("resize", computePositions);
         
-        // Mouse Drag Logic
         window.addEventListener("mousedown", e => { 
             isDragging = true; 
             lastX = e.clientX; 
@@ -244,13 +226,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function animateSphere() {
         if (isMobile) return; 
 
-        if (!isDragging) targetRotY += 0.02; // Restored to original speed
+        if (!isDragging) targetRotY += 0.02;
         rotX += (targetRotX - rotX) * 0.1;
         rotY += (targetRotY - rotY) * 0.1;
 
         if(sphere) sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-        textOrbit += 0.002; // Text ring still slow (5x slower than original)
+        textOrbit += 0.002;
         if (textRing) textRing.style.transform = `translate(-50%, -50%)`;
         if (textRingSvg) textRingSvg.style.transform = `translateZ(${TEXT_RING_DISTANCE}px) rotateZ(${textOrbit}deg)`;
 
@@ -273,40 +255,25 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.style.display = "flex";
             overlay.style.pointerEvents = "auto";
             setTimeout(() => overlay.style.opacity = "1", 10);
+            
+            // Hide sphere and text ring when viewing image
+            if (centerSphere) centerSphere.style.display = "none";
+            if (textRing) textRing.style.display = "none";
         }
     }
-setTimeout(() => { 
-    overlay.style.display = "none"; 
-    if (centerSphere) centerSphere.style.display = "block"; // <-- show again
-}, 300);
-
-if (centerSphere) {
-    centerSphere.style.transition = "opacity 0.3s ease";
-    centerSphere.style.opacity = "0"; // hide
-}
-
-// then show
-centerSphere.style.opacity = "1";
 
     if(overlayClose) {
         overlayClose.addEventListener("click", () => {
             overlay.style.opacity = "0";
             overlay.style.pointerEvents = "none";
-            setTimeout(() => { overlay.style.display = "none"; }, 300);
+            setTimeout(() => { 
+                overlay.style.display = "none";
+                // Show sphere and text ring again
+                if (centerSphere) centerSphere.style.display = "block";
+                if (textRing) textRing.style.display = "block";
+            }, 300);
         });
     }
-    function openOverlay(src) {
-    if (overlay && overlayImg) {
-        overlayImg.src = src;
-        overlay.style.display = "flex";
-        overlay.style.pointerEvents = "auto";
-        setTimeout(() => overlay.style.opacity = "1", 10);
-
-        // HIDE CENTER SPHERE
-        if (centerSphere) centerSphere.style.display = "none";
-    }
-}
-
 
     // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
     if (centerSphere) {
@@ -359,7 +326,11 @@ centerSphere.style.opacity = "1";
             } else {
                 contentContainer.innerHTML = getPageContent(page);
                 contentOverlay.classList.add("active");
-                // Keep sphere and text ring hidden when viewing content
+                
+                // Setup contact form if on contact page
+                if (page === 'contact') {
+                    setupContactForm();
+                }
             }
             dropdownMenu.classList.remove("active");
             setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
@@ -374,65 +345,73 @@ centerSphere.style.opacity = "1";
             if (textRing) textRing.style.display = "block";
         });
     }
+    
+    /**********************************************************
+     * 6. CONTACT FORM HANDLER
+     **********************************************************/
+    function setupContactForm() {
+        setTimeout(() => {
+            const form = document.getElementById("my-form");
+            if (form) {
+                form.addEventListener("submit", async function handleSubmit(event) {
+                    event.preventDefault();
+
+                    const statusDiv = document.createElement('div');
+                    statusDiv.id = "my-form-status";
+                    statusDiv.style.marginTop = "10px";
+                    form.appendChild(statusDiv);
+
+                    const data = new FormData(event.target);
+
+                    fetch(event.target.action, {
+                        method: form.method,
+                        body: data,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            statusDiv.innerHTML = "Thanks for your submission!";
+                            statusDiv.style.color = "green";
+                            form.reset();
+                        } else {
+                            response.json().then(data => {
+                                if (Object.hasOwn(data, 'errors')) {
+                                    statusDiv.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+                                } else {
+                                    statusDiv.innerHTML = "Oops! There was a problem submitting your form";
+                                }
+                                statusDiv.style.color = "red";
+                            });
+                        }
+                    }).catch(error => {
+                        statusDiv.innerHTML = "Oops! There was a problem submitting your form";
+                        statusDiv.style.color = "red";
+                    });
+                });
+            }
+        }, 100);
+    }
 });
 
 // --- HELPER: PAGE CONTENT ---
 function getPageContent(page) {
     const contents = {
         about: `<h1>About Peter Kopp</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
-        contact: `<form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
-   <label>Your Email:
-   <br>
-     <input type="email" name="email">
-   </label>
-   <br>
-<br>
-   <label>Your Message:
-   <br>
-   <br>
-     <textarea name="message"></textarea>
-   </label>
-<br>
-<br>
-   <button type="submit">Send</button>
-</form>`
+        contact: `
+            <h1>Contact Me</h1>
+            <form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
+                <label>Your Email:<br>
+                    <input type="email" name="email" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                </label>
+                <br><br>
+                <label>Your Message:<br>
+                    <textarea name="message" required style="width: 100%; padding: 8px; margin-top: 5px; min-height: 150px;"></textarea>
+                </label>
+                <br><br>
+                <button type="submit" style="padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer;">Send</button>
+            </form>
+        `
     };
     return contents[page] || '<h1>Page Not Found</h1>';
-}
-
- /**********************************************************
- * 6. FORMSPREE CONTACT FORM HANDLER
- **********************************************************/
-const form = document.getElementById("my-form");
-
-if (form) {
-    form.addEventListener("submit", async function handleSubmit(event) {
-        event.preventDefault();
-
-        const status = document.getElementById("my-form-status");
-        const data = new FormData(event.target);
-
-        fetch(event.target.action, {
-            method: form.method,
-            body: data,
-            headers: {
-                'Accept': 'application/json'
-            }
-        }).then(response => {
-            if (response.ok) {
-                status.innerHTML = "Thanks for your submission!";
-                form.reset();
-            } else {
-                response.json().then(data => {
-                    if (Object.hasOwn(data, 'errors')) {
-                        status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
-                    } else {
-                        status.innerHTML = "Oops! There was a problem submitting your form";
-                    }
-                });
-            }
-        }).catch(error => {
-            status.innerHTML = "Oops! There was a problem submitting your form";
-        });
-    });
 }
