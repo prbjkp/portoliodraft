@@ -59,15 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-        if(backButton) {
-        backButton.addEventListener("click", () => {
-            contentOverlay.classList.remove("active");
-            // Show sphere and text ring when going back
-            if (centerSphere) centerSphere.style.display = "block";
-            if (textRing) textRing.style.display = "block";
-        });
-    }
-
     /**********************************************************
      * 3. HUD HINTS - AUTO SHOW ON LOAD
      **********************************************************/
@@ -275,35 +266,76 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(animateSphere);
     }
 
-   // OVERLAY LOGIC
-function openOverlay(src) {
-    if (!overlay || !overlayImg) return;
-    overlayImg.src = src;
-    overlay.style.display = "flex";
-    overlay.style.pointerEvents = "auto";
-    setTimeout(() => overlay.style.opacity = "1", 10);
+    // --- OVERLAY LOGIC ---
+    function openOverlay(src) {
+        if(overlay && overlayImg) {
+            overlayImg.src = src;
+            overlay.style.display = "flex";
+            overlay.style.pointerEvents = "auto";
+            setTimeout(() => overlay.style.opacity = "1", 10);
+        }
+    }
+setTimeout(() => { 
+    overlay.style.display = "none"; 
+    if (centerSphere) centerSphere.style.display = "block"; // <-- show again
+}, 300);
 
-    if (centerSphere) centerSphere.style.display = "none"; // hide sphere while overlay open
-    if (textRing) textRing.style.display = "none";
+if (centerSphere) {
+    centerSphere.style.transition = "opacity 0.3s ease";
+    centerSphere.style.opacity = "0"; // hide
 }
 
-function closeOverlay() {
-    if (!overlay) return;
-    overlay.style.opacity = "0";
-    overlay.style.pointerEvents = "none";
-    setTimeout(() => {
-        overlay.style.display = "none";
-        if (centerSphere) centerSphere.style.display = "block"; // show sphere again
-        if (textRing) textRing.style.display = "block";
-    }, 300);
+// then show
+centerSphere.style.opacity = "1";
+
+    if(overlayClose) {
+        overlayClose.addEventListener("click", () => {
+            overlay.style.opacity = "0";
+            overlay.style.pointerEvents = "none";
+            setTimeout(() => { overlay.style.display = "none"; }, 300);
+        });
+    }
+    function openOverlay(src) {
+    if (overlay && overlayImg) {
+        overlayImg.src = src;
+        overlay.style.display = "flex";
+        overlay.style.pointerEvents = "auto";
+        setTimeout(() => overlay.style.opacity = "1", 10);
+
+        // HIDE CENTER SPHERE
+        if (centerSphere) centerSphere.style.display = "none";
+    }
 }
 
 
+    // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
+    if (centerSphere) {
+        centerSphere.addEventListener("click", (e) => {
+            e.stopPropagation();
+            console.log("Menu sphere clicked!");
+            
+            // Add expanding animation class
+            centerSphere.classList.add("expanding");
+            
+            // Hide sphere and text ring when menu opens
+            setTimeout(() => {
+                if (centerSphere) centerSphere.style.display = "none";
+                if (textRing) textRing.style.display = "none";
+            }, 300);
+            
+            // Show menu after a brief delay to let expansion start
+            setTimeout(() => {
+                dropdownMenu.classList.add("active");
+                dropdownMenu.style.display = "flex";
+            }, 100);
+            
+            // Remove expanding class after animation completes
+            setTimeout(() => {
+                centerSphere.classList.remove("expanding");
+            }, 600);
+        });
+    }
 
-
-if (overlayClose) overlayClose.addEventListener("click", closeOverlay);
-
-    
     if (closeMenuBtn) {
         closeMenuBtn.addEventListener("click", () => {
             dropdownMenu.classList.remove("active");
@@ -315,11 +347,34 @@ if (overlayClose) overlayClose.addEventListener("click", closeOverlay);
             }, 300);
         });
     }
-           // Keep sphere and text ring hidden when viewing content
-            
+    
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const page = item.dataset.page;
+            if (page === 'home') {
+                contentOverlay.classList.remove("active");
+                // Show sphere and text ring when going back home
+                if (centerSphere) centerSphere.style.display = "block";
+                if (textRing) textRing.style.display = "block";
+            } else {
+                contentContainer.innerHTML = getPageContent(page);
+                contentOverlay.classList.add("active");
+                // Keep sphere and text ring hidden when viewing content
+            }
+            dropdownMenu.classList.remove("active");
+            setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
         });
-    ;
+    });
 
+    if(backButton) {
+        backButton.addEventListener("click", () => {
+            contentOverlay.classList.remove("active");
+            // Show sphere and text ring when going back
+            if (centerSphere) centerSphere.style.display = "block";
+            if (textRing) textRing.style.display = "block";
+        });
+    }
+});
 
 // --- HELPER: PAGE CONTENT ---
 function getPageContent(page) {
