@@ -358,12 +358,15 @@ function getPageContent(page) {
         about: `<h1>About Peter Kopp</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
         contact: `<form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
    <label>Your Email:
+   <br>
      <input type="email" name="email">
    </label>
 <br>
    <label>Your Message:
+   <br>
      <textarea name="message"></textarea>
    </label>
+<br>
 <br>
    <button type="submit">Send</button>
 </form>`
