@@ -283,6 +283,18 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => { overlay.style.display = "none"; }, 300);
         });
     }
+    function openOverlay(src) {
+    if (overlay && overlayImg) {
+        overlayImg.src = src;
+        overlay.style.display = "flex";
+        overlay.style.pointerEvents = "auto";
+        setTimeout(() => overlay.style.opacity = "1", 10);
+
+        // HIDE CENTER SPHERE
+        if (centerSphere) centerSphere.style.display = "none";
+    }
+}
+
 
     // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
     if (centerSphere) {
