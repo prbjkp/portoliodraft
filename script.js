@@ -356,7 +356,17 @@ document.addEventListener("DOMContentLoaded", () => {
 function getPageContent(page) {
     const contents = {
         about: `<h1>About Peter Kopp</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
-        contact: `<h1>Contact Me</h1><p>Email: peter@example.com</p><p>Instagram: @peterkoppphotography</p>`
+        contact: `<form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
+   <label>Your Email:
+     <input type="email" name="email">
+   </label>
+
+   <label>Your Message:
+     <textarea name="message"></textarea>
+   </label>
+
+   <button type="submit">Send</button>
+</form>`
     };
     return contents[page] || '<h1>Page Not Found</h1>';
 }
