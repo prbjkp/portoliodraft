@@ -272,23 +272,45 @@ html, body {
   transform: translate(-50%, -50%) scale(1.1);
 }
 
-/* Expanding animation when menu opens */
+/* Expanding animation when menu opens - MOBILE VERSION */
 #center-sphere.expanding {
-  animation: sphereExpand 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: sphereExpandMobile 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes sphereExpand {
+@keyframes sphereExpandMobile {
   0% {
-    transform: translate(-50%, 0) scale(1);
+    transform: translateX(-50%) scale(1);
     opacity: 1;
   }
   50% {
-    transform: translate(-50%, 0) scale(25);
+    transform: translateX(-50%) scale(25);
     opacity: 0.8;
   }
   100% {
-    transform: translate(-50%, 0) scale(50);
+    transform: translateX(-50%) scale(50);
     opacity: 0;
+  }
+}
+
+/* Desktop version uses different transform */
+@media (min-width: 768px) {
+  #center-sphere.expanding {
+    animation: sphereExpandDesktop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  @keyframes sphereExpandDesktop {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(25);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(50);
+      opacity: 0;
+    }
   }
 }
 

@@ -192,8 +192,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Show hints on mobile too
         showHints();
 
-        // Hide text ring on mobile
-        if (textRing) textRing.style.display = "none";
+        // Animate text ring on mobile
+        function animateMobileTextRing() {
+            if (textRingSvg) {
+                textOrbit += 0.01;
+                textRingSvg.style.transform = `rotateZ(${textOrbit * 57.2958}deg)`;
+            }
+            requestAnimationFrame(animateMobileTextRing);
+        }
+        animateMobileTextRing();
 
     } else {
         console.log("💻 Desktop Mode Active");
