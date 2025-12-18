@@ -457,3 +457,51 @@ function getPageContent(page) {
     };
     return contents[page] || '<h1>Page Not Found</h1>';
 }
+
+
+function showHints() {
+    const mobileText = [
+        "Scroll to explore photos",
+        "Tap any photo to view full size",
+        "Tap the sphere for menu"
+    ];
+    
+    const desktopText = [
+        "Drag to rotate the gallery",
+        "Click any photo to view it full size",
+        "Click the center sphere for more information"
+    ];
+
+    const activeTextSet = isMobile ? mobileText : desktopText;
+
+    // Apply text content
+    hudHints.forEach((hint, i) => {
+        if (activeTextSet[i]) {
+            hint.textContent = activeTextSet[i];
+        }
+    });
+
+    let index = 0;
+    function showNextHint() {
+        if (index >= hudHints.length) return;
+        
+        // Remove active class from all first to be safe
+        hudHints.forEach(h => h.classList.remove("active"));
+        
+        // Show current
+        hudHints[index].classList.add("active");
+        
+        setTimeout(() => {
+            hudHints[index].classList.remove("active");
+            index++;
+            // Short delay before the next one pops up
+            setTimeout(showNextHint, 600);
+        }, 3000);
+    }
+
+    // Delay the very first hint so the user has time to see the site load
+    setTimeout(showNextHint, 1500);
+}
+
+// MAKE SURE THIS IS THE LAST LINE BEFORE THE CLOSING }); OF YOUR DOMContentLoaded
+showHints();
