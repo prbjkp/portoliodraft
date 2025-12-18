@@ -526,7 +526,7 @@ html, body {
     opacity: 1 !important;
     position: fixed !important;
     top: auto !important;
-    bottom: 30px !important;
+    bottom: 80px !important; /* Moved up from 30px to 80px */
     left: 50% !important;
     transform: translateX(-50%) !important;
     z-index: 99999 !important; /* Even higher */
@@ -559,7 +559,7 @@ html, body {
     display: block !important;
     position: fixed !important;
     top: auto !important;
-    bottom: -5px !important; /* Adjusted to center around sphere better */
+    bottom: 25px !important; /* Adjusted to match new sphere position */
     left: 50% !important;
     width: 220px !important;
     height: 220px !important;
@@ -577,7 +577,7 @@ html, body {
     display: block !important;
     position: fixed !important;
     top: auto !important;
-    bottom: 170px !important;
+    bottom: 220px !important; /* Adjusted to be above new sphere position */
     left: 50% !important;
     transform: translateX(-50%) !important;
     z-index: 99997 !important;
