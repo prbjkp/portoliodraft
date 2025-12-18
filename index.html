@@ -14,18 +14,7 @@
 
   <div id="scene-wrapper">
     
-    <div id="start-text-ring">
-      <svg id="text-ring-svg" viewBox="0 0 300 300">
-        <defs>
-          <path id="text-circle" d="M 150,150 m -120,0 a 120,120 0 1,1 240,0 a 120,120 0 1,1 -240,0" />
-        </defs>
-        <text>
-          <textPath href="#text-circle" startOffset="0%">
-            PETER KOPP PHOTOGRAPHY • PETER KOPP PHOTOGRAPHY • 
-          </textPath>
-        </text>
-      </svg>
-    </div>
+    <!-- Text ring moved outside - placeholder comment -->
 
     <div id="hud-hints">
       <div class="hud-hint">Drag to rotate the gallery</div>
@@ -108,6 +97,20 @@
     
     <!-- Center sphere moved outside - this is now just a placeholder comment -->
 
+  </div>
+  
+  <!-- MOVED: Text ring outside scene-wrapper for mobile -->
+  <div id="start-text-ring">
+    <svg id="text-ring-svg" viewBox="0 0 300 300">
+      <defs>
+        <path id="text-circle" d="M 150,150 m -120,0 a 120,120 0 1,1 240,0 a 120,120 0 1,1 -240,0" />
+      </defs>
+      <text>
+        <textPath href="#text-circle" startOffset="0%">
+          PETER KOPP PHOTOGRAPHY • PETER KOPP PHOTOGRAPHY • 
+        </textPath>
+      </text>
+    </svg>
   </div>
   
   <!-- MOVED: Center sphere is now OUTSIDE scene-wrapper so it's independent on mobile -->
