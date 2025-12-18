@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
  * 3. HUD HINTS - DEVICE AWARE
  **********************************************************/
 function showHints() {
-    // Define the different sets of text
+    // 1. Define device-specific text
     const mobileText = [
         "Scroll to explore photos",
         "Tap any photo to view full size",
@@ -76,32 +76,34 @@ function showHints() {
         "Click the center sphere for more information"
     ];
 
-    // Select the correct text based on device
     const activeTextSet = isMobile ? mobileText : desktopText;
 
-    // Apply the text to the elements
+    // 2. Assign text to the HTML elements
     hudHints.forEach((hint, i) => {
         if (activeTextSet[i]) {
             hint.textContent = activeTextSet[i];
         }
     });
 
-    // Existing animation logic
+    // 3. Animation Logic
     let index = 0;
     function showNextHint() {
         if (index >= hudHints.length) return;
         
+        // Remove active from previous
         if (index > 0) hudHints[index - 1].classList.remove("active");
+        
+        // Add active to current
         hudHints[index].classList.add("active");
         
         setTimeout(() => {
             hudHints[index].classList.remove("active");
             index++;
-            setTimeout(showNextHint, 500);
-        }, 3000);
+            setTimeout(showNextHint, 500); // Small gap between hints
+        }, 3000); // How long each hint stays up
     }
-    
-    // Start the sequence
+
+    // Start the sequence after 2 seconds
     setTimeout(showNextHint, 2000);
 }
     /**********************************************************
