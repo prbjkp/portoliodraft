@@ -4,14 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
      * 1. CORE VARIABLES & DOM ELEMENTS
      **********************************************************/
     const isMobile = window.innerWidth < 768;
-    
-    console.log("🔍 Debug Info:");
-    console.log("Is Mobile:", isMobile);
-    console.log("Window Width:", window.innerWidth);
-    
     const sphere = document.getElementById("sphere");
     const photos = document.querySelectorAll(".photo");
-    const scene = document.getElementById("scene");
     const textRing = document.getElementById("start-text-ring");
     const textRingSvg = document.getElementById("text-ring-svg");
     const centerSphere = document.getElementById("center-sphere");
@@ -25,18 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const backButton = document.getElementById("back-button");
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
-    
-    console.log("Center Sphere Element:", centerSphere);
-    if (centerSphere) {
-        console.log("Center Sphere computed style:", window.getComputedStyle(centerSphere).display);
-        console.log("Center Sphere position:", window.getComputedStyle(centerSphere).position);
-        console.log("Center Sphere z-index:", window.getComputedStyle(centerSphere).zIndex);
-    }
 
     /**********************************************************
-     * 2. SPHERE MATH VARIABLES
+     * 2. SPHERE MATH & ANIMATION
      **********************************************************/
-    const sphereRadius = 2200; // Spread out images more (back to original spread)
+    const sphereRadius = 2200; 
     const positions = [];
     let rotX = 0, rotY = 0;
     let targetRotX = 0, targetRotY = 0;
@@ -59,175 +46,77 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /**********************************************************
-     * 3. HUD HINTS - AUTO SHOW ON LOAD
-     **********************************************************/
-    function showHints() {
-        let index = 0;
-        function showNextHint() {
-            if (index >= hudHints.length) {
-                return;
-            }
-            if (index > 0) hudHints[index - 1].classList.remove("active");
-            
-            hudHints[index].classList.add("active");
-            
-            setTimeout(() => {
-                hudHints[index].classList.remove("active");
-                index++;
-                setTimeout(showNextHint, 500);
-            }, 3000);
-        }
-        setTimeout(showNextHint, 2000); // Start 2 seconds after load
+    function animateSphere() {
+        if (isMobile) return; 
+        if (!isDragging) targetRotY += 0.02;
+        rotX += (targetRotX - rotX) * 0.1;
+        rotY += (targetRotY - rotY) * 0.1;
+        if(sphere) sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+        textOrbit += 0.002;
+        if (textRingSvg) textRingSvg.style.transform = `translateZ(${TEXT_RING_DISTANCE}px) rotateZ(${textOrbit}deg)`;
+        photos.forEach((photo, i) => {
+            const pos = positions[i];
+            if (!pos) return;
+            photo.style.transform = `translate(-50%, -50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
+        });
+        requestAnimationFrame(animateSphere);
     }
 
     /**********************************************************
-     * 4. LOGIC SWITCHER (MOBILE VS DESKTOP)
+     * 3. FORMSPREE SUBMISSION LOGIC
+     **********************************************************/
+    async function handleFormSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const status = document.getElementById("my-form-status");
+        const data = new FormData(form);
+
+        status.innerHTML = "Sending...";
+
+        fetch(form.action, {
+            method: form.method,
+            body: data,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                status.innerHTML = "Thanks for your submission!";
+                form.reset();
+            } else {
+                response.json().then(data => {
+                    status.innerHTML = data.errors ? data.errors.map(e => e.message).join(", ") : "Oops! Problem submitting form.";
+                });
+            }
+        }).catch(() => {
+            status.innerHTML = "Oops! There was a problem submitting your form";
+        });
+    }
+
+    /**********************************************************
+     * 4. MOBILE/DESKTOP INITIALIZATION
      **********************************************************/
     if (isMobile) {
-        console.log("📱 Mobile Mode Active");
-
-        // --- A. POPULATE MOBILE GALLERY ---
+        // Mobile Gallery Logic
         if (mobileGallery && photos.length > 0) {
-            mobileGallery.innerHTML = ''; // Clean start
-
-            // Create array of images to duplicate
+            mobileGallery.innerHTML = ''; 
             const imageArray = [];
-            
             photos.forEach(photoDiv => {
                 const originalImg = photoDiv.querySelector('img');
-                if (originalImg && originalImg.src) {
-                    imageArray.push(originalImg.src);
-                }
+                if (originalImg) imageArray.push(originalImg.src);
             });
-
-            // Duplicate images 3 times for infinite scroll effect
-            const duplicateCount = 3;
-            for (let i = 0; i < duplicateCount; i++) {
+            for (let i = 0; i < 3; i++) {
                 imageArray.forEach(src => {
                     const newImg = document.createElement('img');
                     newImg.src = src;
-                    newImg.alt = 'Gallery image';
-                    
-                    newImg.addEventListener('click', () => {
-                        openOverlay(newImg.src);
-                    });
-
+                    newImg.addEventListener('click', () => openOverlay(newImg.src));
                     mobileGallery.appendChild(newImg);
                 });
             }
-
-            console.log(`✅ Added ${mobileGallery.children.length} images to mobile gallery (with duplicates)`);
-            
-            // --- INFINITE AUTO-SCROLL FUNCTION ---
-            let autoScrollInterval;
-            let isUserScrolling = false;
-            let scrollTimeout;
-            
-            // Calculate when to reset scroll position (1/3 through since we have 3 copies)
-            const resetPoint = mobileGallery.scrollHeight / duplicateCount;
-            
-            // Detect user scrolling
-            mobileGallery.addEventListener('scroll', () => {
-                // Check if we need to loop manually when user scrolls
-                handleInfiniteScroll();
-            });
-            
-            // Detect when user is actively touching/scrolling
-            mobileGallery.addEventListener('touchstart', () => {
-                isUserScrolling = true;
-                clearInterval(autoScrollInterval);
-            });
-            
-            mobileGallery.addEventListener('touchend', () => {
-                isUserScrolling = false;
-                startAutoScroll();
-            });
-            
-            // Handle infinite scroll loop
-            function handleInfiniteScroll() {
-                const scrollPos = mobileGallery.scrollTop;
-                const maxScroll = mobileGallery.scrollHeight - mobileGallery.clientHeight;
-                
-                // If scrolled to bottom, jump back to middle section
-                if (scrollPos >= maxScroll - 10) {
-                    mobileGallery.scrollTop = resetPoint;
-                }
-                
-                // If scrolled to top, jump to middle section
-                if (scrollPos <= 10) {
-                    mobileGallery.scrollTop = resetPoint;
-                }
-            }
-            
-            // Auto-scroll function
-            function startAutoScroll() {
-                autoScrollInterval = setInterval(() => {
-                    if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
-                        mobileGallery.scrollBy({
-                            top: 1.5, // Slowed down from 4 to 1.5 for gentler scroll
-                            behavior: 'auto'
-                        });
-                        
-                        // Handle infinite loop for auto-scroll
-                        handleInfiniteScroll();
-                    }
-                }, 16);
-            }
-            
-            // Start at middle section for seamless looping
-            mobileGallery.scrollTop = resetPoint;
-            
-            // Start auto-scroll immediately
-            startAutoScroll();
         }
-
-        // --- B. MOBILE HINTS ---
-        if (hudHints.length >= 3) {
-            hudHints[0].textContent = "Scroll to view all photos";
-            hudHints[1].textContent = "Tap any photo to enlarge";
-            hudHints[2].textContent = "Menu button below";
-        }
-
-        // Show hints on mobile too
-        showHints();
-
-        // Animate text ring on mobile
-        function animateMobileTextRing() {
-            if (textRingSvg) {
-                textOrbit += 0.002; // Slowed down from 0.01 to 0.002 (5x slower)
-                textRingSvg.style.transform = `rotateZ(${textOrbit * 57.2958}deg)`;
-            }
-            requestAnimationFrame(animateMobileTextRing);
-        }
-        animateMobileTextRing();
-
     } else {
-        console.log("💻 Desktop Mode Active");
-        
         computePositions();
         animateSphere();
-        showHints(); // Start HUD hints on desktop
-        
-        // Desktop Photo Listeners
-        photos.forEach(photo => {
-            const img = photo.querySelector("img");
-            if (img) {
-                photo.addEventListener("click", () => openOverlay(img.src));
-            }
-            photo.ondragstart = e => e.preventDefault();
-        });
-        
-        window.addEventListener("resize", computePositions);
-        
-        // Mouse Drag Logic
-        window.addEventListener("mousedown", e => { 
-            isDragging = true; 
-            lastX = e.clientX; 
-            lastY = e.clientY; 
-        });
+        window.addEventListener("mousedown", e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
         window.addEventListener("mouseup", () => isDragging = false);
-        window.addEventListener("mouseleave", () => isDragging = false);
         window.addEventListener("mousemove", e => {
             if (!isDragging) return;
             targetRotY -= (e.clientX - lastX) * 0.3;
@@ -238,125 +127,80 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**********************************************************
-     * 5. SHARED FUNCTIONS
+     * 5. NAVIGATION & OVERLAYS
      **********************************************************/
-
-    function animateSphere() {
-        if (isMobile) return; 
-
-        if (!isDragging) targetRotY += 0.02; // Restored to original speed
-        rotX += (targetRotX - rotX) * 0.1;
-        rotY += (targetRotY - rotY) * 0.1;
-
-        if(sphere) sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-
-        textOrbit += 0.002; // Text ring still slow (5x slower than original)
-        if (textRing) textRing.style.transform = `translate(-50%, -50%)`;
-        if (textRingSvg) textRingSvg.style.transform = `translateZ(${TEXT_RING_DISTANCE}px) rotateZ(${textOrbit}deg)`;
-
-        photos.forEach((photo, i) => {
-            const pos = positions[i];
-            if (!pos) return;
-            photo.style.transform = `translate(-50%, -50%) translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${-rotY}deg) rotateX(${-rotX}deg)`;
-            
-            const img = photo.querySelector("img");
-            if(img) photo.classList.toggle("portrait", img.naturalHeight > img.naturalWidth);
-        });
-
-        requestAnimationFrame(animateSphere);
-    }
-
-    // --- OVERLAY LOGIC ---
     function openOverlay(src) {
-        if(overlay && overlayImg) {
-            overlayImg.src = src;
-            overlay.style.display = "flex";
-            overlay.style.pointerEvents = "auto";
-            setTimeout(() => overlay.style.opacity = "1", 10);
-        }
+        overlayImg.src = src;
+        overlay.style.display = "flex";
+        setTimeout(() => overlay.style.opacity = "1", 10);
     }
 
-    if(overlayClose) {
+    if (overlayClose) {
         overlayClose.addEventListener("click", () => {
             overlay.style.opacity = "0";
-            overlay.style.pointerEvents = "none";
             setTimeout(() => { overlay.style.display = "none"; }, 300);
         });
     }
 
-    // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
     if (centerSphere) {
-        centerSphere.addEventListener("click", (e) => {
-            e.stopPropagation();
-            console.log("Menu sphere clicked!");
-            
-            // Add expanding animation class
+        centerSphere.addEventListener("click", () => {
             centerSphere.classList.add("expanding");
-            
-            // Hide sphere and text ring when menu opens
             setTimeout(() => {
-                if (centerSphere) centerSphere.style.display = "none";
-                if (textRing) textRing.style.display = "none";
-            }, 300);
-            
-            // Show menu after a brief delay to let expansion start
-            setTimeout(() => {
-                dropdownMenu.classList.add("active");
+                centerSphere.style.display = "none";
+                textRing.style.display = "none";
                 dropdownMenu.style.display = "flex";
-            }, 100);
-            
-            // Remove expanding class after animation completes
-            setTimeout(() => {
+                dropdownMenu.classList.add("active");
                 centerSphere.classList.remove("expanding");
-            }, 600);
+            }, 300);
         });
     }
 
-    if (closeMenuBtn) {
-        closeMenuBtn.addEventListener("click", () => {
-            dropdownMenu.classList.remove("active");
-            setTimeout(() => { 
-                dropdownMenu.style.display = "none";
-                // Show sphere and text ring again when menu closes
-                if (centerSphere) centerSphere.style.display = "block";
-                if (textRing) textRing.style.display = "block";
-            }, 300);
-        });
-    }
-    
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', () => {
             const page = item.dataset.page;
             if (page === 'home') {
                 contentOverlay.classList.remove("active");
-                // Show sphere and text ring when going back home
-                if (centerSphere) centerSphere.style.display = "block";
-                if (textRing) textRing.style.display = "block";
+                centerSphere.style.display = "block";
+                textRing.style.display = "block";
             } else {
                 contentContainer.innerHTML = getPageContent(page);
                 contentOverlay.classList.add("active");
-                // Keep sphere and text ring hidden when viewing content
+                
+                // CRITICAL: Attach form listener AFTER HTML is injected
+                if (page === 'contact') {
+                    const form = document.getElementById("my-form");
+                    if (form) form.addEventListener("submit", handleFormSubmit);
+                }
             }
             dropdownMenu.classList.remove("active");
             setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
         });
     });
 
-    if(backButton) {
+    if (backButton) {
         backButton.addEventListener("click", () => {
             contentOverlay.classList.remove("active");
-            // Show sphere and text ring when going back
-            if (centerSphere) centerSphere.style.display = "block";
-            if (textRing) textRing.style.display = "block";
+            centerSphere.style.display = "block";
+            textRing.style.display = "block";
         });
     }
 });
 
-// --- HELPER: PAGE CONTENT ---
+/**********************************************************
+ * 6. PAGE CONTENT HELPER
+ **********************************************************/
 function getPageContent(page) {
     const contents = {
         about: `<h1>About Peter Kopp</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
-        contact: `<h1>Contact Me</h1><p>Email: peter@example.com</p><p>Instagram: @peterkoppphotography</p>`
+        contact: `
+            <h1>Contact Me</h1>
+            <p>Instagram: @peterkoppphotography</p>
+            <form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST" style="display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin-top: 20px;">
+                <input type="email" name="email" placeholder="Your Email" required style="padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid #444; color: white; border-radius: 4px;">
+                <textarea name="message" placeholder="How can I help?" required style="padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid #444; color: white; border-radius: 4px; min-height: 120px;"></textarea>
+                <button type="submit" style="padding: 12px; background: white; color: black; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; transition: 0.3s;">Send Message</button>
+                <p id="my-form-status" style="margin-top: 10px; font-weight: bold;"></p>
+            </form>`
     };
     return contents[page] || '<h1>Page Not Found</h1>';
 }
