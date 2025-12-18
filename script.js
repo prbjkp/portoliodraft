@@ -286,6 +286,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // Add expanding animation class
             centerSphere.classList.add("expanding");
             
+            // Hide sphere and text ring when menu opens
+            setTimeout(() => {
+                if (centerSphere) centerSphere.style.display = "none";
+                if (textRing) textRing.style.display = "none";
+            }, 300);
+            
             // Show menu after a brief delay to let expansion start
             setTimeout(() => {
                 dropdownMenu.classList.add("active");
@@ -302,7 +308,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (closeMenuBtn) {
         closeMenuBtn.addEventListener("click", () => {
             dropdownMenu.classList.remove("active");
-            setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
+            setTimeout(() => { 
+                dropdownMenu.style.display = "none";
+                // Show sphere and text ring again when menu closes
+                if (centerSphere) centerSphere.style.display = "block";
+                if (textRing) textRing.style.display = "block";
+            }, 300);
         });
     }
     
@@ -311,9 +322,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const page = item.dataset.page;
             if (page === 'home') {
                 contentOverlay.classList.remove("active");
+                // Show sphere and text ring when going back home
+                if (centerSphere) centerSphere.style.display = "block";
+                if (textRing) textRing.style.display = "block";
             } else {
                 contentContainer.innerHTML = getPageContent(page);
                 contentOverlay.classList.add("active");
+                // Keep sphere and text ring hidden when viewing content
             }
             dropdownMenu.classList.remove("active");
             setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
@@ -323,6 +338,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if(backButton) {
         backButton.addEventListener("click", () => {
             contentOverlay.classList.remove("active");
+            // Show sphere and text ring when going back
+            if (centerSphere) centerSphere.style.display = "block";
+            if (textRing) textRing.style.display = "block";
         });
     }
 });
