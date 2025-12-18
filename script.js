@@ -266,48 +266,27 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(animateSphere);
     }
 
-    // --- OVERLAY LOGIC ---
+   // OVERLAY LOGIC
     function openOverlay(src) {
-        if(overlay && overlayImg) {
+        if (overlay && overlayImg) {
             overlayImg.src = src;
             overlay.style.display = "flex";
             overlay.style.pointerEvents = "auto";
             setTimeout(() => overlay.style.opacity = "1", 10);
+            if (centerSphere) centerSphere.style.display = "none"; // hide sphere while overlay open
         }
     }
-setTimeout(() => { 
-    overlay.style.display = "none"; 
-    if (centerSphere) centerSphere.style.display = "block"; // <-- show again
-}, 300);
 
-if (centerSphere) {
-    centerSphere.style.transition = "opacity 0.3s ease";
-    centerSphere.style.opacity = "0"; // hide
-}
-
-// then show
-centerSphere.style.opacity = "1";
-
-    if(overlayClose) {
+    if (overlayClose) {
         overlayClose.addEventListener("click", () => {
             overlay.style.opacity = "0";
             overlay.style.pointerEvents = "none";
-            setTimeout(() => { overlay.style.display = "none"; }, 300);
+            setTimeout(() => {
+                overlay.style.display = "none";
+                if (centerSphere) centerSphere.style.display = "block"; // show sphere again
+            }, 300);
         });
     }
-    function openOverlay(src) {
-    if (overlay && overlayImg) {
-        overlayImg.src = src;
-        overlay.style.display = "flex";
-        overlay.style.pointerEvents = "auto";
-        setTimeout(() => overlay.style.opacity = "1", 10);
-
-        // HIDE CENTER SPHERE
-        if (centerSphere) centerSphere.style.display = "none";
-    }
-}
-
-
     // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
     if (centerSphere) {
         centerSphere.addEventListener("click", (e) => {
