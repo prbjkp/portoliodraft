@@ -59,6 +59,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+        if(backButton) {
+        backButton.addEventListener("click", () => {
+            contentOverlay.classList.remove("active");
+            // Show sphere and text ring when going back
+            if (centerSphere) centerSphere.style.display = "block";
+            if (textRing) textRing.style.display = "block";
+        });
+    }
+
     /**********************************************************
      * 3. HUD HINTS - AUTO SHOW ON LOAD
      **********************************************************/
@@ -311,15 +320,6 @@ if (overlayClose) overlayClose.addEventListener("click", closeOverlay);
         });
     ;
 
-    if(backButton) {
-        backButton.addEventListener("click", () => {
-            contentOverlay.classList.remove("active");
-            // Show sphere and text ring when going back
-            if (centerSphere) centerSphere.style.display = "block";
-            if (textRing) textRing.style.display = "block";
-        });
-    }
-;
 
 // --- HELPER: PAGE CONTENT ---
 function getPageContent(page) {
