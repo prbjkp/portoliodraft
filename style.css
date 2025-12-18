@@ -172,7 +172,7 @@ html, body {
     top: calc(50% + 40px); /* move up on mobile */
     width: 90%;           /* give more room */
     max-width: 340px;     /* smaller max width */
-    z-index: 500;         /* higher z-index to be above other elements */
+    z-index: 9999;         /* higher z-index to be above other elements */
   }
 
   
