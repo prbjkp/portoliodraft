@@ -247,18 +247,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         requestAnimationFrame(animateSphere);
     }
-
 // --- OVERLAY LOGIC ---
 function openOverlay(src) {
     if(overlay && overlayImg) {
         overlayImg.src = src;
         overlay.classList.add("active");
         
-        // Use the class to force-hide the sphere
+        // Force hide both the sphere and the rotating text ring
         if (centerSphere) centerSphere.classList.add("is-hidden");
-        if (textRing) textRing.style.display = "none";
+        if (textRing) textRing.classList.add("is-hidden");
 
-        if (isMobile) document.body.style.overflow = "hidden";
+        if (isMobile) {
+            document.body.style.overflow = "hidden"; // Prevent background scrolling
+        }
     }
 }
 
@@ -266,14 +267,16 @@ if(overlayClose) {
     overlayClose.addEventListener("click", () => {
         overlay.classList.remove("active");
         
-        // Remove the class to bring the sphere back
+        // Bring them both back
         if (centerSphere) centerSphere.classList.remove("is-hidden");
-        
-        setTimeout(() => { 
-            if (textRing) textRing.style.display = "block";
-        }, 300);
+        if (textRing) textRing.classList.remove("is-hidden");
 
-        if (isMobile) document.body.style.overflow = "auto";
+        if (isMobile) {
+            document.body.style.overflow = "auto";
+        }
+        
+        // Clean up the image after fade-out
+        setTimeout(() => { overlayImg.src = ""; }, 400);
     });
 }
 // Close when clicking the dark area of the overlay

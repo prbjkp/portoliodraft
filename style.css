@@ -712,8 +712,11 @@ html, body {
 
 
 /* This selector is strong enough to override the mobile !important rule */
-#center-sphere.is-hidden {
+/* Overrides the mobile !important rules for both the sphere and the text */
+#center-sphere.is-hidden,
+#start-text-ring.is-hidden {
     display: none !important;
     opacity: 0 !important;
     visibility: hidden !important;
+    pointer-events: none !important;
 }
