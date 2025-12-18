@@ -330,6 +330,7 @@ html, body {
   border-radius: 2px;
   transition: all 0.3s ease;
   pointer-events: none;
+  display: block; /* Ensure spans are visible */
 }
 
 #center-sphere:hover #menu-icon span {
@@ -518,7 +519,7 @@ html, body {
 @media (max-width: 768px) {
   /* Show mobile gallery */
   #mobile-gallery {
-    display: flex !important; /* Changed from block to flex to match the layout */
+    display: flex !important;
   }
 
   /* Hide 3D elements */
@@ -526,17 +527,33 @@ html, body {
     display: none !important;
   }
 
-  /* Position menu button at bottom center - FORCE IT TO SHOW */
+  /* FORCE MENU SPHERE TO SHOW AT BOTTOM */
   #center-sphere {
     display: block !important;
     visibility: visible !important;
+    opacity: 1 !important;
     position: fixed !important;
     top: auto !important;
     bottom: 30px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    z-index: 1000 !important; /* Higher z-index to be above everything */
+    z-index: 9999 !important;
     pointer-events: auto !important;
+    width: 110px !important;
+    height: 110px !important;
+  }
+  
+  /* FORCE MENU ICON TO SHOW */
+  #menu-icon {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  #menu-icon span {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   
   /* Override hover transform for mobile */
@@ -548,7 +565,7 @@ html, body {
   #hud-hints {
     display: block !important;
     top: auto !important;
-    bottom: 160px !important; /* Above the menu sphere */
+    bottom: 160px !important;
     left: 50%;
     transform: translateX(-50%);
   }
