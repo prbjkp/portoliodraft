@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Animate text ring on mobile
         function animateMobileTextRing() {
             if (textRingSvg) {
-                textOrbit += 0.01;
+                textOrbit += 0.002; // Slowed down from 0.01 to 0.002 (5x slower)
                 textRingSvg.style.transform = `rotateZ(${textOrbit * 57.2958}deg)`;
             }
             requestAnimationFrame(animateMobileTextRing);
@@ -244,13 +244,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function animateSphere() {
         if (isMobile) return; 
 
-        if (!isDragging) targetRotY += 0.02;
+        if (!isDragging) targetRotY += 0.004; // Slowed down from 0.02 to 0.004 (5x slower)
         rotX += (targetRotX - rotX) * 0.1;
         rotY += (targetRotY - rotY) * 0.1;
 
         if(sphere) sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-        textOrbit += 0.01;
+        textOrbit += 0.002; // Slowed down from 0.01 to 0.002 (5x slower)
         if (textRing) textRing.style.transform = `translate(-50%, -50%)`;
         if (textRingSvg) textRingSvg.style.transform = `translateZ(${TEXT_RING_DISTANCE}px) rotateZ(${textOrbit}deg)`;
 
