@@ -360,11 +360,11 @@ function getPageContent(page) {
    <label>Your Email:
      <input type="email" name="email">
    </label>
-
+<br>
    <label>Your Message:
      <textarea name="message"></textarea>
    </label>
-
+<br>
    <button type="submit">Send</button>
 </form>`
     };
