@@ -709,3 +709,11 @@ html, body {
   font-size: 1.1rem;
   font-weight: 600;
 }
+
+
+/* This selector is strong enough to override the mobile !important rule */
+#center-sphere.is-hidden {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}

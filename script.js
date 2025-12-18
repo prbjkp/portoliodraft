@@ -253,17 +253,10 @@ function openOverlay(src) {
     if(overlay && overlayImg) {
         overlayImg.src = src;
         overlay.classList.add("active");
-        overlay.style.display = "flex"; // Ensure overlay is visible
         
-        // COMPLETELY HIDE the sphere and text ring
-        if (centerSphere) {
-            centerSphere.style.display = "none";
-            centerSphere.style.opacity = "0";
-        }
-        if (textRing) {
-            textRing.style.display = "none";
-            textRing.style.opacity = "0";
-        }
+        // Use the class to force-hide the sphere
+        if (centerSphere) centerSphere.classList.add("is-hidden");
+        if (textRing) textRing.style.display = "none";
 
         if (isMobile) document.body.style.overflow = "hidden";
     }
@@ -273,19 +266,11 @@ if(overlayClose) {
     overlayClose.addEventListener("click", () => {
         overlay.classList.remove("active");
         
-        // Delay showing the sphere until the overlay starts fading out
+        // Remove the class to bring the sphere back
+        if (centerSphere) centerSphere.classList.remove("is-hidden");
+        
         setTimeout(() => { 
-            overlay.style.display = "none";
-            
-            // BRING BACK the sphere and text ring
-            if (centerSphere) {
-                centerSphere.style.display = "block";
-                centerSphere.style.opacity = "1";
-            }
-            if (textRing) {
-                textRing.style.display = "block";
-                textRing.style.opacity = "1";
-            }
+            if (textRing) textRing.style.display = "block";
         }, 300);
 
         if (isMobile) document.body.style.overflow = "auto";
