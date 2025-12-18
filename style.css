@@ -660,7 +660,9 @@ html, body {
   border-radius: 6px;
   margin-bottom: 20px;
   background: white;
+  box-sizing: border-box;  /* prevents overflow */
 }
+
 
 #my-form textarea {
   min-height: 150px;
