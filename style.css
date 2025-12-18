@@ -720,3 +720,10 @@ html, body {
     visibility: hidden !important;
     pointer-events: none !important;
 }
+
+
+.hud-hint {
+    background: rgba(255, 255, 255, 0.95); /* High contrast for mobile readability */
+    color: #000;
+    border: 1px solid #ddd;
+  }

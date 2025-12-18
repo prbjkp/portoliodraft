@@ -59,28 +59,51 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /**********************************************************
-     * 3. HUD HINTS - AUTO SHOW ON LOAD
-     **********************************************************/
-    function showHints() {
-        let index = 0;
-        function showNextHint() {
-            if (index >= hudHints.length) {
-                return;
-            }
-            if (index > 0) hudHints[index - 1].classList.remove("active");
-            
-            hudHints[index].classList.add("active");
-            
-            setTimeout(() => {
-                hudHints[index].classList.remove("active");
-                index++;
-                setTimeout(showNextHint, 500);
-            }, 3000);
-        }
-        setTimeout(showNextHint, 2000);
-    }
+ /**********************************************************
+ * 3. HUD HINTS - DEVICE AWARE
+ **********************************************************/
+function showHints() {
+    // Define the different sets of text
+    const mobileText = [
+        "Scroll to explore photos",
+        "Tap any photo to view full size",
+        "Tap the center sphere for menu"
+    ];
+    
+    const desktopText = [
+        "Drag to rotate the gallery",
+        "Click any photo to view it full size",
+        "Click the center sphere for more information"
+    ];
 
+    // Select the correct text based on device
+    const activeTextSet = isMobile ? mobileText : desktopText;
+
+    // Apply the text to the elements
+    hudHints.forEach((hint, i) => {
+        if (activeTextSet[i]) {
+            hint.textContent = activeTextSet[i];
+        }
+    });
+
+    // Existing animation logic
+    let index = 0;
+    function showNextHint() {
+        if (index >= hudHints.length) return;
+        
+        if (index > 0) hudHints[index - 1].classList.remove("active");
+        hudHints[index].classList.add("active");
+        
+        setTimeout(() => {
+            hudHints[index].classList.remove("active");
+            index++;
+            setTimeout(showNextHint, 500);
+        }, 3000);
+    }
+    
+    // Start the sequence
+    setTimeout(showNextHint, 2000);
+}
     /**********************************************************
      * 4. LOGIC SWITCHER (MOBILE VS DESKTOP)
      **********************************************************/
