@@ -559,13 +559,17 @@ html, body {
     display: block !important;
     position: fixed !important;
     top: auto !important;
-    bottom: 30px !important;
+    bottom: -5px !important; /* Adjusted to center around sphere better */
     left: 50% !important;
     width: 220px !important;
     height: 220px !important;
     transform: translate(-50%, 0) !important;
     z-index: 99998 !important; /* Just below sphere */
     pointer-events: none !important;
+  }
+  
+  #text-ring-svg {
+    transform-origin: center center !important;
   }
 
   /* Show hints above menu sphere on mobile */
