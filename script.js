@@ -244,13 +244,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function animateSphere() {
         if (isMobile) return; 
 
-        if (!isDragging) targetRotY += 0.004; // Slowed down from 0.02 to 0.004 (5x slower)
+        if (!isDragging) targetRotY += 0.02; // Restored to original speed
         rotX += (targetRotX - rotX) * 0.1;
         rotY += (targetRotY - rotY) * 0.1;
 
         if(sphere) sphere.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-        textOrbit += 0.002; // Slowed down from 0.01 to 0.002 (5x slower)
+        textOrbit += 0.002; // Text ring still slow (5x slower than original)
         if (textRing) textRing.style.transform = `translate(-50%, -50%)`;
         if (textRingSvg) textRingSvg.style.transform = `translateZ(${TEXT_RING_DISTANCE}px) rotateZ(${textOrbit}deg)`;
 
