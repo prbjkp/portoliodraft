@@ -179,7 +179,9 @@ html, body {
     padding: 8px 16px;    /* smaller padding */
   }
 }
-
+.hud-hint {
+  opacity: 1 !important;
+}
 
 /* ==================================================
    3D SCENE & SPHERE CONTAINER
