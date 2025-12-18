@@ -515,7 +515,7 @@ html, body {
   }
 
   /* Hide 3D elements */
-  #sphere, #scene, #start-text-ring {
+  #sphere, #scene {
     display: none !important;
   }
 
@@ -547,18 +547,36 @@ html, body {
     display: none !important;
   }
   
-  /* Override hover transform for mobile */
+  /* Mobile hover/active - use same zoom as desktop */
+  #center-sphere:active,
   #center-sphere:hover {
     transform: translateX(-50%) scale(1.1) !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  /* Show text ring on mobile around sphere */
+  #start-text-ring {
+    display: block !important;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 30px !important;
+    left: 50% !important;
+    width: 220px !important;
+    height: 220px !important;
+    transform: translate(-50%, 0) !important;
+    z-index: 99998 !important; /* Just below sphere */
+    pointer-events: none !important;
   }
 
   /* Show hints above menu sphere on mobile */
   #hud-hints {
     display: block !important;
+    position: fixed !important;
     top: auto !important;
-    bottom: 160px !important;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 170px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 99997 !important;
   }
 }
 
