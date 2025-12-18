@@ -167,6 +167,20 @@ html, body {
   transition: none;
 }
 
+@media (max-width: 768px) {
+  #hud-hints {
+    top: calc(50% + 40px); /* move up on mobile */
+    width: 90%;           /* give more room */
+    max-width: 340px;     /* smaller max width */
+  }
+
+  .hud-hint {
+    font-size: 12px;      /* slightly smaller text */
+    padding: 8px 16px;    /* smaller padding */
+  }
+}
+
+
 /* ==================================================
    3D SCENE & SPHERE CONTAINER
 ================================================== */
