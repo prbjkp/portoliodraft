@@ -252,15 +252,19 @@ document.addEventListener("DOMContentLoaded", () => {
 function openOverlay(src) {
     if(overlay && overlayImg) {
         overlayImg.src = src;
-        
-        // Use the class defined in your CSS for the transition
         overlay.classList.add("active");
+        overlay.style.display = "flex"; // Ensure overlay is visible
         
-        // Hide sphere and text ring so they don't peak through the edges
-        if (centerSphere) centerSphere.style.opacity = "0";
-        if (textRing) textRing.style.opacity = "0";
-        
-        // Optional: Disable scrolling on mobile while viewing image
+        // COMPLETELY HIDE the sphere and text ring
+        if (centerSphere) {
+            centerSphere.style.display = "none";
+            centerSphere.style.opacity = "0";
+        }
+        if (textRing) {
+            textRing.style.display = "none";
+            textRing.style.opacity = "0";
+        }
+
         if (isMobile) document.body.style.overflow = "hidden";
     }
 }
@@ -269,15 +273,22 @@ if(overlayClose) {
     overlayClose.addEventListener("click", () => {
         overlay.classList.remove("active");
         
-        // Show sphere and text ring again
-        if (centerSphere) centerSphere.style.opacity = "1";
-        if (textRing) textRing.style.opacity = "1";
-        
-        // Re-enable scrolling
+        // Delay showing the sphere until the overlay starts fading out
+        setTimeout(() => { 
+            overlay.style.display = "none";
+            
+            // BRING BACK the sphere and text ring
+            if (centerSphere) {
+                centerSphere.style.display = "block";
+                centerSphere.style.opacity = "1";
+            }
+            if (textRing) {
+                textRing.style.display = "block";
+                textRing.style.opacity = "1";
+            }
+        }, 300);
+
         if (isMobile) document.body.style.overflow = "auto";
-        
-        // Clear the image after it fades out to keep things clean
-        setTimeout(() => { overlayImg.src = ""; }, 400);
     });
 }
 // Close when clicking the dark area of the overlay
