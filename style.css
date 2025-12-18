@@ -351,6 +351,12 @@ html, body {
   pointer-events: auto;
 }
 
+/* Hide sphere and text ring when menu is active */
+#dropdown-menu.active ~ #center-sphere,
+#dropdown-menu.active ~ #start-text-ring {
+  display: none !important;
+}
+
 #dropdown-menu h3 {
   display: none;
 }
