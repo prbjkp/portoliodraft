@@ -507,24 +507,38 @@ function showHints() {
 showHints();
 
 
-
-// --- WELCOME HEADER WITH BEGIN BUTTON ---
+// --- WELCOME HEADER LOGIC ---
 const welcomeHeader = document.getElementById('welcome-header');
 const beginButton = document.getElementById('begin-button');
 
 if (beginButton && welcomeHeader) {
+    // Prevent clicking the button while it's still transparent/animating
+    beginButton.style.pointerEvents = "none";
+    setTimeout(() => {
+        beginButton.style.pointerEvents = "auto";
+    }, 2000);
+
     beginButton.addEventListener('click', () => {
-        // Start the fade out
         welcomeHeader.classList.add('fade-out');
         
-        // Optional: Trigger the HUD hints to start specifically after "Begin" is clicked
-        // if (typeof showHints === "function") {
-        //     setTimeout(showHints, 1000); 
-        // }
+        // Start the HUD hints sequence 1 second after clicking Begin
+        setTimeout(() => {
+            if (typeof showHints === "function") {
+                showHints();
+            }
+        }, 1000);
 
-        // Remove from DOM after transition finishes to keep the site clean
+        // Remove element from DOM after fade
         setTimeout(() => {
             welcomeHeader.remove();
-        }, 800); 
+        }, 1000); 
     });
 }
+// Lock scroll on load
+document.body.style.overflow = "hidden";
+
+// Unlock scroll when Begin is clicked
+beginButton.addEventListener('click', () => {
+    document.body.style.overflow = "auto";
+    // ... rest of your begin logic ...
+});
