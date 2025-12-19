@@ -517,9 +517,14 @@ if (beginButton && welcomeHeader) {
         beginButton.style.pointerEvents = "auto";
     }, 1800);
 
-    beginButton.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent any default behavior
-        
+beginButton.addEventListener('click', () => {
+    welcomeHeader.classList.add('fade-out');
+    
+    // Wait for the 1s CSS transition to finish before removing from DOM
+    setTimeout(() => {
+        welcomeHeader.remove();
+    }, 1000); 
+
         console.log("Begin clicked - sliding up..."); // Debug check
         
         // Add the class to trigger CSS animation
