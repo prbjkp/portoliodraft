@@ -33,7 +33,7 @@ html, body {
   background-color: #ffffff; /* Matches your body background */
   z-index: 2147483647; /* Highest possible z-index */
   transition: opacity 1s ease, visibility 1s;
-  pointer-events: none; /* Allows users to click through it if it's fading */
+  pointer-events: auto; /* Allows users to click through it if it's fading */
 }
 
 #welcome-header h1 {
