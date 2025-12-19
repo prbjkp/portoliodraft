@@ -1,173 +1,798 @@
 /* ==================================================
-   1. GLOBAL & RESET
-   ================================================== */
+   GLOBAL
+================================================== */
 html, body {
-    width: 100%; height: 100%; margin: 0; padding: 0;
-    overflow: hidden; font-family: 'Inter', sans-serif;
-    background: #ffffff; color: #000;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Inter, sans-serif;
+  background: #ffffff;
+  color: rgb(0, 0, 0);
+  -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
+  -webkit-touch-callout: none; /* Disable callout on long press */
+  user-select: none; /* Prevent text selection */
+}
+
+* {
+  -webkit-tap-highlight-color: transparent; /* Remove blue highlight globally */
+  -webkit-touch-callout: none;
 }
 
 /* ==================================================
-   2. WELCOME HEADER (INTRO SCREEN)
-   ================================================== */
+   MOBILE GALLERY (Default Hidden)
+================================================== */
 #welcome-header {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffffff;
-    z-index: 2147483647; 
-    transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease;
-}
-
-#welcome-header.fade-out {
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff; /* Matches your body background */
+  z-index: 2147483647; /* Highest possible z-index */
+  transition: opacity 1s ease, visibility 1s;
+  pointer-events: none; /* Allows users to click through it if it's fading */
 }
 
 #welcome-header h1 {
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    letter-spacing: 15px;
-    text-transform: uppercase;
-    font-weight: 900;
-    margin: 0;
-    text-align: center;
+  font-size: 5rem;
+  margin: 0;
+  letter-spacing: 15px;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #000;
+  text-align: center;
 }
 
-#begin-button {
-    margin-top: 50px;
-    padding: 15px 40px;
-    background: transparent;
-    border: 2px solid #000;
-    font-size: 1.2rem;
-    font-weight: 600;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
+#welcome-header h2 {
+  font-size: 1.5rem;
+  margin: 10px 0 0 0;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  font-weight: 300;
+  color: #555;
 }
 
-#begin-button:hover {
-    background: #000;
-    color: #fff;
-    transform: scale(1.05);
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  #welcome-header h1 { font-size: 2.5rem; letter-spacing: 8px; }
+  #welcome-header h2 { font-size: 1rem; letter-spacing: 4px; }
 }
 
-/* ==================================================
-   3. VISIBILITY TOGGLE
-   ================================================== */
-/* Hide these until the user clicks "Begin" */
-#center-sphere, 
-#start-text-ring, 
-#hud-hints,
-#scene-wrapper,
+/* Class to trigger the fade out */
+#welcome-header.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+
 #mobile-gallery {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1s ease, visibility 1s;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  background: #f4f4f4;
+  z-index: 1;
+  padding: 15px 10px 150px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
-/* Revealed state */
-body.entered #center-sphere,
-body.entered #start-text-ring,
-body.entered #hud-hints,
-body.entered #scene-wrapper,
-body.entered #mobile-gallery {
-    opacity: 1 !important;
-    visibility: visible !important;
+#mobile-gallery img {
+  width: auto;
+  max-width: 85%;
+  height: auto;
+  max-height: 400px;
+  display: block;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* Alternate images between left and right */
+#mobile-gallery img:nth-child(odd) {
+  align-self: flex-start;
+  margin-left: 5%;
+}
+
+#mobile-gallery img:nth-child(even) {
+  align-self: flex-end;
+  margin-right: 5%;
+}
+
+/* 3 column layout for slightly larger phones */
+@media (min-width: 400px) and (max-width: 768px) {
+  #mobile-gallery img {
+    max-width: 80%;
+  }
 }
 
 /* ==================================================
-   4. CENTER SPHERE & TEXT RING
-   ================================================== */
-#center-sphere {
-    position: fixed;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    width: 110px; height: 110px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 40% 30%, #444 0%, #111 35%, #000 85%);
-    box-shadow: inset -30px -30px 60px rgba(0,0,0,0.95), 0 60px 120px rgba(0,0,0,0.95);
-    z-index: 100;
-    cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.3s ease;
+   SCENE WRAPPER
+================================================== */
+#scene-wrapper {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* Let clicks pass through */
 }
 
-#center-sphere.is-hidden { display: none !important; }
+/* On mobile, hide the scene wrapper completely */
+@media (max-width: 768px) {
+  #scene-wrapper {
+    display: none !important;
+  }
+}
 
+/* ==================================================
+   TEXT RING
+================================================== */
 #start-text-ring {
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 220px; height: 220px;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 30;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  pointer-events: none;
+  z-index: 30;
+}
+
+#text-ring-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-style: preserve-3d;
 }
 
 #text-ring-svg text {
-    fill: rgba(0,0,0,0.85);
-    font-size: 14px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
+  fill: rgba(0,0,0,0.85);
+  font-size: 14px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  dominant-baseline: middle;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.25));
 }
 
 /* ==================================================
-   5. HUD HINTS
-   ================================================== */
+   HUD HINTS
+================================================== */
 #hud-hints {
-    position: fixed;
-    bottom: 12%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2000;
-    pointer-events: none;
-    text-align: center;
+  position: absolute;
+  top: calc(50% + 100px); /* Positioned below the center sphere */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+  z-index: 50;
+  pointer-events: none;
+  height: 60px;
 }
 
 .hud-hint {
-    background: rgba(255, 255, 255, 0.95);
-    color: #000;
-    padding: 12px 24px;
-    border-radius: 4px;
-    border: 1px solid #000;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    opacity: 0;
-    position: absolute;
-    left: 50%; transform: translateX(-50%);
-    white-space: nowrap;
-    transition: opacity 0.6s ease;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: black;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px 24px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.hud-hint.active { opacity: 1; }
-
-/* ==================================================
-   6. 3D SCENE & OVERLAYS
-   ================================================== */
-#scene-wrapper { position: fixed; inset: 0; pointer-events: none; }
-#scene { position: absolute; inset: 0; perspective: 1800px; display: flex; justify-content: center; align-items: center; transform-style: preserve-3d; pointer-events: auto; }
-#sphere { position: relative; width: 800px; height: 800px; transform-style: preserve-3d; cursor: grab; }
-
-#overlay, #dropdown-menu {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-    display: none; z-index: 3000; justify-content: center; align-items: center;
+.hud-hint.active {
+  opacity: 1;
 }
 
-#overlay.active, #dropdown-menu.active { display: flex; }
+/* Removed dimming effect */
+#scene.dimmed {
+  filter: none;
+  transition: none;
+}
 
-/* ==================================================
-   7. MOBILE RESPONSIVENESS
-   ================================================== */
 @media (max-width: 768px) {
-    #scene-wrapper { display: none !important; }
-    #mobile-gallery { display: flex; flex-direction: column; gap: 20px; padding: 20px 10px 150px; overflow-y: auto; position: fixed; inset: 0; background: #f4f4f4; }
-    #center-sphere { top: auto !important; bottom: 80px !important; }
-    #hud-hints { bottom: 210px; }
+  #hud-hints {
+    top: calc(50% + 40px); /* move up on mobile */
+    width: 90%;           /* give more room */
+    max-width: 340px;     /* smaller max width */
+    z-index: 100000 !important; /* above the center sphere */
+    pointer-events: none !important;
+}
+      /* higher z-index to be above other elements */
+  }
+
+  
+  .hud-hint {
+    font-size: 12px;      /* slightly smaller text */
+    padding: 8px 16px;    /* smaller padding */
+  }
+
+
+/* ==================================================
+   3D SCENE & SPHERE CONTAINER
+================================================== */
+#scene {
+  position: absolute;
+  inset: 0;
+  perspective: 1800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  pointer-events: auto; /* Allow interaction */
+}
+
+#sphere {
+  position: relative;
+  width: 800px;
+  height: 800px;
+  transform-style: preserve-3d;
+  cursor: grab;
+  transform: rotateX(0deg) rotateY(0deg);
+}
+
+#sphere:active {
+  cursor: grabbing;
+}
+
+/* ==================================================
+   PHOTOS
+================================================== */
+.photo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-in;
+  will-change: transform;
+  transform-origin: 0 0;
+}
+
+.photo.landscape { 
+  width: 200px; 
+  height: 130px; 
+}
+
+.photo.portrait { 
+  width: 200px;
+  height: 360px;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 28px 56px rgba(0,0,0,0.55);
+  backface-visibility: hidden;
+  transition: transform 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.photo.portrait img {
+  object-fit: contain;
+}
+
+.photo img:hover {
+  transform: scale(1.05);
+}
+
+/* ==================================================
+   CENTER SPHERE (MENU BUTTON)
+================================================== */
+#center-sphere {
+  --light-x: 40%;
+  --light-y: 30%;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  background: radial-gradient(circle at var(--light-x) var(--light-y), #444 0%, #111 35%, #000 85%);
+  box-shadow:
+    inset -30px -30px 60px rgba(0,0,0,0.95),
+    inset 12px 12px 24px rgba(255,255,255,0.03),
+    0 60px 120px rgba(0,0,0,0.95);
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 100;
+  transition: transform 0.2s ease;
+  display: block; /* Ensure it's always visible by default */
+}
+
+#center-sphere:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Expanding animation when menu opens - MOBILE VERSION */
+#center-sphere.expanding {
+  animation: sphereExpandMobile 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes sphereExpandMobile {
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(-50%) scale(25);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(-50%) scale(50);
+    opacity: 0;
+  }
+}
+
+/* Desktop version uses different transform */
+@media (min-width: 768px) {
+  #center-sphere.expanding {
+    animation: sphereExpandDesktop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  @keyframes sphereExpandDesktop {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(25);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(50);
+      opacity: 0;
+    }
+  }
+}
+
+#center-sphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--light-x) var(--light-y),
+    rgba(255,255,255,0.18) 0%,
+    rgba(255,255,255,0.05) 6%,
+    transparent 25%);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+#center-sphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 -40px 60px rgba(0,0,0,0.7);
+  pointer-events: none;
+}
+
+/* Menu icon on center sphere - HIDDEN */
+#menu-icon {
+  display: none !important; /* Completely hide the menu icon */
+}
+
+#menu-icon span {
+  display: none !important;
+}
+
+/* ==================================================
+   DROPDOWN MENU (CURTAIN STYLE)
+================================================== */
+#dropdown-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%);
+  backdrop-filter: blur(10px);
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+#dropdown-menu.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Hide sphere and text ring when menu is active */
+#dropdown-menu.active ~ #center-sphere,
+#dropdown-menu.active ~ #start-text-ring {
+  display: none !important;
+}
+
+#dropdown-menu h3 {
+  display: none;
+}
+
+.menu-item {
+  padding: 15px 40px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 200px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+#dropdown-menu.active .menu-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Cascade animation delays */
+#dropdown-menu.active .menu-item:nth-child(2) { transition-delay: 0.1s; }
+#dropdown-menu.active .menu-item:nth-child(3) { transition-delay: 0.2s; }
+#dropdown-menu.active .menu-item:nth-child(4) { transition-delay: 0.3s; }
+#dropdown-menu.active .menu-item:nth-child(5) { transition-delay: 0.4s; }
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+  letter-spacing: 4px;
+  transform: translateY(0) scale(1.05);
+}
+
+#close-menu {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.3s ease, transform 0.3s ease;
+  padding: 10px;
+  opacity: 0;
+}
+
+#dropdown-menu.active #close-menu {
+  opacity: 1;
+  transition-delay: 0.3s;
+}
+
+#close-menu:hover {
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* ==================================================
+   CONTENT OVERLAY
+================================================== */
+#content-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.98);
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  overflow-y: auto;
+  color: #000;
+}
+
+#content-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#content-container {
+  max-width: 800px;
+  margin: 80px auto;
+  padding: 40px;
+}
+
+#back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 12px 24px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  z-index: 160;
+  transition: background 0.2s ease;
+}
+
+#back-button:hover {
+  background: #555;
+}
+
+/* ==================================================
+   OVERLAY (FULLSCREEN IMAGE VIEW)
+================================================== */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 300;
+}
+
+#overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#overlay img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+#overlay-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  padding: 10px;
+  z-index: 310;
+}
+
+/* ==================================================
+   MOBILE SPECIFIC (Under 768px)
+================================================== */
+@media (max-width: 768px) {
+  /* Hide scene wrapper that might be blocking sphere */
+  #scene-wrapper {
+    display: none !important;
+  }
+
+  /* Show mobile gallery */
+  #mobile-gallery {
+    display: flex !important;
+  }
+
+  /* Hide 3D elements */
+  #sphere, #scene {
+    display: none !important;
+  }
+
+  /* PULL SPHERE OUT OF WRAPPER - MAKE IT INDEPENDENT */
+  #center-sphere {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 80px !important; /* Moved up from 30px to 80px */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 99999 !important; /* Even higher */
+    pointer-events: auto !important;
+    width: 110px !important;
+    height: 110px !important;
+    
+    /* Force the sphere styling - RED BORDER REMOVED */
+    background: radial-gradient(circle at 40% 30%, #444 0%, #111 35%, #000 85%) !important;
+    border-radius: 50% !important;
+    box-shadow: inset -30px -30px 60px rgba(0,0,0,0.95),
+                inset 12px 12px 24px rgba(255,255,255,0.03),
+                0 60px 120px rgba(0,0,0,0.95) !important;
+  }
+  
+  /* FORCE MENU ICON TO HIDE */
+  #menu-icon {
+    display: none !important;
+  }
+  
+  /* Mobile hover/active - use same zoom as desktop */
+  #center-sphere:active,
+  #center-sphere:hover {
+    transform: translateX(-50%) scale(1.1) !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  /* Show text ring on mobile around sphere */
+  #start-text-ring {
+    display: block !important;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 25px !important; /* Adjusted to match new sphere position */
+    left: 50% !important;
+    width: 220px !important;
+    height: 220px !important;
+    transform: translate(-50%, 0) !important;
+    z-index: 99998 !important; /* Just below sphere */
+    pointer-events: none !important;
+  }
+  
+  #text-ring-svg {
+    transform-origin: center center !important;
+  }
+
+  /* Show hints above menu sphere on mobile */
+  #hud-hints {
+    display: block !important;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 220px !important; /* Adjusted to be above new sphere position */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 99997 !important;
+  }
+}
+
+/* ==================================================
+   DESKTOP SPECIFIC (768px and above)
+================================================== */
+@media (min-width: 768px) {
+  /* Ensure mobile gallery is hidden */
+  #mobile-gallery {
+    display: none !important;
+  }
+
+  /* Center the menu sphere */
+  #center-sphere {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
+}
+
+
+
+/* CONTACT FORM STYLING */
+#my-form {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+/* Larger bold black text for labels */
+#my-form label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Larger input & textarea */
+#my-form input[type="email"],
+#my-form textarea {
+  width: 100%;
+  border: 2px solid #000;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  background: white;
+  box-sizing: border-box;  /* prevents overflow */
+}
+
+
+#my-form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+/* Formal button look */
+#my-form button[type="submit"] {
+  background: #000;
+  color: white;
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* Button hover effect */
+#my-form button:hover {
+  background: #333;
+}
+#my-form-status {
+  margin-top: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+
+/* This selector is strong enough to override the mobile !important rule */
+/* Overrides the mobile !important rules for both the sphere and the text */
+#center-sphere.is-hidden,
+#start-text-ring.is-hidden {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+
+.hud-hint {
+    background: rgba(255, 255, 255, 0.95); /* High contrast for mobile readability */
+    color: #000;
+    border: 1px solid #ddd;
+  }
+
+
+  @media (max-width: 768px) {
+  #hud-hints {
+    display: block !important;
+    position: fixed !important;
+    /* Position it above the sphere/text ring */
+    bottom: 250px !important; 
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 999999 !important; /* Higher than everything else */
+    width: 90% !important;
+    pointer-events: none !important;
+  }
+
+  .hud-hint {
+    /* Make sure text is visible against photos */
+    background: rgba(255, 255, 255, 0.98) !important;
+    color: #000 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    border: 1px solid #000;
+  }
 }
