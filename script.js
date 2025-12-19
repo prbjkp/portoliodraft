@@ -59,6 +59,43 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+
+
+
+    // Add this code at the very beginning of your DOMContentLoaded event listener
+// Replace the automatic welcome header removal with button-triggered removal
+
+document.addEventListener("DOMContentLoaded", () => {
+    
+    // --- WELCOME HEADER LOGIC (MOVED TO TOP) ---
+    const welcomeHeader = document.getElementById('welcome-header');
+    const beginButton = document.getElementById('begin-button');
+
+    if (beginButton && welcomeHeader) {
+        beginButton.addEventListener('click', () => {
+            welcomeHeader.classList.add('fade-out');
+            
+            // Completely remove from DOM after fade to save resources
+            setTimeout(() => {
+                welcomeHeader.remove();
+            }, 1000); // Matches the 1s transition in CSS
+        });
+    }
+    
+    // ... rest of your existing code follows here
+    
+    /**********************************************************
+     * 1. CORE VARIABLES & DOM ELEMENTS
+     **********************************************************/
+    const isMobile = window.innerWidth < 768;
+    
+    console.log("🔍 Debug Info:");
+    console.log("Is Mobile:", isMobile);
+    console.log("Window Width:", window.innerWidth);
+    
+    // ... (rest of your existing JavaScript code)
+});
+
  /**********************************************************
  * 3. HUD HINTS - DEVICE AWARE
  **********************************************************/
@@ -505,17 +542,3 @@ function showHints() {
 
 // MAKE SURE THIS IS THE LAST LINE BEFORE THE CLOSING }); OF YOUR DOMContentLoaded
 showHints();
-
-// --- WELCOME HEADER LOGIC ---
-const welcomeHeader = document.getElementById('welcome-header');
-
-if (welcomeHeader) {
-    setTimeout(() => {
-        welcomeHeader.classList.add('fade-out');
-        
-        // Completely remove from DOM after fade to save resources
-        setTimeout(() => {
-            welcomeHeader.remove();
-        }, 1000); // Matches the 1s transition in CSS
-    }, 3000); // Display for 3 seconds
-}
