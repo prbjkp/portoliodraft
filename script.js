@@ -506,16 +506,25 @@ function showHints() {
 // MAKE SURE THIS IS THE LAST LINE BEFORE THE CLOSING }); OF YOUR DOMContentLoaded
 showHints();
 
-// --- WELCOME HEADER LOGIC ---
-const welcomeHeader = document.getElementById('welcome-header');
 
-if (welcomeHeader) {
-    setTimeout(() => {
+
+// --- WELCOME HEADER WITH BEGIN BUTTON ---
+const welcomeHeader = document.getElementById('welcome-header');
+const beginButton = document.getElementById('begin-button');
+
+if (beginButton && welcomeHeader) {
+    beginButton.addEventListener('click', () => {
+        // Start the fade out
         welcomeHeader.classList.add('fade-out');
         
-        // Completely remove from DOM after fade to save resources
+        // Optional: Trigger the HUD hints to start specifically after "Begin" is clicked
+        // if (typeof showHints === "function") {
+        //     setTimeout(showHints, 1000); 
+        // }
+
+        // Remove from DOM after transition finishes to keep the site clean
         setTimeout(() => {
             welcomeHeader.remove();
-        }, 1000); // Matches the 1s transition in CSS
-    }, 3000); // Display for 3 seconds
+        }, 800); 
+    });
 }
