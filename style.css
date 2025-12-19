@@ -1,15 +1,16 @@
 /* ==================================================
-   1. GLOBAL & INTRO RESET
+   1. GLOBAL & RESET
    ================================================== */
 html, body {
     width: 100%; height: 100%; margin: 0; padding: 0;
     overflow: hidden; font-family: 'Inter', sans-serif;
     background: #ffffff; color: #000;
+    -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
 /* ==================================================
-   2. WELCOME HEADER (THE START SCREEN)
+   2. WELCOME HEADER (INTRO SCREEN)
    ================================================== */
 #welcome-header {
     position: fixed;
@@ -19,7 +20,7 @@ html, body {
     justify-content: center;
     align-items: center;
     background-color: #ffffff;
-    z-index: 2147483647; /* Maximum priority */
+    z-index: 2147483647; 
     transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease;
 }
 
@@ -35,7 +36,7 @@ html, body {
     text-transform: uppercase;
     font-weight: 900;
     margin: 0;
-    animation: welcomeFadeUp 1.2s ease forwards;
+    text-align: center;
 }
 
 #begin-button {
@@ -44,6 +45,7 @@ html, body {
     background: transparent;
     border: 2px solid #000;
     font-size: 1.2rem;
+    font-weight: 600;
     letter-spacing: 4px;
     text-transform: uppercase;
     cursor: pointer;
@@ -53,17 +55,13 @@ html, body {
 #begin-button:hover {
     background: #000;
     color: #fff;
-}
-
-@keyframes welcomeFadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    transform: scale(1.05);
 }
 
 /* ==================================================
-   3. VISIBILITY CONTROL (Revealing Menu & Hints)
+   3. VISIBILITY TOGGLE
    ================================================== */
-/* Hide these by default until "Begin" is clicked */
+/* Hide these until the user clicks "Begin" */
 #center-sphere, 
 #start-text-ring, 
 #hud-hints,
@@ -71,10 +69,10 @@ html, body {
 #mobile-gallery {
     opacity: 0;
     visibility: hidden;
-    transition: opacity 1s ease;
+    transition: opacity 1s ease, visibility 1s;
 }
 
-/* JavaScript will add this class to the <body> */
+/* Revealed state */
 body.entered #center-sphere,
 body.entered #start-text-ring,
 body.entered #hud-hints,
@@ -85,7 +83,7 @@ body.entered #mobile-gallery {
 }
 
 /* ==================================================
-   4. CENTER SPHERE (MENU BUTTON)
+   4. CENTER SPHERE & TEXT RING
    ================================================== */
 #center-sphere {
     position: fixed;
@@ -97,11 +95,25 @@ body.entered #mobile-gallery {
     box-shadow: inset -30px -30px 60px rgba(0,0,0,0.95), 0 60px 120px rgba(0,0,0,0.95);
     z-index: 100;
     cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.3s ease;
 }
 
-/* Hide sphere ONLY when it has the is-hidden class (for overlays) */
-#center-sphere.is-hidden {
-    display: none !important;
+#center-sphere.is-hidden { display: none !important; }
+
+#start-text-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 220px; height: 220px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 30;
+}
+
+#text-ring-svg text {
+    fill: rgba(0,0,0,0.85);
+    font-size: 14px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
 }
 
 /* ==================================================
@@ -109,33 +121,53 @@ body.entered #mobile-gallery {
    ================================================== */
 #hud-hints {
     position: fixed;
-    bottom: 15%;
+    bottom: 12%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 2000;
     pointer-events: none;
+    text-align: center;
 }
 
 .hud-hint {
     background: rgba(255, 255, 255, 0.95);
+    color: #000;
     padding: 12px 24px;
     border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #000;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     opacity: 0;
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    white-space: nowrap;
     transition: opacity 0.6s ease;
 }
 
 .hud-hint.active { opacity: 1; }
 
 /* ==================================================
-   6. MOBILE OVERRIDES
+   6. 3D SCENE & OVERLAYS
+   ================================================== */
+#scene-wrapper { position: fixed; inset: 0; pointer-events: none; }
+#scene { position: absolute; inset: 0; perspective: 1800px; display: flex; justify-content: center; align-items: center; transform-style: preserve-3d; pointer-events: auto; }
+#sphere { position: relative; width: 800px; height: 800px; transform-style: preserve-3d; cursor: grab; }
+
+#overlay, #dropdown-menu {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+    display: none; z-index: 3000; justify-content: center; align-items: center;
+}
+
+#overlay.active, #dropdown-menu.active { display: flex; }
+
+/* ==================================================
+   7. MOBILE RESPONSIVENESS
    ================================================== */
 @media (max-width: 768px) {
-    #center-sphere {
-        top: auto !important;
-        bottom: 80px !important;
-    }
-    #hud-hints {
-        bottom: 200px;
-    }
+    #scene-wrapper { display: none !important; }
+    #mobile-gallery { display: flex; flex-direction: column; gap: 20px; padding: 20px 10px 150px; overflow-y: auto; position: fixed; inset: 0; background: #f4f4f4; }
+    #center-sphere { top: auto !important; bottom: 80px !important; }
+    #hud-hints { bottom: 210px; }
 }
