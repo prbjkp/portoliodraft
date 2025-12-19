@@ -507,38 +507,46 @@ function showHints() {
 showHints();
 
 
-// --- WELCOME HEADER LOGIC ---
+// --- WELCOME HEADER WITH SLIDE-UP ANIMATION ---
 const welcomeHeader = document.getElementById('welcome-header');
 const beginButton = document.getElementById('begin-button');
 
 if (beginButton && welcomeHeader) {
-    // Prevent clicking the button while it's still transparent/animating
+    // Lock interaction until animation finishes
     beginButton.style.pointerEvents = "none";
     setTimeout(() => {
         beginButton.style.pointerEvents = "auto";
     }, 2000);
 
     beginButton.addEventListener('click', () => {
+        // Trigger the upward slide
         welcomeHeader.classList.add('fade-out');
         
-        // Start the HUD hints sequence 1 second after clicking Begin
+        // Re-enable scrolling on the body
+        document.body.style.overflow = "auto";
+
+        // Delay the HUD hints so they pop up once the screen is clear
         setTimeout(() => {
             if (typeof showHints === "function") {
                 showHints();
             }
-        }, 1000);
+        }, 800);
 
-        // Remove element from DOM after fade
+        // Remove the element from the DOM after it slides off-screen
         setTimeout(() => {
             welcomeHeader.remove();
-        }, 1000); 
+        }, 1100); 
     });
-}
-// Lock scroll on load
-document.body.style.overflow = "hidden";
-
-// Unlock scroll when Begin is clicked
-beginButton.addEventListener('click', () => {
+}beginButton.addEventListener('click', () => {
+    welcomeHeader.classList.add('fade-out');
     document.body.style.overflow = "auto";
-    // ... rest of your begin logic ...
+
+    // "Reveal" effect for the sphere
+    if (sphere) {
+        sphere.style.transition = "transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+        // Briefly scale it up from a smaller size to create a 'zoom' feel
+        sphere.style.transform = "scale(1)"; 
+    }
+    
+    // ... rest of the code ...
 });
