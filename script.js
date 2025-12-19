@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 welcomeHeader.remove();
                 console.log("Welcome header removed - main screen should now be visible");
             }, 1000);
+              setTimeout(() => {
+                startHudHints();
+                }, 3000);
         });
     }
 
