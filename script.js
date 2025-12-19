@@ -506,47 +506,39 @@ function showHints() {
 // MAKE SURE THIS IS THE LAST LINE BEFORE THE CLOSING }); OF YOUR DOMContentLoaded
 showHints();
 
-
-// --- WELCOME HEADER WITH SLIDE-UP ANIMATION ---
+// --- WELCOME HEADER LOGIC ---
 const welcomeHeader = document.getElementById('welcome-header');
 const beginButton = document.getElementById('begin-button');
 
 if (beginButton && welcomeHeader) {
-    // Lock interaction until animation finishes
+    // Force the button to wait until its own animation is done
     beginButton.style.pointerEvents = "none";
     setTimeout(() => {
         beginButton.style.pointerEvents = "auto";
-    }, 2000);
+    }, 1800);
 
-    beginButton.addEventListener('click', () => {
-        // Trigger the upward slide
+    beginButton.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent any default behavior
+        
+        console.log("Begin clicked - sliding up..."); // Debug check
+        
+        // Add the class to trigger CSS animation
         welcomeHeader.classList.add('fade-out');
         
-        // Re-enable scrolling on the body
+        // Unlock the body scroll
         document.body.style.overflow = "auto";
 
-        // Delay the HUD hints so they pop up once the screen is clear
+        // Start the HUD hints after the screen has cleared (approx 800ms)
         setTimeout(() => {
             if (typeof showHints === "function") {
                 showHints();
             }
         }, 800);
 
-        // Remove the element from the DOM after it slides off-screen
+        // Remove from DOM only AFTER the slide animation is 100% done
         setTimeout(() => {
+            welcomeHeader.style.display = "none"; 
             welcomeHeader.remove();
         }, 1100); 
     });
-}beginButton.addEventListener('click', () => {
-    welcomeHeader.classList.add('fade-out');
-    document.body.style.overflow = "auto";
-
-    // "Reveal" effect for the sphere
-    if (sphere) {
-        sphere.style.transition = "transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-        // Briefly scale it up from a smaller size to create a 'zoom' feel
-        sphere.style.transform = "scale(1)"; 
-    }
-    
-    // ... rest of the code ...
-});
+}
