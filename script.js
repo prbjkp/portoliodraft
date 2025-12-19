@@ -510,29 +510,35 @@ showHints();
 const welcomeHeader = document.getElementById('welcome-header');
 const beginButton = document.getElementById('begin-button');
 
-if (beginButton && welcomeHeader) {
-    // Force the button to wait until its own animation is done
-    beginButton.style.pointerEvents = "none";
-    setTimeout(() => {
-        beginButton.style.pointerEvents = "auto";
-    }, 1800);
+   /**********************************************************
+     * 2. INTRO SCREEN (BEGIN BUTTON) LOGIC
+     **********************************************************/
+    if (beginButton && welcomeHeader) {
+        // Prevent accidental clicks while animating in
+        beginButton.style.pointerEvents = "none";
+        setTimeout(() => {
+            beginButton.style.pointerEvents = "auto";
+        }, 1800);
 
-beginButton.addEventListener('click', () => {
-    welcomeHeader.classList.add('fade-out');
-    
-    // Wait for the 1s CSS transition to finish before removing from DOM
-    setTimeout(() => {
-        welcomeHeader.remove();
-    }, 1000); 
+        beginButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("Begin clicked - sliding up...");
+            
+            // Trigger the CSS Slide-Up
+            welcomeHeader.classList.add('fade-out');
+            
+            // Unlock scrolling
+            document.body.style.overflow = "auto";
 
-        console.log("Begin clicked - sliding up..."); // Debug check
-        
-        // Add the class to trigger CSS animation
-        welcomeHeader.classList.add('fade-out');
-        
-        // Unlock the body scroll
-        document.body.style.overflow = "auto";
+            // Start HUD hints after panel clears
+            setTimeout(() => {
+                showHints();
+            }, 800);
 
+            // Clean up DOM after animation
+            setTimeout(() => {
+                welcomeHeader.remove();
+            }, 1100); 
         // Start the HUD hints after the screen has cleared (approx 800ms)
         setTimeout(() => {
             if (typeof showHints === "function") {
