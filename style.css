@@ -798,7 +798,6 @@ html, body {
 }
 
 
-
 /* Add this to your existing CSS */
 
 #begin-button {
@@ -815,9 +814,11 @@ html, body {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
   animation: fadeInButton 1s ease forwards 0.5s;
+  -webkit-tap-highlight-color: transparent;
 }
 
-#begin-button:hover {
+#begin-button:hover,
+#begin-button:active {
   background: #000;
   color: #fff;
   transform: scaleX(1.15) scaleY(0.95);
@@ -844,7 +845,8 @@ html, body {
     letter-spacing: 3px;
   }
   
-  #begin-button:hover {
+  #begin-button:hover,
+  #begin-button:active {
     letter-spacing: 4px;
   }
 }
