@@ -102,19 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        let index = 0;
-        function showNextHint() {
-            if (index >= hudHints.length) return;
-            
-            hudHints.forEach(h => h.classList.remove("active"));
-            hudHints[index].classList.add("active");
-            
-            setTimeout(() => {
-                hudHints[index].classList.remove("active");
-                index++;
-                setTimeout(showNextHint, 600);
-            }, 3000);
-        }
+       function startHudHints() {
+  const hints = document.querySelectorAll(".hud-hint");
+  let hintIndex = 0;
+
+  // start first hint
+  hints[0].classList.add("active");
+
+  setInterval(() => {
+    hints[hintIndex].classList.remove("active");
+    hintIndex = (hintIndex + 1) % hints.length;
+    hints[hintIndex].classList.add("active");
+  }, 3000);
+}
+
 
         setTimeout(showNextHint, 1500);
     }
