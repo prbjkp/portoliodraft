@@ -1,216 +1,141 @@
 /* ==================================================
-1. GLOBAL & RESET
-================================================== */
+   1. GLOBAL & INTRO RESET
+   ================================================== */
 html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Locked until "Begin" is clicked */
-    font-family: Inter, sans-serif;
-    background: #ffffff;
-    color: rgb(0, 0, 0);
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
+    width: 100%; height: 100%; margin: 0; padding: 0;
+    overflow: hidden; font-family: 'Inter', sans-serif;
+    background: #ffffff; color: #000;
     user-select: none;
 }
 
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
-
 /* ==================================================
-2. STARTING MENU (INTRO SCREEN) 
-================================================== */
+   2. WELCOME HEADER (THE START SCREEN)
+   ================================================== */
 #welcome-header {
     position: fixed;
     inset: 0;
-    z-index: 1000;
-    background: #ffffff;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+    align-items: center;
+    background-color: #ffffff;
+    z-index: 2147483647; /* Maximum priority */
+    transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease;
 }
 
 #welcome-header.fade-out {
     transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#welcome-header h1 {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    letter-spacing: 15px;
+    text-transform: uppercase;
+    font-weight: 900;
+    margin: 0;
+    animation: welcomeFadeUp 1.2s ease forwards;
 }
 
 #begin-button {
+    margin-top: 50px;
     padding: 15px 40px;
+    background: transparent;
+    border: 2px solid #000;
     font-size: 1.2rem;
     letter-spacing: 4px;
     text-transform: uppercase;
-    background: black;
-    color: white;
-    border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 20px;
 }
 
 #begin-button:hover {
-    letter-spacing: 6px;
-    background: #333;
+    background: #000;
+    color: #fff;
+}
+
+@keyframes welcomeFadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==================================================
-3. SPHERE MENU & 3D SCENE
-================================================= */
-#scene-wrapper {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
+   3. VISIBILITY CONTROL (Revealing Menu & Hints)
+   ================================================== */
+/* Hide these by default until "Begin" is clicked */
+#center-sphere, 
+#start-text-ring, 
+#hud-hints,
+#scene-wrapper,
+#mobile-gallery {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease;
 }
 
-#scene {
-    position: absolute;
-    inset: 0;
-    perspective: 1800px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    perspective-origin: 50% 50%;
-    transform-style: preserve-3d;
-    pointer-events: auto;
+/* JavaScript will add this class to the <body> */
+body.entered #center-sphere,
+body.entered #start-text-ring,
+body.entered #hud-hints,
+body.entered #scene-wrapper,
+body.entered #mobile-gallery {
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
-#sphere {
-    position: relative;
-    width: 800px;
-    height: 800px;
-    transform-style: preserve-3d;
-    cursor: grab;
-}
-
-/* CENTER SPHERE BUTTON */
+/* ==================================================
+   4. CENTER SPHERE (MENU BUTTON)
+   ================================================== */
 #center-sphere {
-    --light-x: 40%;
-    --light-y: 30%;
     position: fixed;
-    left: 50%;
-    top: 50%;
+    left: 50%; top: 50%;
     transform: translate(-50%, -50%);
-    width: 110px;
-    height: 110px;
+    width: 110px; height: 110px;
     border-radius: 50%;
-    background: radial-gradient(circle at var(--light-x) var(--light-y), #444 0%, #111 35%, #000 85%);
+    background: radial-gradient(circle at 40% 30%, #444 0%, #111 35%, #000 85%);
     box-shadow: inset -30px -30px 60px rgba(0,0,0,0.95), 0 60px 120px rgba(0,0,0,0.95);
-    cursor: pointer;
     z-index: 100;
-    transition: transform 0.2s ease;
+    cursor: pointer;
 }
 
-#center-sphere:hover { transform: translate(-50%, -50%) scale(1.1); }
-
-/* SPHERE EXPANSION ANIMATION */
-#center-sphere.expanding {
-    animation: sphereExpand 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes sphereExpand {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(50); opacity: 0; }
+/* Hide sphere ONLY when it has the is-hidden class (for overlays) */
+#center-sphere.is-hidden {
+    display: none !important;
 }
 
 /* ==================================================
-4. HUD HINTS
-================================================== */
+   5. HUD HINTS
+   ================================================== */
 #hud-hints {
-    position: absolute;
-    top: calc(50% + 100px);
+    position: fixed;
+    bottom: 15%;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
-    max-width: 500px;
-    text-align: center;
-    z-index: 50;
+    z-index: 2000;
     pointer-events: none;
-    height: 60px;
 }
 
 .hud-hint {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    transform: translate(-50%, 0);
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    white-space: nowrap;
-    font-size: 14px;
-    text-transform: uppercase;
-    color: black;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 12px 24px;
     border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    opacity: 0;
+    transition: opacity 0.6s ease;
 }
 
 .hud-hint.active { opacity: 1; }
 
 /* ==================================================
-5. DROPDOWN MENU (CURTAIN)
-================================================== */
-#dropdown-menu {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.85));
-    backdrop-filter: blur(10px);
-    z-index: 200;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-#dropdown-menu.active { opacity: 1; pointer-events: auto; }
-
-.menu-item {
-    padding: 15px 40px;
-    color: #fff;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    width: 220px;
-    text-align: center;
-}
-
-.menu-item:hover {
-    background: rgba(255,255,255,0.1);
-    letter-spacing: 4px;
-}
-
-/* ==================================================
-6. MOBILE GALLERY & OVERRIDES
-================================================== */
-#mobile-gallery {
-    display: none;
-    background: #f4f4f4;
-    padding-bottom: 150px;
-}
-
+   6. MOBILE OVERRIDES
+   ================================================== */
 @media (max-width: 768px) {
-    #scene-wrapper, #scene { display: none !important; }
-    #mobile-gallery { display: flex !important; flex-direction: column; align-items: center; gap: 20px; }
-    
     #center-sphere {
         top: auto !important;
-        bottom: 40px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
+        bottom: 80px !important;
     }
-
     #hud-hints {
-        top: calc(50% + 40px);
-        z-index: 10000;
+        bottom: 200px;
     }
 }
