@@ -1,6 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     /**********************************************************
+     * WELCOME HEADER LOGIC - MUST BE FIRST
+     **********************************************************/
+    const welcomeHeader = document.getElementById('welcome-header');
+    const beginButton = document.getElementById('begin-button');
+
+    if (beginButton && welcomeHeader) {
+        beginButton.addEventListener('click', () => {
+            console.log("BEGIN button clicked!");
+            
+            welcomeHeader.classList.add('fade-out');
+            
+            setTimeout(() => {
+                welcomeHeader.remove();
+                console.log("Welcome header removed - main screen should now be visible");
+            }, 1000);
+        });
+    }
+
+    /**********************************************************
      * 1. CORE VARIABLES & DOM ELEMENTS
      **********************************************************/
     const isMobile = window.innerWidth < 768;
@@ -59,100 +78,55 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-
-
-    // Add this code at the very beginning of your DOMContentLoaded event listener
-// Replace the automatic welcome header removal with button-triggered removal
-
-document.addEventListener("DOMContentLoaded", () => {
-    
-    // --- WELCOME HEADER LOGIC (MOVED TO TOP) ---
-    const welcomeHeader = document.getElementById('welcome-header');
-    const beginButton = document.getElementById('begin-button');
-
-    if (beginButton && welcomeHeader) {
-        beginButton.addEventListener('click', () => {
-            welcomeHeader.classList.add('fade-out');
-            
-            // Completely remove from DOM after fade to save resources
-            setTimeout(() => {
-                welcomeHeader.remove();
-            }, 1000); // Matches the 1s transition in CSS
-        });
-    }
-    
-    // ... rest of your existing code follows here
-    
     /**********************************************************
-     * 1. CORE VARIABLES & DOM ELEMENTS
+     * 3. HUD HINTS - DEVICE AWARE
      **********************************************************/
-    const isMobile = window.innerWidth < 768;
-    
-    console.log("🔍 Debug Info:");
-    console.log("Is Mobile:", isMobile);
-    console.log("Window Width:", window.innerWidth);
-    
-    // ... (rest of your existing JavaScript code)
-});
+    function showHints() {
+        const mobileText = [
+            "Scroll to explore photos",
+            "Tap any photo to view full size",
+            "Tap the sphere for menu"
+        ];
+        
+        const desktopText = [
+            "Drag to rotate the gallery",
+            "Click any photo to view it full size",
+            "Click the center sphere for more information"
+        ];
 
- /**********************************************************
- * 3. HUD HINTS - DEVICE AWARE
- **********************************************************/
-function showHints() {
-    // 1. Define device-specific text
-    const mobileText = [
-        "Scroll to explore photos",
-        "Tap any photo to view full size",
-        "Tap the center sphere for menu"
-    ];
-    
-    const desktopText = [
-        "Drag to rotate the gallery",
-        "Click any photo to view it full size",
-        "Click the center sphere for more information"
-    ];
+        const activeTextSet = isMobile ? mobileText : desktopText;
 
-    const activeTextSet = isMobile ? mobileText : desktopText;
+        hudHints.forEach((hint, i) => {
+            if (activeTextSet[i]) {
+                hint.textContent = activeTextSet[i];
+            }
+        });
 
-    // 2. Assign text to the HTML elements
-    hudHints.forEach((hint, i) => {
-        if (activeTextSet[i]) {
-            hint.textContent = activeTextSet[i];
+        let index = 0;
+        function showNextHint() {
+            if (index >= hudHints.length) return;
+            
+            hudHints.forEach(h => h.classList.remove("active"));
+            hudHints[index].classList.add("active");
+            
+            setTimeout(() => {
+                hudHints[index].classList.remove("active");
+                index++;
+                setTimeout(showNextHint, 600);
+            }, 3000);
         }
-    });
 
-    // 3. Animation Logic
-    let index = 0;
-    function showNextHint() {
-        if (index >= hudHints.length) return;
-        
-        // Remove active from previous
-        if (index > 0) hudHints[index - 1].classList.remove("active");
-        
-        // Add active to current
-        hudHints[index].classList.add("active");
-        
-        setTimeout(() => {
-            hudHints[index].classList.remove("active");
-            index++;
-            setTimeout(showNextHint, 500); // Small gap between hints
-        }, 3000); // How long each hint stays up
+        setTimeout(showNextHint, 1500);
     }
 
-    // Start the sequence after 2 seconds
-    setTimeout(showNextHint, 2000);
-}
     /**********************************************************
      * 4. LOGIC SWITCHER (MOBILE VS DESKTOP)
      **********************************************************/
     if (isMobile) {
         console.log("📱 Mobile Mode Active");
 
-        // --- A. POPULATE MOBILE GALLERY ---
         if (mobileGallery && photos.length > 0) {
             mobileGallery.innerHTML = '';
-
             const imageArray = [];
             
             photos.forEach(photoDiv => {
@@ -177,12 +151,10 @@ function showHints() {
                 });
             }
 
-            console.log(`✅ Added ${mobileGallery.children.length} images to mobile gallery (with duplicates)`);
+            console.log(`✅ Added ${mobileGallery.children.length} images to mobile gallery`);
             
-            // --- INFINITE AUTO-SCROLL FUNCTION ---
             let autoScrollInterval;
             let isUserScrolling = false;
-            
             const resetPoint = mobileGallery.scrollHeight / duplicateCount;
             
             mobileGallery.addEventListener('scroll', () => {
@@ -206,7 +178,6 @@ function showHints() {
                 if (scrollPos >= maxScroll - 10) {
                     mobileGallery.scrollTop = resetPoint;
                 }
-                
                 if (scrollPos <= 10) {
                     mobileGallery.scrollTop = resetPoint;
                 }
@@ -219,7 +190,6 @@ function showHints() {
                             top: 1.5,
                             behavior: 'auto'
                         });
-                        
                         handleInfiniteScroll();
                     }
                 }, 16);
@@ -229,16 +199,8 @@ function showHints() {
             startAutoScroll();
         }
 
-        // --- B. MOBILE HINTS ---
-        if (hudHints.length >= 3) {
-            hudHints[0].textContent = "Scroll to view all photos";
-            hudHints[1].textContent = "Tap any photo to enlarge";
-            hudHints[2].textContent = "Tap sphere below for menu";
-        }
-
         showHints();
 
-        // Animate text ring on mobile
         function animateMobileTextRing() {
             if (textRingSvg) {
                 textOrbit += 0.002;
@@ -284,7 +246,6 @@ function showHints() {
     /**********************************************************
      * 5. SHARED FUNCTIONS
      **********************************************************/
-
     function animateSphere() {
         if (isMobile) return; 
 
@@ -309,73 +270,68 @@ function showHints() {
 
         requestAnimationFrame(animateSphere);
     }
-// --- OVERLAY LOGIC ---
-function openOverlay(src) {
-    if(overlay && overlayImg) {
-        overlayImg.src = src;
-        overlay.classList.add("active");
-        
-        // Force hide both the sphere and the rotating text ring
-        if (centerSphere) centerSphere.classList.add("is-hidden");
-        if (textRing) textRing.classList.add("is-hidden");
 
-        if (isMobile) {
-            document.body.style.overflow = "hidden"; // Prevent background scrolling
+    function openOverlay(src) {
+        if(overlay && overlayImg) {
+            overlayImg.src = src;
+            overlay.classList.add("active");
+            
+            if (centerSphere) centerSphere.classList.add("is-hidden");
+            if (textRing) textRing.classList.add("is-hidden");
+
+            if (isMobile) {
+                document.body.style.overflow = "hidden";
+            }
         }
     }
-}
 
-if(overlayClose) {
-    overlayClose.addEventListener("click", () => {
-        overlay.classList.remove("active");
-        
-        // Bring them both back
-        if (centerSphere) centerSphere.classList.remove("is-hidden");
-        if (textRing) textRing.classList.remove("is-hidden");
+    if(overlayClose) {
+        overlayClose.addEventListener("click", () => {
+            overlay.classList.remove("active");
+            
+            if (centerSphere) centerSphere.classList.remove("is-hidden");
+            if (textRing) textRing.classList.remove("is-hidden");
 
-        if (isMobile) {
-            document.body.style.overflow = "auto";
+            if (isMobile) {
+                document.body.style.overflow = "auto";
+            }
+            
+            setTimeout(() => { overlayImg.src = ""; }, 400);
+        });
+    }
+
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+            overlayClose.click();
         }
-        
-        // Clean up the image after fade-out
-        setTimeout(() => { overlayImg.src = ""; }, 400);
     });
-}
-// Close when clicking the dark area of the overlay
-overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) {
-        overlayClose.click(); // Trigger the same close logic
-    }
-});
-// Close overlay on Escape key
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && overlay.classList.contains("active")) {
-        overlayClose.click();
-    }
-});
 
-    // --- MENU LOGIC (WORKS FOR BOTH MOBILE AND DESKTOP) ---
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && overlay.classList.contains("active")) {
+            overlayClose.click();
+        }
+    });
+
+    /**********************************************************
+     * 6. MENU LOGIC
+     **********************************************************/
     if (centerSphere) {
         centerSphere.addEventListener("click", (e) => {
             e.stopPropagation();
             console.log("Menu sphere clicked!");
             
-            // Add expanding animation class
             centerSphere.classList.add("expanding");
             
-            // Hide sphere and text ring when menu opens
             setTimeout(() => {
                 if (centerSphere) centerSphere.style.display = "none";
                 if (textRing) textRing.style.display = "none";
             }, 300);
             
-            // Show menu after a brief delay to let expansion start
             setTimeout(() => {
                 dropdownMenu.classList.add("active");
                 dropdownMenu.style.display = "flex";
             }, 100);
             
-            // Remove expanding class after animation completes
             setTimeout(() => {
                 centerSphere.classList.remove("expanding");
             }, 600);
@@ -387,7 +343,6 @@ document.addEventListener("keydown", (e) => {
             dropdownMenu.classList.remove("active");
             setTimeout(() => { 
                 dropdownMenu.style.display = "none";
-                // Show sphere and text ring again when menu closes
                 if (centerSphere) centerSphere.style.display = "block";
                 if (textRing) textRing.style.display = "block";
             }, 300);
@@ -399,14 +354,12 @@ document.addEventListener("keydown", (e) => {
             const page = item.dataset.page;
             if (page === 'home') {
                 contentOverlay.classList.remove("active");
-                // Show sphere and text ring when going back home
                 if (centerSphere) centerSphere.style.display = "block";
                 if (textRing) textRing.style.display = "block";
             } else {
                 contentContainer.innerHTML = getPageContent(page);
                 contentOverlay.classList.add("active");
                 
-                // Setup contact form if on contact page
                 if (page === 'contact') {
                     setupContactForm();
                 }
@@ -419,14 +372,13 @@ document.addEventListener("keydown", (e) => {
     if(backButton) {
         backButton.addEventListener("click", () => {
             contentOverlay.classList.remove("active");
-            // Show sphere and text ring when going back
             if (centerSphere) centerSphere.style.display = "block";
             if (textRing) textRing.style.display = "block";
         });
     }
     
     /**********************************************************
-     * 6. CONTACT FORM HANDLER
+     * 7. CONTACT FORM HANDLER
      **********************************************************/
     function setupContactForm() {
         setTimeout(() => {
@@ -471,74 +423,28 @@ document.addEventListener("keydown", (e) => {
             }
         }, 100);
     }
-});
 
-// --- HELPER: PAGE CONTENT ---
-function getPageContent(page) {
-    const contents = {
-        about: `<h1>Hello fellow photo enjoyers!</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
-        contact: `
-            <h1>Contact Me</h1>
-            <form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
-                <label>Your Email:<br>
-                    <input type="email" name="email" required style="width: 100%; padding: 8px; margin-top: 5px;">
-                </label>
-                <br><br>
-                <label>Your Message:<br>
-                    <textarea name="message" required style="width: 100%; padding: 8px; margin-top: 5px; min-height: 150px;"></textarea>
-                </label>
-                <br><br>
-                <button type="submit" style="padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer;">Send</button>
-            </form>
-        `
-    };
-    return contents[page] || '<h1>Page Not Found</h1>';
-}
-
-
-function showHints() {
-    const mobileText = [
-        "Scroll to explore photos",
-        "Tap any photo to view full size",
-        "Tap the sphere for menu"
-    ];
-    
-    const desktopText = [
-        "Drag to rotate the gallery",
-        "Click any photo to view it full size",
-        "Click the center sphere for more information"
-    ];
-
-    const activeTextSet = isMobile ? mobileText : desktopText;
-
-    // Apply text content
-    hudHints.forEach((hint, i) => {
-        if (activeTextSet[i]) {
-            hint.textContent = activeTextSet[i];
-        }
-    });
-
-    let index = 0;
-    function showNextHint() {
-        if (index >= hudHints.length) return;
-        
-        // Remove active class from all first to be safe
-        hudHints.forEach(h => h.classList.remove("active"));
-        
-        // Show current
-        hudHints[index].classList.add("active");
-        
-        setTimeout(() => {
-            hudHints[index].classList.remove("active");
-            index++;
-            // Short delay before the next one pops up
-            setTimeout(showNextHint, 600);
-        }, 3000);
+    /**********************************************************
+     * 8. HELPER FUNCTIONS
+     **********************************************************/
+    function getPageContent(page) {
+        const contents = {
+            about: `<h1>Hello fellow photo enjoyers!</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
+            contact: `
+                <h1>Contact Me</h1>
+                <form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
+                    <label>Your Email:<br>
+                        <input type="email" name="email" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                    </label>
+                    <br><br>
+                    <label>Your Message:<br>
+                        <textarea name="message" required style="width: 100%; padding: 8px; margin-top: 5px; min-height: 150px;"></textarea>
+                    </label>
+                    <br><br>
+                    <button type="submit" style="padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer;">Send</button>
+                </form>
+            `
+        };
+        return contents[page] || '<h1>Page Not Found</h1>';
     }
-
-    // Delay the very first hint so the user has time to see the site load
-    setTimeout(showNextHint, 1500);
-}
-
-// MAKE SURE THIS IS THE LAST LINE BEFORE THE CLOSING }); OF YOUR DOMContentLoaded
-showHints();
+});
