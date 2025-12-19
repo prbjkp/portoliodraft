@@ -105,10 +105,28 @@ html, body {
   letter-spacing: 6px; /* Extra flourish on hover */
 }
 
+/* Modified fade-out to slide UPWARDS */
 #welcome-header.fade-out {
-  opacity: 0;
+  opacity: 1; /* Keep opacity high so the solid white block hides the sphere until it's gone */
+  transform: translateY(-100%);
   visibility: hidden;
   pointer-events: none;
+  transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), visibility 1s;
+}
+
+/* Ensure the welcome header starts at the center */
+#welcome-header {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  z-index: 2147483647; 
+  transform: translateY(0); /* Default position */
+  transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), visibility 1s;
+  pointer-events: auto;
 }
 /* Mobile adjustments */
 @media (max-width: 768px) {
