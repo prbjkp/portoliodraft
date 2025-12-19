@@ -506,39 +506,27 @@ function showHints() {
 // MAKE SURE THIS IS THE LAST LINE BEFORE THE CLOSING }); OF YOUR DOMContentLoaded
 showHints();
 
-// --- WELCOME HEADER LOGIC ---
-const welcomeHeader = document.getElementById('welcome-header');
 const beginButton = document.getElementById('begin-button');
+const welcomeHeader = document.getElementById('welcome-header');
 
-if (beginButton && welcomeHeader) {
-    // Force the button to wait until its own animation is done
-    beginButton.style.pointerEvents = "none";
-    setTimeout(() => {
-        beginButton.style.pointerEvents = "auto";
-    }, 1800);
-
-    beginButton.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent any default behavior
-        
-        console.log("Begin clicked - sliding up..."); // Debug check
-        
-        // Add the class to trigger CSS animation
+if (beginButton) {
+    beginButton.addEventListener('click', () => {
+        // 1. Slide the intro screen up
         welcomeHeader.classList.add('fade-out');
         
-        // Unlock the body scroll
-        document.body.style.overflow = "auto";
+        // 2. Add class to body to trigger CSS visibility for Sphere/Hints/Gallery
+        document.body.classList.add('entered');
 
-        // Start the HUD hints after the screen has cleared (approx 800ms)
+        // 3. Start your HUD Hints logic
         setTimeout(() => {
             if (typeof showHints === "function") {
                 showHints();
             }
-        }, 800);
+        }, 1000);
 
-        // Remove from DOM only AFTER the slide animation is 100% done
+        // 4. Remove intro from DOM after it finishes sliding
         setTimeout(() => {
-            welcomeHeader.style.display = "none"; 
             welcomeHeader.remove();
-        }, 1100); 
+        }, 1100);
     });
 }
