@@ -1,11 +1,11 @@
-// 1. Move global variable to the very top
-const isMobile = window.innerWidth < 768;
-
 document.addEventListener("DOMContentLoaded", () => {
     
     /**********************************************************
      * 1. CORE VARIABLES & DOM ELEMENTS
      **********************************************************/
+    const isMobile = window.innerWidth < 768;
+    
+    // Core Elements
     const sphere = document.getElementById("sphere");
     const photos = document.querySelectorAll(".photo");
     const scene = document.getElementById("scene");
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * 2. INTRO SCREEN (BEGIN BUTTON) LOGIC
      **********************************************************/
     if (beginButton && welcomeHeader) {
-        // Lock button until animation finishes
+        // Prevent accidental clicks while animating in
         beginButton.style.pointerEvents = "none";
         setTimeout(() => {
             beginButton.style.pointerEvents = "auto";
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         beginButton.addEventListener('click', (e) => {
             e.preventDefault();
+            console.log("Begin clicked - sliding up...");
             
             // Trigger the CSS Slide-Up
             welcomeHeader.classList.add('fade-out');
@@ -67,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**********************************************************
-     * 3. HUD HINTS FUNCTION
+     * 3. HUD HINTS
      **********************************************************/
     function showHints() {
         const mobileText = [
@@ -108,10 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
      * 4. GALLERY LOGIC (SWITCHER)
      **********************************************************/
     if (isMobile) {
+        // --- MOBILE SETUP ---
         if (mobileGallery && photos.length > 0) {
             mobileGallery.innerHTML = '';
             const images = Array.from(photos).map(p => p.querySelector('img').src);
             
+            // Triplicate for infinite scroll feel
             [...images, ...images, ...images].forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
@@ -119,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 mobileGallery.appendChild(img);
             });
 
+            // Start mobile text rotation
             function animRing() {
                 textOrbit += 0.002;
                 if(textRingSvg) textRingSvg.style.transform = `rotateZ(${textOrbit * 57.29}deg)`;
@@ -127,6 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
             animRing();
         }
     } else {
+        // --- DESKTOP SETUP ---
         computePositions();
         function mainLoop() {
             if (!isDragging) targetRotY += 0.02;
@@ -147,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         mainLoop();
 
+        // Desktop Events
         window.addEventListener("mousedown", e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
         window.addEventListener("mouseup", () => isDragging = false);
         window.addEventListener("mousemove", e => {
@@ -182,17 +188,16 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.overflow = "hidden";
     }
 
-    if (overlayClose) {
-        overlayClose.addEventListener("click", () => {
-            overlay.classList.remove("active");
-            if (centerSphere) centerSphere.classList.remove("is-hidden");
-            if (textRing) textRing.classList.remove("is-hidden");
-            if (isMobile) document.body.style.overflow = "auto";
-        });
-    }
+    overlayClose.addEventListener("click", () => {
+        overlay.classList.remove("active");
+        if (centerSphere) centerSphere.classList.remove("is-hidden");
+        if (textRing) textRing.classList.remove("is-hidden");
+        if (isMobile) document.body.style.overflow = "auto";
+    });
 
     overlay.addEventListener("click", (e) => { if (e.target === overlay) overlayClose.click(); });
 
+    // Menu Toggle
     if (centerSphere) {
         centerSphere.addEventListener("click", () => {
             centerSphere.classList.add("expanding");
@@ -217,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Menu Item Navigation
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', () => {
             const page = item.dataset.page;
@@ -230,10 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    if (backButton) backButton.addEventListener("click", () => contentOverlay.classList.remove("active"));
+    backButton.addEventListener("click", () => contentOverlay.classList.remove("active"));
 });
 
-// Helper Function Outside
+// Helper Function Outside the Main Listener
 function getPageContent(page) {
     const contents = {
         about: `<h1>About</h1><p>Professional photography portfolio by Peter Kopp.</p>`,
