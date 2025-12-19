@@ -436,6 +436,7 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+
 // --- HELPER: PAGE CONTENT ---
 function getPageContent(page) {
     const contents = {
@@ -505,48 +506,3 @@ function showHints() {
 
 // MAKE SURE THIS IS THE LAST LINE BEFORE THE CLOSING }); OF YOUR DOMContentLoaded
 showHints();
-
-
-// --- WELCOME HEADER WITH SLIDE-UP ANIMATION ---
-const welcomeHeader = document.getElementById('welcome-header');
-const beginButton = document.getElementById('begin-button');
-
-if (beginButton && welcomeHeader) {
-    // Lock interaction until animation finishes
-    beginButton.style.pointerEvents = "none";
-    setTimeout(() => {
-        beginButton.style.pointerEvents = "auto";
-    }, 2000);
-
-    beginButton.addEventListener('click', () => {
-        // Trigger the upward slide
-        welcomeHeader.classList.add('fade-out');
-        
-        // Re-enable scrolling on the body
-        document.body.style.overflow = "auto";
-
-        // Delay the HUD hints so they pop up once the screen is clear
-        setTimeout(() => {
-            if (typeof showHints === "function") {
-                showHints();
-            }
-        }, 800);
-
-        // Remove the element from the DOM after it slides off-screen
-        setTimeout(() => {
-            welcomeHeader.remove();
-        }, 1100); 
-    });
-}beginButton.addEventListener('click', () => {
-    welcomeHeader.classList.add('fade-out');
-    document.body.style.overflow = "auto";
-
-    // "Reveal" effect for the sphere
-    if (sphere) {
-        sphere.style.transition = "transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-        // Briefly scale it up from a smaller size to create a 'zoom' feel
-        sphere.style.transform = "scale(1)"; 
-    }
-    
-    // ... rest of the code ...
-});
