@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
      **********************************************************/
     const welcomeHeader = document.getElementById('welcome-header');
     const beginButton = document.getElementById('begin-button');
-
 if (beginButton && welcomeHeader) {
         beginButton.addEventListener('click', () => {
             console.log("BEGIN button clicked!");
