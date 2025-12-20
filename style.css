@@ -214,20 +214,28 @@ html, body {
 
 @media (max-width: 768px) {
   #hud-hints {
-    top: calc(50% + 40px); /* move up on mobile */
-    width: 90%;           /* give more room */
-    max-width: 340px;     /* smaller max width */
-    z-index: 100000 !important; /* above the center sphere */
+    display: block !important; /* Force visible on mobile */
+    position: fixed !important;
+    bottom: 250px !important; 
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90%;
+    max-width: 340px;
+    z-index: 100000 !important;
     pointer-events: none !important;
-}
-      /* higher z-index to be above other elements */
+    height: 60px;
   }
 
-  
   .hud-hint {
-    font-size: 12px;      /* slightly smaller text */
-    padding: 8px 16px;    /* smaller padding */
+    font-size: 13px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.98) !important;
+    color: #000 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    border: 1px solid #000;
   }
+}
 
 
 /* ==================================================
@@ -662,17 +670,6 @@ html, body {
   #text-ring-svg {
     transform-origin: center center !important;
   }
-
-  /* Show hints above menu sphere on mobile */
-  #hud-hints {
-    display: block !important;
-    position: fixed !important;
-    top: auto !important;
-    bottom: 220px !important; /* Adjusted to be above new sphere position */
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 99997 !important;
-  }
 }
 
 /* ==================================================
@@ -764,37 +761,6 @@ html, body {
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
-}
-
-
-.hud-hint {
-    background: rgba(255, 255, 255, 0.95); /* High contrast for mobile readability */
-    color: #000;
-    border: 1px solid #ddd;
-  }
-
-
-  @media (max-width: 768px) {
-  #hud-hints {
-    display: block !important;
-    position: fixed !important;
-    /* Position it above the sphere/text ring */
-    bottom: 250px !important; 
-    top: auto !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 999999 !important; /* Higher than everything else */
-    width: 90% !important;
-    pointer-events: none !important;
-  }
-
-  .hud-hint {
-    /* Make sure text is visible against photos */
-    background: rgba(255, 255, 255, 0.98) !important;
-    color: #000 !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-    border: 1px solid #000;
-  }
 }
 
 
