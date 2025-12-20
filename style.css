@@ -632,6 +632,39 @@ html, body {
   #sphere, #scene {
     display: none !important;
   }
+  
+  /* FORCE HUD HINTS TO SHOW ON MOBILE */
+  #hud-hints {
+    display: block !important; /* Force visible on mobile */
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important; /* Changed from absolute to fixed for proper z-index */
+    bottom: 250px !important; 
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    max-width: 340px !important;
+    z-index: 100000 !important;
+    pointer-events: none !important;
+    height: 60px !important;
+  }
+
+  .hud-hint {
+    display: block !important;
+    visibility: visible !important;
+    font-size: 13px !important;
+    padding: 10px 20px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    color: #000 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    border: 1px solid #000 !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 0 !important;
+    transform: translate(-50%, 0) !important;
+    white-space: nowrap !important;
+  }
 
   /* PULL SPHERE OUT OF WRAPPER - MAKE IT INDEPENDENT */
   #center-sphere {
