@@ -230,7 +230,7 @@ html, body {
 @media (max-width: 768px) {
   #hud-hints {
     display: block !important; /* Force visible on mobile */
-    position: fixed !important;
+    position: fixed !important; /* Changed from absolute to fixed for proper z-index */
     bottom: 250px !important; 
     top: auto !important;
     left: 50% !important;
