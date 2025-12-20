@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const welcomeHeader = document.getElementById('welcome-header');
     const beginButton = document.getElementById('begin-button');
 
-    if (beginButton && welcomeHeader) {
+if (beginButton && welcomeHeader) {
         beginButton.addEventListener('click', () => {
             console.log("BEGIN button clicked!");
             
@@ -15,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 welcomeHeader.remove();
                 console.log("Welcome header removed - main screen should now be visible");
+                
+                // Trigger HUD hints AFTER the welcome header is removed
+                showHints();
             }, 1000);
         });
     }
