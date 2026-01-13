@@ -369,10 +369,10 @@ if (beginButton && welcomeHeader) {
             if (tab) tab.opener = null;
 
             // Close menu
-            dropdownMenu.classList.remove("active");
-            setTimeout(() => {
-                dropdownMenu.style.display = "none";
-            }, 300);
+           // dropdownMenu.classList.remove("active");
+           // setTimeout(() => {
+             //   dropdownMenu.style.display = "none";
+            // }, 300);
 
             // Return to home state
             contentOverlay.classList.remove("active");
