@@ -361,6 +361,15 @@ if (beginButton && welcomeHeader) {
                 contentContainer.innerHTML = getPageContent(page);
                 contentOverlay.classList.add("active");
                 
+                if (page === 'shop') {
+                    const shopLink = document.getElementById('shop-link');
+                    if (shopLink) {
+                        shopLink.addEventListener('click', () => {
+                            window.open('https://peterbkopp.darkroom.com/m', '_blank');
+                        });
+                    }
+                }
+
                 if (page === 'contact') {
                     setupContactForm();
                 }
@@ -450,7 +459,4 @@ if (beginButton && welcomeHeader) {
     }
 });
 
-;document.getElementById('shop-link').addEventListener('click', () => {
-  const tab = window.open('https://peterbkopp.darkroom.comm', '_blank');
-  if (tab) tab.opener = null;
-});
+
