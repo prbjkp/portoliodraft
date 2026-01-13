@@ -449,3 +449,8 @@ if (beginButton && welcomeHeader) {
         return contents[page] || '<h1>Page Not Found</h1>';
     }
 });
+
+;document.getElementById('shop-link').addEventListener('click', () => {
+  const tab = window.open('https://peterbkopp.darkroom.comm', '_blank');
+  if (tab) tab.opener = null;
+});
