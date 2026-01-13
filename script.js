@@ -363,7 +363,7 @@ if (beginButton && welcomeHeader) {
                      // 🔗 SHOP: open external site + return home
         if (page === 'shop') {
             const tab = window.open(
-                'https://peterbkopp.darkroom.com/m',
+                'https://peterbkopp.darkroom.com',
                 '_blank'
             );
             if (tab) tab.opener = null;
