@@ -8,7 +8,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   font-family: Inter, sans-serif;
-  background: #0B1410;
+  background: #ffffff;
   color: rgb(0, 0, 0);
   -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
   -webkit-touch-callout: none; /* Disable callout on long press */
