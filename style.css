@@ -473,7 +473,7 @@ html, body {
   padding: 15px 40px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  color: #E6ECE8;
   font-size: 1.5rem;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -497,8 +497,8 @@ html, body {
 #dropdown-menu.active .menu-item:nth-child(5) { transition-delay: 0.4s; }
 
 .menu-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #fff;
+  background: #2A3A2E;
+  border-color: #9DAE9F;
   letter-spacing: 4px;
   transform: translateY(0) scale(1.05);
 }
@@ -523,7 +523,7 @@ html, body {
 }
 
 #close-menu:hover {
-  color: #fff;
+  color: #9DAE9F;
   transform: rotate(90deg);
 }
 
@@ -533,7 +533,7 @@ html, body {
 #content-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(255, 255, 255, 0.98);
+  background: #0B1410;
   z-index: 150;
   opacity: 0;
   pointer-events: none;
@@ -558,8 +558,8 @@ html, body {
   top: 20px;
   left: 20px;
   padding: 12px 24px;
-  background: #333;
-  color: white;
+  background: #5C6F5A;
+  color: #E6ECE8;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -570,7 +570,7 @@ html, body {
 }
 
 #back-button:hover {
-  background: #555;
+  background: #9DAE9F;
 }
 
 /* ==================================================
@@ -682,7 +682,7 @@ html, body {
     height: 110px !important;
     
     /* Force the sphere styling - RED BORDER REMOVED */
-    background: radial-gradient(circle at 40% 30%, #444 0%, #111 35%, #000 85%) !important;
+    background: radial-gradient(circle at 40% 30%, #111 35%, #000 85%) !important;
     border-radius: 50% !important;
     box-shadow: inset -30px -30px 60px rgba(0,0,0,0.95),
                 inset 12px 12px 24px rgba(255,255,255,0.03),
@@ -744,7 +744,7 @@ html, body {
   max-width: 500px;
   margin: 30px auto;
   padding: 20px;
-  background: #f7f7f7;
+  background: #0B1410;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.15);
 }
@@ -753,7 +753,7 @@ html, body {
 #my-form label {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #000;
+  color: #E6ECE8;
   display: block;
   margin-bottom: 10px;
 }
@@ -762,12 +762,12 @@ html, body {
 #my-form input[type="email"],
 #my-form textarea {
   width: 100%;
-  border: 2px solid #000;
+  border: 2px solid #9DAE9F;
   padding: 12px;
   font-size: 1rem;
   border-radius: 6px;
   margin-bottom: 20px;
-  background: white;
+  background: #0B1410;
   box-sizing: border-box;  /* prevents overflow */
 }
 
@@ -779,8 +779,8 @@ html, body {
 
 /* Formal button look */
 #my-form button[type="submit"] {
-  background: #000;
-  color: white;
+  background: #5C6F5A;
+  color: #E6ECE8;
   padding: 12px 25px;
   font-size: 1.1rem;
   font-weight: 600;
@@ -792,7 +792,7 @@ html, body {
 
 /* Button hover effect */
 #my-form button:hover {
-  background: #333;
+  background: #E6ECE8;
 }
 #my-form-status {
   margin-top: 15px;
@@ -822,7 +822,7 @@ html, body {
   letter-spacing: 4px;
   text-transform: uppercase;
   background: transparent;
-  color: #000;
+  color: #5C6F5A;
   border: 3px solid #000;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -833,8 +833,8 @@ html, body {
 
 #begin-button:hover,
 #begin-button:active {
-  background: #000;
-  color: #fff;
+  background: #9DAE9F;
+  color: #E6ECE8;
   transform: scaleX(1.15) scaleY(0.95);
   letter-spacing: 6px;
 }
