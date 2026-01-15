@@ -826,7 +826,7 @@ h1, h2, h3, h4, h5, h6, p {
   letter-spacing: 4px;
   text-transform: uppercase;
   background: #2A3A2E;
-  color: #5C6F5A;
+  color: #9DAE9F;
   border: 3px solid #000;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -837,7 +837,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 #begin-button:hover,
 #begin-button:active {
-  background: #9DAE9F;
+  background: #5C6F5A;
   color: #E6ECE8;
   transform: scaleX(1.15) scaleY(0.95);
   letter-spacing: 6px;
