@@ -686,7 +686,7 @@ h1, h2, h3, h4, h5, h6, p {
     height: 110px !important;
     
     /* Force the sphere styling - RED BORDER REMOVED */
-    background: radial-gradient(circle at 40% 30%, #111 35%, #000 85%) !important;
+    background: radial-gradient(circle at 40% 30%, #2A3A2E) !important;
     border-radius: 50% !important;
     box-shadow: inset -30px -30px 60px rgba(0,0,0,0.95),
                 inset 12px 12px 24px rgba(255,255,255,0.03),
