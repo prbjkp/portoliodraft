@@ -20,6 +20,11 @@ html, body {
   -webkit-touch-callout: none;
 }
 
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+  color: #E6ECE8;
+}
 /* ==================================================
    MOBILE GALLERY (Default Hidden)
 ================================================== */
@@ -406,7 +411,6 @@ html, body {
   inset: 0;
   border-radius: inherit;
   background: radial-gradient(circle at var(--light-x) var(--light-y),
-    rgba(255,255,255,0.18) 0%,
     rgba(255,255,255,0.05) 6%,
     transparent 25%);
   filter: blur(6px);
