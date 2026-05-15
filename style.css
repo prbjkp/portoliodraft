@@ -178,6 +178,21 @@ h1, h2, h3, h4, h5, h6, p {
   transform-style: preserve-3d;
 }
 
+/* Rotate the text ring around the center sphere */
+#start-text-ring,
+#text-ring-svg {
+  transform-origin: 50% 50%;
+}
+
+#text-ring-svg {
+  animation: spin 18s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 #text-ring-svg text {
   fill: rgba(255, 255, 255, 0.85);
   font-size: 14px;
