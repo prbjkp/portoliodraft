@@ -71,8 +71,11 @@ if (beginButton && welcomeHeader) {
             __dbgPanel.style.fontSize = '12px';
             __dbgPanel.style.padding = '8px';
             __dbgPanel.style.borderRadius = '8px';
-            __dbgPanel.style.zIndex = '1000000';
+            // Ensure panel sits above any full-screen welcome overlays
+            __dbgPanel.style.zIndex = '2147483648';
             __dbgPanel.style.pointerEvents = 'none'; // don't block input
+            __dbgPanel.style.boxShadow = '0 8px 30px rgba(0,0,0,0.6)';
+            __dbgPanel.style.border = '1px solid rgba(255,255,255,0.06)';
             __dbgPanel.style.whiteSpace = 'nowrap';
             document.body.appendChild(__dbgPanel);
             return __dbgPanel;
