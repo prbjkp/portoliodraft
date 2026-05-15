@@ -222,6 +222,10 @@ if (beginButton && welcomeHeader) {
             const img = photo.querySelector("img");
             if (img) {
                 photo.addEventListener("click", () => openOverlay(img.src));
+                img.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    openOverlay(img.src);
+                });
             }
             photo.ondragstart = e => e.preventDefault();
         });
@@ -273,43 +277,54 @@ if (beginButton && welcomeHeader) {
     }
 
     function openOverlay(src) {
-        if(overlay && overlayImg) {
-            overlayImg.src = src;
-            overlay.classList.add("active");
-            
-            if (centerSphere) centerSphere.classList.add("is-hidden");
-            if (textRing) textRing.classList.add("is-hidden");
+        if (!overlay || !overlayImg) return;
 
-            if (isMobile) {
-                document.body.style.overflow = "hidden";
-            }
+        overlayImg.src = src;
+        overlay.classList.add("active");
+        overlayImg.style.opacity = "0";
+        overlayImg.style.transform = "scale(0.95)";
+        requestAnimationFrame(() => {
+            overlayImg.style.opacity = "1";
+            overlayImg.style.transform = "scale(1)";
+        });
+
+        if (centerSphere) centerSphere.classList.add("is-hidden");
+        if (textRing) textRing.classList.add("is-hidden");
+
+        if (isMobile) {
+            document.body.style.overflow = "hidden";
         }
     }
 
-    if(overlayClose) {
-        overlayClose.addEventListener("click", () => {
-            overlay.classList.remove("active");
-            
-            if (centerSphere) centerSphere.classList.remove("is-hidden");
-            if (textRing) textRing.classList.remove("is-hidden");
+    function closeOverlay() {
+        if (!overlay || !overlayImg) return;
 
-            if (isMobile) {
-                document.body.style.overflow = "auto";
+        overlay.classList.remove("active");
+        if (centerSphere) centerSphere.classList.remove("is-hidden");
+        if (textRing) textRing.classList.remove("is-hidden");
+
+        if (isMobile) {
+            document.body.style.overflow = "auto";
+        }
+
+        setTimeout(() => { overlayImg.src = ""; }, 400);
+    }
+
+    if (overlayClose) {
+        overlayClose.addEventListener("click", closeOverlay);
+    }
+
+    if (overlay) {
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) {
+                closeOverlay();
             }
-            
-            setTimeout(() => { overlayImg.src = ""; }, 400);
         });
     }
 
-    overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) {
-            overlayClose.click();
-        }
-    });
-
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && overlay.classList.contains("active")) {
-            overlayClose.click();
+        if (e.key === "Escape" && overlay && overlay.classList.contains("active")) {
+            closeOverlay();
         }
     });
 
