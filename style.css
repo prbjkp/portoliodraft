@@ -179,7 +179,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 #text-ring-svg text {
-  fill: rgba(0,0,0,0.85);
+  fill: rgba(255, 255, 255, 0.85);
   font-size: 14px;
   letter-spacing: 0.35em;
   text-transform: uppercase;
