@@ -45,6 +45,68 @@ if (beginButton && welcomeHeader) {
     const backButton = document.getElementById("back-button");
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
+
+    /**********************************************************
+     * Debugging: log input events on photos/images
+     * Enabled to capture what the Chromebook sends (tap, trackpad)
+     **********************************************************/
+    const DEBUG_ACTIVATION = true;
+    if (DEBUG_ACTIVATION) {
+        const interestingEvents = ['pointerdown','pointerup','pointercancel','mousedown','mouseup','touchstart','touchend','click','auxclick','contextmenu'];
+
+        // Create a non-interfering on-screen debug panel so managed devices can still see logs
+        let __dbgPanel;
+        function ensureDbgPanel() {
+            if (__dbgPanel) return __dbgPanel;
+            __dbgPanel = document.createElement('div');
+            __dbgPanel.id = 'dbg-panel';
+            __dbgPanel.style.position = 'fixed';
+            __dbgPanel.style.right = '12px';
+            __dbgPanel.style.bottom = '12px';
+            __dbgPanel.style.width = '360px';
+            __dbgPanel.style.maxHeight = '40vh';
+            __dbgPanel.style.overflow = 'auto';
+            __dbgPanel.style.background = 'rgba(0,0,0,0.75)';
+            __dbgPanel.style.color = '#E6ECE8';
+            __dbgPanel.style.fontSize = '12px';
+            __dbgPanel.style.padding = '8px';
+            __dbgPanel.style.borderRadius = '8px';
+            __dbgPanel.style.zIndex = '1000000';
+            __dbgPanel.style.pointerEvents = 'none'; // don't block input
+            __dbgPanel.style.whiteSpace = 'nowrap';
+            document.body.appendChild(__dbgPanel);
+            return __dbgPanel;
+        }
+
+        function appendDbgLine(txt) {
+            const p = document.createElement('div');
+            p.textContent = txt;
+            p.style.marginBottom = '6px';
+            p.style.opacity = '0.95';
+            ensureDbgPanel().appendChild(p);
+            // keep only recent 60 lines
+            const children = ensureDbgPanel().children;
+            while (children.length > 60) ensureDbgPanel().removeChild(children[0]);
+        }
+
+        function dbgLog(e) {
+            try {
+                const photoEl = e.target.closest && e.target.closest('.photo');
+                if (!photoEl && e.target.tagName !== 'IMG') return;
+                const img = photoEl ? photoEl.querySelector('img') : (e.target.tagName === 'IMG' ? e.target : null);
+                const msg = `[${e.type}] target=${e.target.tagName} class=${(e.target.className||'').replace(/\s+/g,' ')} closestPhoto=${!!photoEl} img=${img?img.src.split('/').pop():'n/a'} btn=${e.button} ptr=${e.pointerType||'n/a'} touches=${e.touches?e.touches.length:'n/a'} client=${e.clientX||'n/a'},${e.clientY||'n/a'}`;
+                console.log('[DBG EVENT]', msg);
+                appendDbgLine(msg);
+            } catch (err) {
+                console.log('[DBG EVENT] error logging event', err);
+                appendDbgLine('[DBG EVENT] error logging event');
+            }
+        }
+
+        interestingEvents.forEach(ev => {
+            document.addEventListener(ev, dbgLog, {capture: true, passive: true});
+        });
+    }
     
     console.log("Center Sphere Element:", centerSphere);
     if (centerSphere) {
