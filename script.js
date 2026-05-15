@@ -80,6 +80,28 @@ if (beginButton && welcomeHeader) {
     }
 
     /**********************************************************
+     * Unified activation handler for clicks, taps, and pointers
+     * Ensures trackpads, touch, mouse and pen input all open images
+     **********************************************************/
+    function addActivationListeners(elem, src, stopPropagation = false) {
+        elem.__lastActivated = 0;
+        const handler = (e) => {
+            const now = Date.now();
+            if (now - elem.__lastActivated < 350) return; // debounce duplicates
+            elem.__lastActivated = now;
+
+            if (e.type === 'pointerup' && e.button !== 0) return; // only primary button
+            if (stopPropagation && e.stopPropagation) e.stopPropagation();
+            if (e.preventDefault) e.preventDefault();
+            openOverlay(src);
+        };
+
+        elem.addEventListener('click', handler);
+        elem.addEventListener('pointerup', handler);
+        elem.addEventListener('touchend', handler);
+    }
+
+    /**********************************************************
      * 3. HUD HINTS - DEVICE AWARE
      **********************************************************/
     function showHints() {
@@ -144,9 +166,7 @@ if (beginButton && welcomeHeader) {
                     newImg.src = src;
                     newImg.alt = 'Gallery image';
                     
-                    newImg.addEventListener('click', () => {
-                        openOverlay(newImg.src);
-                    });
+                    addActivationListeners(newImg, newImg.src);
 
                     mobileGallery.appendChild(newImg);
                 });
@@ -221,11 +241,8 @@ if (beginButton && welcomeHeader) {
         photos.forEach(photo => {
             const img = photo.querySelector("img");
             if (img) {
-                photo.addEventListener("click", () => openOverlay(img.src));
-                img.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    openOverlay(img.src);
-                });
+                addActivationListeners(photo, img.src);
+                addActivationListeners(img, img.src, true);
             }
             photo.ondragstart = e => e.preventDefault();
         });
