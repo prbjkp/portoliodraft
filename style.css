@@ -146,7 +146,7 @@ h1, h2, h3, h4, h5, h6, p {
 #scene-wrapper {
   position: fixed;
   inset: 0;
-  pointer-events: none; /* Let clicks pass through */
+  pointer-events: auto;
 }
 
 /* On mobile, hide the scene wrapper completely */
