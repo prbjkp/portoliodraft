@@ -142,6 +142,15 @@ if (beginButton && welcomeHeader) {
     async function loadPageContent(page) {
         if (!contentContainer) return;
 
+        const shouldAnimate = contentOverlay.classList.contains('active') && contentContainer.innerHTML.trim();
+        if (shouldAnimate) {
+            contentContainer.classList.remove('page-swipe-in');
+            contentContainer.classList.add('page-swipe-out');
+            await new Promise(resolve => setTimeout(resolve, 420));
+        }
+
+        contentContainer.classList.remove('page-swipe-out');
+        contentContainer.classList.remove('page-swipe-in');
         document.body.classList.add('content-open');
 
         if (page === 'about') {
@@ -150,10 +159,16 @@ if (beginButton && welcomeHeader) {
             contentOverlay.classList.add('about-page');
             document.body.classList.add('about-page');
             setupOverlayAboutEffects();
-            return;
+        } else {
+            contentOverlay.classList.remove('about-page');
+            document.body.classList.remove('about-page');
+            contentContainer.innerHTML = getPageContent(page);
         }
 
-        contentContainer.innerHTML = getPageContent(page);
+        contentContainer.classList.add('page-swipe-in');
+        requestAnimationFrame(() => {
+            contentContainer.classList.remove('page-swipe-in');
+        });
     }
 
     /**********************************************************

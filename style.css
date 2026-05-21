@@ -893,6 +893,17 @@ body.about-page #content-overlay.active {
   max-width: 800px;
   margin: 80px auto;
   padding: 40px;
+  transition: transform 0.42s ease, opacity 0.42s ease;
+}
+
+#content-container.page-swipe-out {
+  transform: translateY(-25px);
+  opacity: 0;
+}
+
+#content-container.page-swipe-in {
+  transform: translateY(24px);
+  opacity: 0;
 }
 
 #back-button {
@@ -998,6 +1009,22 @@ body.about-page #content-overlay.active {
     z-index: 100000 !important;
     pointer-events: none !important;
     height: 60px !important;
+  }
+
+  body.about-page .about-hero {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 34px !important;
+    min-height: auto !important;
+    padding: 28px 0 40px !important;
+  }
+
+  body.about-page .hero-copy {
+    margin-bottom: 24px !important;
+  }
+
+  body.about-page .hero-photo {
+    margin-top: 16px !important;
   }
 
   .hud-hint {
