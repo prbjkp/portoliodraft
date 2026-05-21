@@ -822,11 +822,12 @@ body.about-page #content-overlay.active {
   transform: translateY(0);
 }
 
-/* Cascade animation delays */
-#dropdown-menu.active .menu-item:nth-child(2) { transition-delay: 0.1s; }
-#dropdown-menu.active .menu-item:nth-child(3) { transition-delay: 0.2s; }
-#dropdown-menu.active .menu-item:nth-child(4) { transition-delay: 0.3s; }
-#dropdown-menu.active .menu-item:nth-child(5) { transition-delay: 0.4s; }
+/* Staggered drop-in delays using nth-of-type so buttons animate in order */
+#dropdown-menu.active .menu-item:nth-of-type(1) { transition-delay: 0.06s; }
+#dropdown-menu.active .menu-item:nth-of-type(2) { transition-delay: 0.12s; }
+#dropdown-menu.active .menu-item:nth-of-type(3) { transition-delay: 0.18s; }
+#dropdown-menu.active .menu-item:nth-of-type(4) { transition-delay: 0.24s; }
+#dropdown-menu.active .menu-item:nth-of-type(5) { transition-delay: 0.30s; }
 
 .menu-item:hover {
   background: rgba(118, 173, 188, 0.32);
