@@ -65,8 +65,11 @@ if (beginButton && welcomeHeader) {
     function clearAboutPageState() {
         document.body.classList.remove('about-page');
         if (contentOverlay) contentOverlay.classList.remove('about-page');
-        if (aboutOverlayScrollHandler && contentOverlay) {
-            contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
+        if (aboutOverlayScrollHandler) {
+            if (contentOverlay) {
+                contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
+            }
+            window.removeEventListener('scroll', aboutOverlayScrollHandler);
             aboutOverlayScrollHandler = null;
         }
     }
@@ -94,21 +97,31 @@ if (beginButton && welcomeHeader) {
             revealItems.forEach((item) => item.classList.add('active'));
         }
 
-        if (aboutOverlayScrollHandler && contentOverlay) {
-            contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
+        if (aboutOverlayScrollHandler) {
+            if (contentOverlay) {
+                contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
+            }
+            window.removeEventListener('scroll', aboutOverlayScrollHandler);
         }
 
         aboutOverlayScrollHandler = () => {
-            if (!heroPhoto || !contentOverlay) return;
-            const offset = Math.min(contentOverlay.scrollTop, 260);
-            heroPhoto.style.transform = `translateY(${offset * 0.18}px)`;
-            heroPhoto.style.filter = `blur(${Math.min(offset * 0.01, 4)}px)`;
+            if (!contentOverlay) return;
+            const scrollTop = contentOverlay.scrollTop || window.scrollY || 0;
+            const offset = Math.min(scrollTop, 260);
+
+            if (heroPhoto) {
+                heroPhoto.style.transform = `translateY(${offset * 0.2}px)`;
+                heroPhoto.style.filter = `blur(${Math.min(offset * 0.009, 4)}px)`;
+            }
+            if (heroCopy) {
+                heroCopy.style.transform = `translateY(${offset * 0.14}px)`;
+                heroCopy.style.opacity = `${Math.max(0.88, 1 - offset / 900)}`;
+            }
         };
 
-        if (contentOverlay) {
-            contentOverlay.addEventListener('scroll', aboutOverlayScrollHandler, { passive: true });
-            aboutOverlayScrollHandler();
-        }
+        contentOverlay.addEventListener('scroll', aboutOverlayScrollHandler, { passive: true });
+        window.addEventListener('scroll', aboutOverlayScrollHandler, { passive: true });
+        aboutOverlayScrollHandler();
     }
 
     async function loadPageContent(page) {
