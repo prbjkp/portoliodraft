@@ -85,17 +85,15 @@ if (beginButton && welcomeHeader) {
 
         const heroCopy = contentContainer.querySelector('.hero-copy');
         const heroPhoto = contentContainer.querySelector('.hero-photo-placeholder');
-        const bgLayers = contentContainer.querySelectorAll('.about-bg-layer');
+        const bgWall = contentContainer.querySelector('.about-bg-wall');
         const revealItems = contentContainer.querySelectorAll('.reveal-on-scroll');
 
         if (heroCopy) requestAnimationFrame(() => heroCopy.classList.add('active'));
         if (heroPhoto) requestAnimationFrame(() => heroPhoto.classList.add('active'));
 
-        if (bgLayers.length) {
-            bgLayers.forEach((layer, idx) => {
-                layer.style.transform = 'translateY(0px)';
-                layer.style.opacity = '0.35';
-            });
+        if (bgWall) {
+            bgWall.style.transform = 'translateY(0px)';
+            bgWall.style.opacity = '1';
         }
 
         if ('IntersectionObserver' in window) {
@@ -128,18 +126,15 @@ if (beginButton && welcomeHeader) {
             const offset = Math.min(scrollTop, 280);
 
             if (heroPhoto) {
-                heroPhoto.style.transform = `translateY(${offset * 0.22}px)`;
+                heroPhoto.style.transform = `translateY(-${offset * 0.14}px)`;
                 heroPhoto.style.filter = `blur(${Math.min(offset * 0.008, 3)}px)`;
             }
             if (heroCopy) {
-                heroCopy.style.transform = `translateY(${offset * 0.16}px)`;
-                heroCopy.style.opacity = `${Math.max(0.85, 1 - offset / 850)}`;
+                heroCopy.style.transform = `translateY(-${offset * 0.18}px)`;
+                heroCopy.style.opacity = `${Math.max(0.88, 1 - offset / 950)}`;
             }
-            if (bgLayers && bgLayers.length) {
-                bgLayers.forEach((layer, idx) => {
-                    const factor = 0.08 + idx * 0.06;
-                    layer.style.transform = `translateY(-${offset * factor}px)`;
-                });
+            if (bgWall) {
+                bgWall.style.transform = `translateY(${offset * 0.42}px)`;
             }
         };
 
