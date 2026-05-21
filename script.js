@@ -508,29 +508,55 @@ if (beginButton && welcomeHeader) {
     if (document.body.classList.contains('about-page') && !isMobile) {
         const aboutBgGrid = document.querySelector('.about-bg-grid');
         if (aboutBgGrid) {
+            const items = Array.from(aboutBgGrid.querySelectorAll('.about-bg-item'));
+            const imagePool = [
+                'images/DSC04338.JPG','images/flowers.jpg','images/acropliswindow.jpg',
+                'images/DSC01285.jpg','images/DSC01160.jpg','images/DSC01213.jpg',
+                'images/snake1.jpg','images/_DSC1013.jpg','images/DSC01102.jpg',
+                'images/landscapeboarder.jpg','images/bird9.jpg','images/landscapeboarder(1).jpg'
+            ];
+            let offset = 0;
+
+            function applyImages() {
+                items.forEach((el, idx) => {
+                    const img = imagePool[(offset + idx) % imagePool.length];
+                    el.style.backgroundImage = `url('${img}')`;
+                });
+            }
+
+            // Initial paint
+            applyImages();
+
+            // Auto-cycle images every few seconds
+            const AUTO_CYCLE_MS = 4500;
+            let autoCycleId = setInterval(() => {
+                offset = (offset + 1) % imagePool.length;
+                applyImages();
+            }, AUTO_CYCLE_MS);
+
+            // Translate grid on scroll and trigger swaps based on progress segments
             const updateAboutBackground = () => {
                 const scrollHeight = document.body.scrollHeight - window.innerHeight;
                 const progress = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
                 const maxTranslate = 50; // percent of viewport height
                 aboutBgGrid.style.transform = `translateY(-${progress * maxTranslate}vh)`;
+
+                // change image set as user scrolls through segments
+                const segments = Math.max(1, Math.floor(items.length / 4));
+                const segIndex = Math.floor(progress * 4);
+                const desiredOffset = (segIndex * items.length / 4) | 0;
+                if (desiredOffset !== offset) {
+                    offset = desiredOffset % imagePool.length;
+                    applyImages();
+                }
             };
+
             updateAboutBackground();
             window.addEventListener('scroll', updateAboutBackground, { passive: true });
             window.addEventListener('resize', updateAboutBackground);
-        }
-    }
-    if (document.body.classList.contains('about-page') && !isMobile) {
-        const aboutBgGrid = document.querySelector('.about-bg-grid');
-        if (aboutBgGrid) {
-            const updateAboutBackground = () => {
-                const scrollHeight = document.body.scrollHeight - window.innerHeight;
-                const progress = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
-                const maxTranslate = 50; // percent of viewport height
-                aboutBgGrid.style.transform = `translateY(-${progress * maxTranslate}vh)`;
-            };
-            updateAboutBackground();
-            window.addEventListener('scroll', updateAboutBackground, { passive: true });
-            window.addEventListener('resize', updateAboutBackground);
+
+            // Clean up when navigating away
+            window.addEventListener('beforeunload', () => clearInterval(autoCycleId));
         }
     }
 
