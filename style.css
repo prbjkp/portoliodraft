@@ -115,6 +115,14 @@ body.about-page .about-bg-card {
   will-change: transform, opacity;
 }
 
+/* Hide legacy about-bg wall and cards to remove dark/opaque square */
+body.about-page .about-bg-wall,
+body.about-page .about-bg-card,
+body.about-page .about-bg-wall::before {
+  display: none !important;
+  visibility: hidden !important;
+}
+
 body.about-page .about-bg-card.image-1 {
   top: 8%;
   left: 4%;
