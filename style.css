@@ -28,13 +28,13 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 body.about-page {
-  background: #ffffff;
-  color: #14191f;
+  background: #0B1410;
+  color: #E6ECE8;
 }
 
 body.about-page .about-header {
   padding: 80px 24px 48px;
-  background: transparent;
+  background: linear-gradient(180deg, rgba(14, 27, 20, 0.98), rgba(8, 14, 10, 0.95));
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: inset 0 -1px 0 rgba(255,255,255,0.05);
 }
@@ -179,67 +179,7 @@ body.about-page .about-bg-card.image-8 {
   background-image: url('images/_DSC1013.jpg');
 }
 
-body.about-page .about-bg-scroll {
-  display: none;
-}
-
-/* Hide the legacy absolute cards that created the darker square layout */
-body.about-page .about-bg-wall {
-  display: none !important;
-}
-
-body.about-page .about-bg-scroll {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-body.about-page .about-bg-row {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-body.about-page .about-bg-track {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  display: flex;
-  align-items: stretch;
-  will-change: transform;
-}
-
-body.about-page .about-bg-item {
-  flex: 0 0 auto;
-  height: 100%;
-  width: 60vw; /* large images */
-  background-size: cover;
-  background-position: center;
-  border-radius: 6px;
-  margin-right: 12px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
-  filter: brightness(0.98);
-}
-
-body.about-page .about-bg-item.image-1 { background-image: url('images/DSC04338.JPG'); }
-body.about-page .about-bg-item.image-2 { background-image: url('images/flowers.jpg'); }
-body.about-page .about-bg-item.image-3 { background-image: url('images/acropliswindow.jpg'); }
-body.about-page .about-bg-item.image-4 { background-image: url('images/DSC01285.jpg'); }
-body.about-page .about-bg-item.image-5 { background-image: url('images/DSC01160.jpg'); }
-body.about-page .about-bg-item.image-6 { background-image: url('images/DSC01213.jpg'); }
-body.about-page .about-bg-item.image-7 { background-image: url('images/snake1.jpg'); }
-body.about-page .about-bg-item.image-8 { background-image: url('images/_DSC1013.jpg'); }
-body.about-page .about-bg-item.image-9 { background-image: url('images/DSC01102.jpg'); }
-body.about-page .about-bg-item.image-10 { background-image: url('images/landscapeboarder.jpg'); }
-body.about-page .about-bg-item.image-11 { background-image: url('images/bird9.jpg'); }
-body.about-page .about-bg-item.image-12 { background-image: url('images/acropliswindow.jpg'); }
+/* removed temporary about-bg-scroll styles; using original about-bg-wall cards */
 
 body.about-page .about-header,
 body.about-page .about-main {
@@ -247,45 +187,12 @@ body.about-page .about-main {
   z-index: 25;
 }
 
-@media (min-width: 961px) {
-  body.about-page .about-bg-scroll {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-    background: #0B1410;
-  }
-}
-
-@media (max-width: 960px) {
-  body.about-page .about-bg-scroll {
-    display: none !important;
-  }
-}
+/* restored original about page layout; temporary background rules removed */
 
 body.about-page .about-header,
 body.about-page .about-main {
   position: relative;
   z-index: 25;
-}
-
-@media (min-width: 961px) {
-  body.about-page .about-bg-scroll {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-}
-
-@media (max-width: 960px) {
-  body.about-page .about-bg-scroll {
-    display: none !important;
-  }
 }
 
 body.about-page .about-hero .hero-copy,
