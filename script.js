@@ -129,6 +129,7 @@ if (beginButton && welcomeHeader) {
     let lastX = 0, lastY = 0;
     let textOrbit = 0;
     const TEXT_RING_DISTANCE = 95;
+    const AUTO_ROTATE_SPEED = 0.06;
 
     function computePositions() {
         positions.length = 0;
@@ -336,7 +337,7 @@ if (beginButton && welcomeHeader) {
     function animateSphere() {
         if (isMobile) return; 
 
-        if (!isDragging) targetRotY += 0.02;
+        if (!isDragging) targetRotY += AUTO_ROTATE_SPEED;
         rotX += (targetRotX - rotX) * 0.1;
         rotY += (targetRotY - rotY) * 0.1;
 
