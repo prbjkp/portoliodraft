@@ -189,8 +189,8 @@ body.about-page .achievement-card {
 }
 
 body.about-page .achievement-card:hover {
-  border-color: rgba(255,255,255,0.18);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.26);
+  border-color: rgba(66, 123, 140, 0.2);
+  box-shadow: 0 30px 70px rgba(34, 44, 53, 0.16);
   transform: translateY(-2px);
 }
 
@@ -216,7 +216,7 @@ body.about-page .achievement-image::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #A5B99B;
+  color: #577e93;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   opacity: 0.34;
@@ -226,13 +226,13 @@ body.about-page .achievement-image::before {
 body.about-page .achievement-copy h3 {
   margin: 0 0 12px;
   font-size: 1.28rem;
-  color: #F7FAF3;
+  color: #1b262d;
 }
 
 body.about-page .achievement-copy p {
   margin: 0;
   line-height: 1.75;
-  color: rgba(255,255,255,0.74);
+  color: #4f5f67;
 }
 
 body.about-page .achievement-card:nth-child(even) {
@@ -1163,12 +1163,12 @@ body.about-page #content-overlay.active {
    LIGHT PROFESSIONAL THEME OVERRIDES
 ================================================== */
 html, body {
-  background: #f5f4ef;
-  color: #1b242d;
+  background: #f1efe8;
+  color: #14191f;
 }
 
 h1, h2, h3, h4, h5, h6, p {
-  color: #1b242d;
+  color: #14191f;
 }
 
 body.about-page {
@@ -1225,21 +1225,22 @@ body.about-page {
 }
 
 #dropdown-menu {
-  background: rgba(255, 255, 255, 0.98);
-  color: #233039;
+  background: rgba(248, 249, 246, 0.98);
+  color: #14191f;
   backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(39, 52, 62, 0.08);
 }
 
 .menu-item {
   background: transparent;
-  border: 1px solid rgba(35, 41, 47, 0.12);
-  color: #233039;
+  border: 1px solid rgba(39, 52, 62, 0.16);
+  color: #14191f;
 }
 
 .menu-item:hover {
-  background: #eef0ec;
-  border-color: rgba(35, 41, 47, 0.18);
-  color: #11181f;
+  background: #dfe9f0;
+  border-color: rgba(66, 106, 120, 0.24);
+  color: #0f171f;
 }
 
 #close-menu {
@@ -1251,26 +1252,29 @@ body.about-page {
 }
 
 #content-overlay {
-  background: #f7f6f2;
-  color: #233039;
+  background: #f8f6f0;
+  color: #14191f;
 }
 
 #content-overlay.about-page {
-  background: #fbfaf7;
-  color: #233039;
+  background: #faf8f3;
+  color: #14191f;
 }
 
 #content-container {
-  background: transparent;
+  background: #fcfbf7;
+  border-radius: 18px;
+  box-shadow: 0 28px 68px rgba(20, 25, 30, 0.08);
 }
 
 #back-button {
-  background: #3f5057;
-  color: #f7f6f2;
+  background: #3b4f5a;
+  color: #f5f3ea;
+  border: 1px solid rgba(39, 50, 58, 0.24);
 }
 
 #back-button:hover {
-  background: #31434b;
+  background: #2f434d;
 }
 
 #overlay {
@@ -1286,11 +1290,11 @@ body.about-page {
 }
 
 #center-sphere {
-  background: radial-gradient(circle at 35% 30%, #d7d3cc 25%, #8f8b86 90%);
+  background: radial-gradient(circle at 35% 30%, #6a6f74 25%, #33393f 90%);
   box-shadow:
-    inset -18px -18px 36px rgba(255,255,255,0.15),
-    inset 10px 10px 20px rgba(255,255,255,0.08),
-    0 20px 42px rgba(35, 41, 47, 0.18);
+    inset -18px -18px 36px rgba(255,255,255,0.08),
+    inset 10px 10px 20px rgba(255,255,255,0.05),
+    0 24px 52px rgba(20, 25, 30, 0.22);
 }
 
 #center-sphere::after {
@@ -1303,24 +1307,24 @@ body.about-page {
 
 body.about-page .about-header {
   background: #ffffff;
-  border-color: rgba(35, 41, 47, 0.08);
-  box-shadow: inset 0 -1px 0 rgba(35, 41, 47, 0.04);
+  border-color: rgba(39, 53, 64, 0.14);
+  box-shadow: inset 0 -1px 0 rgba(39, 53, 64, 0.06);
 }
 
 body.about-page .about-header .eyebrow {
-  color: #6c787f;
+  color: #4b7488;
 }
 
 body.about-page h1,
 body.about-page .about-hero-title,
 body.about-page .achievement-copy h3 {
-  color: #1f262c;
+  color: #0f1820;
 }
 
 body.about-page .header-subtitle,
 body.about-page .hero-intro,
 body.about-page .achievement-copy p {
-  color: #5f6b72;
+  color: #4a5e6d;
 }
 
 body.about-page .about-main {
@@ -1328,19 +1332,19 @@ body.about-page .about-main {
 }
 
 body.about-page .hero-photo-placeholder {
-  background: linear-gradient(135deg, rgba(245, 245, 242, 1), rgba(236, 236, 231, 1));
-  border: 1px solid rgba(35, 41, 47, 0.08);
-  box-shadow: 0 22px 50px rgba(35, 41, 47, 0.08);
+  background: linear-gradient(135deg, rgba(247, 249, 250, 1), rgba(235, 242, 246, 1));
+  border: 1px solid rgba(39, 52, 63, 0.12);
+  box-shadow: 0 22px 50px rgba(34, 44, 52, 0.12);
 }
 
 body.about-page .achievement-card {
   background: #ffffff;
-  border: 1px solid rgba(35, 41, 47, 0.08);
-  box-shadow: 0 18px 40px rgba(35, 41, 47, 0.08);
+  border: 1px solid rgba(39, 52, 63, 0.12);
+  box-shadow: 0 20px 46px rgba(39, 52, 63, 0.08);
 }
 
 body.about-page .achievement-image {
-  background: linear-gradient(135deg, rgba(246, 246, 243, 1), rgba(239, 239, 235, 1));
+  background: linear-gradient(135deg, rgba(235, 241, 245, 1), rgba(222, 231, 237, 1));
 }
 
 #my-form {
@@ -1349,7 +1353,7 @@ body.about-page .achievement-image {
 }
 
 #my-form label {
-  color: #233039;
+  color: #14191f;
 }
 
 #my-form input[type="email"],
@@ -1360,12 +1364,12 @@ body.about-page .achievement-image {
 }
 
 #my-form button[type="submit"] {
-  background: #42555b;
-  color: #f7f6f2;
+  background: #344d57;
+  color: #f5f3ea;
 }
 
 #my-form button:hover {
-  background: #2f4349;
+  background: #233b44;
   color: #ffffff;
 }
 
@@ -1376,9 +1380,9 @@ body.about-page .achievement-image {
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
-  background: #b0a78f;
+  background: #536a7a;
   color: #f7f6f2;
-  border: 3px solid rgba(35, 41, 47, 0.18);
+  border: 3px solid rgba(38, 50, 60, 0.22);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
@@ -1388,8 +1392,8 @@ body.about-page .achievement-image {
 
 #begin-button:hover,
 #begin-button:active {
-  background: #908775;
-  color: #f7f6f2;
+  background: #345165;
+  color: #f2f1eb;
   transform: scaleX(1.15) scaleY(0.95);
   letter-spacing: 6px;
 }
