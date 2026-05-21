@@ -1016,6 +1016,15 @@ body.about-page #content-overlay.active {
     white-space: nowrap !important;
   }
 
+  body.about-page #center-sphere,
+  body.about-page #start-text-ring,
+  body.content-open #center-sphere,
+  body.content-open #start-text-ring {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
   /* PULL SPHERE OUT OF WRAPPER - MAKE IT INDEPENDENT */
   #center-sphere {
     display: block !important;

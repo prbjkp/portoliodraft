@@ -65,6 +65,7 @@ if (beginButton && welcomeHeader) {
 
     function clearAboutPageState() {
         document.body.classList.remove('about-page');
+        document.body.classList.remove('content-open');
         if (contentOverlay) contentOverlay.classList.remove('about-page');
         if (aboutOverlayScrollHandler) {
             if (contentOverlay) {
@@ -141,6 +142,8 @@ if (beginButton && welcomeHeader) {
     async function loadPageContent(page) {
         if (!contentContainer) return;
 
+        document.body.classList.add('content-open');
+
         if (page === 'about') {
             const aboutMarkup = await fetchPageBody('about.html');
             contentContainer.innerHTML = aboutMarkup || getPageContent(page);
@@ -157,7 +160,7 @@ if (beginButton && welcomeHeader) {
      * Debugging: log input events on photos/images
      * Enabled to capture what the Chromebook sends (tap, trackpad)
      **********************************************************/
-    const DEBUG_ACTIVATION = true;
+    const DEBUG_ACTIVATION = false;
     if (DEBUG_ACTIVATION) {
         const interestingEvents = ['pointerdown','pointerup','pointercancel','mousedown','mouseup','touchstart','touchend','click','auxclick','contextmenu'];
 
@@ -272,16 +275,41 @@ if (beginButton && welcomeHeader) {
      **********************************************************/
     function addActivationListeners(elem, src, stopPropagation = false) {
         elem.__lastActivated = 0;
+        elem.__pressInfo = { startX: null, startY: null, moved: false };
+
+        const startInteraction = (e) => {
+            const point = e.touches && e.touches[0] ? e.touches[0] : e;
+            elem.__pressInfo.startX = point.clientX;
+            elem.__pressInfo.startY = point.clientY;
+            elem.__pressInfo.moved = false;
+        };
+
+        const moveInteraction = (e) => {
+            const point = e.touches && e.touches[0] ? e.touches[0] : e;
+            if (typeof elem.__pressInfo.startX !== 'number') return;
+            const dx = point.clientX - elem.__pressInfo.startX;
+            const dy = point.clientY - elem.__pressInfo.startY;
+            if (Math.hypot(dx, dy) > 10) {
+                elem.__pressInfo.moved = true;
+            }
+        };
+
         const handler = (e) => {
             const now = Date.now();
             if (now - elem.__lastActivated < 350) return; // debounce duplicates
             elem.__lastActivated = now;
-
             if (e.type === 'pointerup' && e.button !== 0) return; // only primary button
+            if (elem.__pressInfo.moved) return;
             if (stopPropagation && e.stopPropagation) e.stopPropagation();
             if (e.preventDefault) e.preventDefault();
             openOverlay(src);
         };
+
+        elem.addEventListener('pointerdown', startInteraction, { passive: true });
+        elem.addEventListener('touchstart', startInteraction, { passive: true });
+        elem.addEventListener('pointermove', moveInteraction, { passive: true });
+        elem.addEventListener('touchmove', moveInteraction, { passive: true });
+        elem.addEventListener('pointercancel', () => { elem.__pressInfo.moved = true; }, { passive: true });
 
         elem.addEventListener('click', handler);
         elem.addEventListener('pointerup', handler);
