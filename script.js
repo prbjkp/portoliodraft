@@ -506,61 +506,80 @@ if (beginButton && welcomeHeader) {
     }
 
     if (document.body.classList.contains('about-page') && !isMobile) {
-        const aboutBgGrid = document.querySelector('.about-bg-grid');
-        if (aboutBgGrid) {
-                const items = Array.from(aboutBgGrid.querySelectorAll('.about-bg-item'));
+        const aboutBgScroll = document.querySelector('.about-bg-scroll');
+        if (aboutBgScroll) {
+            // clear any existing grid markup
+            aboutBgScroll.innerHTML = '';
 
-                // Build image pool from main gallery images on the page (desktop gallery '#sphere')
-                const galleryImgs = Array.from(document.querySelectorAll('#sphere img')).map(i => i.src).filter(Boolean);
-                const mobileImgs = Array.from(document.querySelectorAll('#mobile-gallery img')).map(i => i.src).filter(Boolean);
-                let imagePool = Array.from(new Set([...galleryImgs, ...mobileImgs]));
+            // Build image pool from main gallery images on the page (desktop gallery '#sphere')
+            const galleryImgs = Array.from(document.querySelectorAll('#sphere img')).map(i => i.src).filter(Boolean);
+            const mobileImgs = Array.from(document.querySelectorAll('#mobile-gallery img')).map(i => i.src).filter(Boolean);
+            let imagePool = Array.from(new Set([...galleryImgs, ...mobileImgs]));
+            if (!imagePool.length) imagePool = ['images/DSC04338.JPG','images/flowers.jpg','images/acropliswindow.jpg','images/landscapeboarder.jpg'];
 
-                // Fallback to a small set if none found
-                if (!imagePool.length) {
-                    imagePool = ['images/DSC04338.JPG','images/flowers.jpg','images/acropliswindow.jpg','images/landscapeboarder.jpg'];
+            const scrollHeight = document.body.scrollHeight;
+            const rows = Math.max(3, Math.ceil(scrollHeight / window.innerHeight));
+
+            const tracks = [];
+            // create rows with tracks and items
+            for (let r = 0; r < rows; r++) {
+                const row = document.createElement('div');
+                row.className = 'about-bg-row';
+                row.style.top = `${r * window.innerHeight}px`;
+
+                const track = document.createElement('div');
+                track.className = 'about-bg-track';
+
+                // repeat images to ensure long horizontal track
+                const repeatCount = Math.max(6, Math.ceil((imagePool.length * 2)));
+                for (let j = 0; j < repeatCount; j++) {
+                    const item = document.createElement('div');
+                    item.className = 'about-bg-item';
+                    item.style.backgroundImage = `url('${imagePool[j % imagePool.length]}')`;
+                    track.appendChild(item);
                 }
 
-                let offset = 0;
+                row.appendChild(track);
+                aboutBgScroll.appendChild(row);
+                tracks.push(track);
+            }
 
-                function applyImages() {
-                    items.forEach((el, idx) => {
+            let offset = 0;
+            const AUTO_CYCLE_MS = 4500;
+            const applyOffsetImages = () => {
+                // rotate images across all tracks to keep content fresh
+                tracks.forEach((track) => {
+                    Array.from(track.children).forEach((el, idx) => {
                         const img = imagePool[(offset + idx) % imagePool.length];
                         el.style.backgroundImage = `url('${img}')`;
                     });
-                }
+                });
+            };
+            applyOffsetImages();
+            const autoCycleId = setInterval(() => { offset = (offset + 1) % imagePool.length; applyOffsetImages(); }, AUTO_CYCLE_MS);
 
-                // Initial paint
-                applyImages();
+            const updateAboutBackground = () => {
+                const fullScroll = document.body.scrollHeight - window.innerHeight;
+                const progress = fullScroll > 0 ? Math.min(window.scrollY / fullScroll, 1) : 0;
 
-                // Auto-cycle images every few seconds (keeps changing which images appear)
-                const AUTO_CYCLE_MS = 4500;
-                let autoCycleId = setInterval(() => {
-                    offset = (offset + 1) % imagePool.length;
-                    applyImages();
-                }, AUTO_CYCLE_MS);
+                tracks.forEach((track, i) => {
+                    // alternate directions per row
+                    const dir = (i % 2 === 0) ? 1 : -1;
+                    const speed = 40 + i * 15; // percentage multiplier
+                    const translate = dir * progress * speed;
+                    track.style.transform = `translateX(${translate}%)`;
+                });
+            };
 
-                // Translate grid on scroll and swap image offset based on scroll segments
-                const updateAboutBackground = () => {
-                    const scrollHeight = document.body.scrollHeight - window.innerHeight;
-                    const progress = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
-                    const maxTranslate = 50; // percent of viewport height
-                    aboutBgGrid.style.transform = `translateY(-${progress * maxTranslate}vh)`;
+            updateAboutBackground();
+            window.addEventListener('scroll', updateAboutBackground, { passive: true });
+            window.addEventListener('resize', () => {
+                // rebuild rows on resize for consistent top offsets
+                clearInterval(autoCycleId);
+                window.location.reload();
+            });
 
-                    // As user scrolls through 4 equal segments, jump offset so images evolve
-                    const segIndex = Math.floor(progress * 4);
-                    const desiredOffset = (segIndex * Math.max(1, Math.floor(items.length / 3))) % imagePool.length;
-                    if (desiredOffset !== offset) {
-                        offset = desiredOffset;
-                        applyImages();
-                    }
-                };
-
-                updateAboutBackground();
-                window.addEventListener('scroll', updateAboutBackground, { passive: true });
-                window.addEventListener('resize', updateAboutBackground);
-
-                // Clean up when navigating away
-                window.addEventListener('beforeunload', () => clearInterval(autoCycleId));
+            window.addEventListener('beforeunload', () => clearInterval(autoCycleId));
         }
     }
 
