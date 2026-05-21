@@ -1655,4 +1655,70 @@ body.about-page .achievement-image {
   #begin-button:active {
     letter-spacing: 4px;
   }
+
+
+
+  /* ==================================================
+   SCROLLING BACKGROUND GRID (About Page)
+================================================== */
+body.about-page .about-scroll-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+body.about-page .about-scroll-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, 
+    rgba(241, 239, 232, 0.92) 0%,
+    rgba(241, 239, 232, 0.88) 30%,
+    rgba(241, 239, 232, 0.90) 70%,
+    rgba(241, 239, 232, 0.94) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+body.about-page .about-scroll-grid {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 200%;
+  height: 120%;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-auto-rows: minmax(200px, 1fr);
+  gap: 16px;
+  padding: 20px;
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+body.about-page .about-scroll-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  opacity: 0.35;
+  filter: grayscale(0.3) blur(1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  body.about-page .about-scroll-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  body.about-page .about-scroll-grid img {
+    opacity: 0.25;
+    filter: grayscale(0.4) blur(1.5px);
+  }
+}
 }

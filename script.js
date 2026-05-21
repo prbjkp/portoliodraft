@@ -803,6 +803,89 @@ if (beginButton && welcomeHeader) {
             revealItems.forEach((item) => item.classList.add('active'));
         }
     }
+    /**********************************************************
+ * ABOUT PAGE - SCROLLING BACKGROUND GRID
+ **********************************************************/
+const isAboutPageDirect = document.body.classList.contains('about-page');
+if (isAboutPageDirect) {
+    const scrollGrid = document.getElementById('scrollGrid');
+    
+    if (scrollGrid) {
+        // Image catalog from home page
+        const imageList = [
+            'images/snake1.jpg',
+            'images/_DSC1013.jpg',
+            'images/dklajdklsajd.jpg',
+            'images/DSC01087.jpg',
+            'images/DSC01091.jpg',
+            'images/DSC01098.jpg',
+            'images/DSC01102.jpg',
+            'images/DSC01107.jpg',
+            'images/DSC01111.jpg',
+            'images/DSC01115.jpg',
+            'images/DSC01127.jpg',
+            'images/DSC01132.jpg',
+            'images/DSC01136.jpg',
+            'images/aabcaisdjapjd.jpg',
+            'images/_DSC1001.jpg',
+            'images/hsdbasdjabjbad.jpg',
+            'images/barderporites.jpg',
+            'images/_DSC1048.jpg',
+            'images/ndsakldakldnm.jpg',
+            'images/dasdnkat.jpg',
+            'images/ljdalskdjka.jpg',
+            'images/_DSC1023.jpg',
+            'images/cat.jpg',
+            'images/dfkhslkfjs.jpg',
+            'images/DSC01150.jpg',
+            'images/DSC01158.jpg',
+            'images/DSC01160.jpg',
+            'images/DSC01170.jpg',
+            'images/DSC01175.jpg',
+            'images/DSC01181.jpg',
+            'images/DSC01201.jpg',
+            'images/DSC01209.jpg',
+            'images/DSC01213.jpg',
+            'images/DSC01224.jpg',
+            'images/landscapeboarder(1).jpg',
+            'images/DSC04338.JPG',
+            'images/_DSC1003.jpg',
+            'images/bird9.jpg',
+            'images/flowers.jpg',
+            'images/acropliswindow.jpg'
+        ];
+        
+        // Populate grid with images
+        imageList.forEach(src => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = 'Background gallery image';
+            scrollGrid.appendChild(img);
+        });
+        
+        // Scroll-based horizontal translation
+        let ticking = false;
+        
+        function updateGridPosition() {
+            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            const maxTranslate = -50; // Move 50% left at full scroll
+            const translateX = scrollPercent * maxTranslate;
+            
+            scrollGrid.style.transform = `translateX(${translateX}%)`;
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateGridPosition);
+                ticking = true;
+            }
+        }, { passive: true });
+        
+        // Initial position
+        updateGridPosition();
+    }
+}
 });
 
 
