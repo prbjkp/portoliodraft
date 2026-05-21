@@ -1257,8 +1257,15 @@ body.about-page {
 }
 
 #content-overlay.about-page {
-  background: #faf8f3;
+  background: #f4f8fb;
   color: #14191f;
+}
+
+#content-overlay.about-page #content-container {
+  background: #fbfbf7;
+  border: 1px solid rgba(84, 142, 162, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 28px 68px rgba(20, 25, 30, 0.08);
 }
 
 #content-container {
@@ -1306,13 +1313,13 @@ body.about-page {
 }
 
 body.about-page .about-header {
-  background: #ffffff;
-  border-color: rgba(39, 53, 64, 0.14);
-  box-shadow: inset 0 -1px 0 rgba(39, 53, 64, 0.06);
+  background: #fdfbf7;
+  border-color: rgba(92, 142, 158, 0.22);
+  box-shadow: inset 0 -1px 0 rgba(92, 142, 158, 0.08);
 }
 
 body.about-page .about-header .eyebrow {
-  color: #4b7488;
+  color: #5a8f9f;
 }
 
 body.about-page h1,
@@ -1324,7 +1331,7 @@ body.about-page .achievement-copy h3 {
 body.about-page .header-subtitle,
 body.about-page .hero-intro,
 body.about-page .achievement-copy p {
-  color: #4a5e6d;
+  color: #405663;
 }
 
 body.about-page .about-main {
@@ -1332,24 +1339,25 @@ body.about-page .about-main {
 }
 
 body.about-page .hero-photo-placeholder {
-  background: linear-gradient(135deg, rgba(247, 249, 250, 1), rgba(235, 242, 246, 1));
-  border: 1px solid rgba(39, 52, 63, 0.12);
-  box-shadow: 0 22px 50px rgba(34, 44, 52, 0.12);
+  background: linear-gradient(135deg, rgba(238, 247, 251, 1), rgba(223, 236, 243, 1));
+  border: 1px solid rgba(84, 132, 151, 0.2);
+  box-shadow: 0 24px 60px rgba(26, 40, 50, 0.16);
 }
 
 body.about-page .achievement-card {
   background: #ffffff;
-  border: 1px solid rgba(39, 52, 63, 0.12);
-  box-shadow: 0 20px 46px rgba(39, 52, 63, 0.08);
+  border: 1px solid rgba(84, 142, 162, 0.18);
+  box-shadow: 0 24px 60px rgba(26, 40, 50, 0.14);
+  border-left: 4px solid rgba(86, 150, 176, 0.28);
 }
 
 body.about-page .achievement-image {
-  background: linear-gradient(135deg, rgba(235, 241, 245, 1), rgba(222, 231, 237, 1));
+  background: linear-gradient(135deg, rgba(223, 238, 246, 1), rgba(204, 226, 236, 1));
 }
 
 #my-form {
   background: #ffffff;
-  border: 1px solid rgba(35, 41, 47, 0.1);
+  border: 1px solid rgba(84, 142, 162, 0.18);
 }
 
 #my-form label {

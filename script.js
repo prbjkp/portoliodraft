@@ -46,6 +46,7 @@ if (beginButton && welcomeHeader) {
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
     let aboutOverlayScrollHandler = null;
+    let aboutOverlayAnimationId = null;
 
     async function fetchPageBody(url) {
         try {
@@ -71,6 +72,10 @@ if (beginButton && welcomeHeader) {
             }
             window.removeEventListener('scroll', aboutOverlayScrollHandler);
             aboutOverlayScrollHandler = null;
+        }
+        if (aboutOverlayAnimationId) {
+            cancelAnimationFrame(aboutOverlayAnimationId);
+            aboutOverlayAnimationId = null;
         }
     }
 
@@ -103,25 +108,34 @@ if (beginButton && welcomeHeader) {
             }
             window.removeEventListener('scroll', aboutOverlayScrollHandler);
         }
+        if (aboutOverlayAnimationId) {
+            cancelAnimationFrame(aboutOverlayAnimationId);
+            aboutOverlayAnimationId = null;
+        }
 
         aboutOverlayScrollHandler = () => {
             if (!contentOverlay) return;
             const scrollTop = contentOverlay.scrollTop || window.scrollY || 0;
-            const offset = Math.min(scrollTop, 260);
+            const offset = Math.min(scrollTop, 280);
 
             if (heroPhoto) {
-                heroPhoto.style.transform = `translateY(${offset * 0.2}px)`;
-                heroPhoto.style.filter = `blur(${Math.min(offset * 0.009, 4)}px)`;
+                heroPhoto.style.transform = `translateY(${offset * 0.22}px)`;
+                heroPhoto.style.filter = `blur(${Math.min(offset * 0.008, 3)}px)`;
             }
             if (heroCopy) {
-                heroCopy.style.transform = `translateY(${offset * 0.14}px)`;
-                heroCopy.style.opacity = `${Math.max(0.88, 1 - offset / 900)}`;
+                heroCopy.style.transform = `translateY(${offset * 0.16}px)`;
+                heroCopy.style.opacity = `${Math.max(0.85, 1 - offset / 850)}`;
             }
+        };
+
+        const frameTick = () => {
+            aboutOverlayScrollHandler();
+            aboutOverlayAnimationId = requestAnimationFrame(frameTick);
         };
 
         contentOverlay.addEventListener('scroll', aboutOverlayScrollHandler, { passive: true });
         window.addEventListener('scroll', aboutOverlayScrollHandler, { passive: true });
-        aboutOverlayScrollHandler();
+        frameTick();
     }
 
     async function loadPageContent(page) {
