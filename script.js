@@ -506,16 +506,27 @@ if (beginButton && welcomeHeader) {
     }
 
     if (document.body.classList.contains('about-page') && !isMobile) {
-        const aboutBgLayers = document.querySelectorAll('.about-bg-level');
-        if (aboutBgLayers.length) {
-            const maxShift = (aboutBgLayers.length - 1) * 100;
+        const aboutBgGrid = document.querySelector('.about-bg-grid');
+        if (aboutBgGrid) {
             const updateAboutBackground = () => {
                 const scrollHeight = document.body.scrollHeight - window.innerHeight;
                 const progress = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
-                aboutBgLayers.forEach((layer, index) => {
-                    const offset = index * 100 - progress * maxShift;
-                    layer.style.transform = `translateY(${offset}%)`;
-                });
+                const maxTranslate = 50; // percent of viewport height
+                aboutBgGrid.style.transform = `translateY(-${progress * maxTranslate}vh)`;
+            };
+            updateAboutBackground();
+            window.addEventListener('scroll', updateAboutBackground, { passive: true });
+            window.addEventListener('resize', updateAboutBackground);
+        }
+    }
+    if (document.body.classList.contains('about-page') && !isMobile) {
+        const aboutBgGrid = document.querySelector('.about-bg-grid');
+        if (aboutBgGrid) {
+            const updateAboutBackground = () => {
+                const scrollHeight = document.body.scrollHeight - window.innerHeight;
+                const progress = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
+                const maxTranslate = 50; // percent of viewport height
+                aboutBgGrid.style.transform = `translateY(-${progress * maxTranslate}vh)`;
             };
             updateAboutBackground();
             window.addEventListener('scroll', updateAboutBackground, { passive: true });
