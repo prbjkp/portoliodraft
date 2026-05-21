@@ -260,6 +260,21 @@ body.about-page #content-overlay {
   pointer-events: none !important;
 }
 
+body.about-page .about-header,
+body.about-page .about-main,
+body.about-page .about-hero,
+body.about-page .hero-photo,
+body.about-page .hero-copy,
+body.about-page .hero-photo-placeholder,
+body.about-page .achievement-list,
+body.about-page .achievement-card,
+body.about-page .achievement-copy {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 @media (max-width: 960px) {
   body.about-page .about-hero {
     grid-template-columns: 1fr;

@@ -272,7 +272,8 @@ if (beginButton && welcomeHeader) {
             
             function startAutoScroll() {
                 autoScrollInterval = setInterval(() => {
-                    if (!isUserScrolling && !overlay.style.pointerEvents.includes('auto')) {
+                    const overlayOpen = overlay && overlay.style && overlay.style.pointerEvents.includes('auto');
+                    if (!isUserScrolling && !overlayOpen) {
                         mobileGallery.scrollBy({
                             top: 1.5,
                             behavior: 'auto'
