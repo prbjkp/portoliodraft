@@ -118,6 +118,16 @@ if (beginButton && welcomeHeader) {
         console.log("Center Sphere z-index:", window.getComputedStyle(centerSphere).zIndex);
     }
 
+    // Determine if we're on the home page. Index served as '/' or '/index.html'.
+    const isHomePage = (location.pathname === '/' || location.pathname.endsWith('/index.html') || document.body.classList.contains('home-page'));
+
+    // Hide the center sphere and text ring on mobile for any non-home page
+    if (isMobile && !isHomePage) {
+        if (centerSphere) centerSphere.style.display = 'none';
+        if (textRing) textRing.style.display = 'none';
+        console.log('Hiding center sphere and text ring on mobile (non-home page)');
+    }
+
     /**********************************************************
      * 2. SPHERE MATH VARIABLES
      **********************************************************/
