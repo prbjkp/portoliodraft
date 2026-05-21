@@ -566,6 +566,44 @@ if (beginButton && welcomeHeader) {
         };
         return contents[page] || '<h1>Page Not Found</h1>';
     }
+
+    const isAboutPage = document.body.classList.contains('about-page');
+    if (isAboutPage) {
+        const heroCopy = document.querySelector('.hero-copy');
+        const heroPhoto = document.querySelector('.hero-photo-placeholder');
+        const revealItems = document.querySelectorAll('.reveal-on-scroll');
+
+        if (heroCopy) {
+            requestAnimationFrame(() => heroCopy.classList.add('active'));
+        }
+        if (heroPhoto) {
+            requestAnimationFrame(() => heroPhoto.classList.add('active'));
+        }
+
+        window.addEventListener('scroll', () => {
+            const offset = Math.min(window.scrollY, 260);
+            if (heroPhoto) {
+                heroPhoto.style.transform = `translateY(${offset * 0.18}px)`;
+                heroPhoto.style.filter = `blur(${Math.min(offset * 0.01, 4)}px)`;
+            }
+        }, { passive: true });
+
+        if ('IntersectionObserver' in window) {
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.2,
+            });
+
+            revealItems.forEach((item) => revealObserver.observe(item));
+        } else {
+            revealItems.forEach((item) => item.classList.add('active'));
+        }
+    }
 });
 
 

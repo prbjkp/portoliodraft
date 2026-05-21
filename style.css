@@ -6,7 +6,8 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: Inter, sans-serif;
   background: #0B1410;
   color: rgb(0, 0, 0);
@@ -24,6 +25,254 @@ h1, h2, h3, h4, h5, h6, p {
   margin: 0;
   padding: 0;
   color: #E6ECE8;
+}
+
+body.about-page {
+  background: #0B1410;
+  color: #E6ECE8;
+}
+
+body.about-page .about-header {
+  padding: 64px 24px 40px;
+  background: linear-gradient(180deg, rgba(15, 28, 20, 0.96), rgba(11, 20, 16, 0.96));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.about-page .about-header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+body.about-page .about-header .eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+  letter-spacing: 0.28em;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #9DAE9F;
+}
+
+body.about-page h1 {
+  font-size: clamp(4rem, 8vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: #F7FBF5;
+  margin-bottom: 16px;
+}
+
+body.about-page .header-subtitle {
+  max-width: 760px;
+  margin: 0 auto;
+  color: #B8C5B3;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+body.about-page .about-main {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+body.about-page .about-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+  min-height: calc(100vh - 160px);
+  padding: 40px 0 60px;
+}
+
+body.about-page .hero-copy,
+body.about-page .hero-photo-placeholder {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+body.about-page .hero-copy.active,
+body.about-page .hero-photo-placeholder.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.about-page .about-hero-title {
+  font-size: clamp(2.8rem, 5vw, 4.25rem);
+  line-height: 1.02;
+  margin: 0 0 24px;
+  color: #F8FBF4;
+}
+
+body.about-page .hero-intro {
+  max-width: 46rem;
+  line-height: 1.8;
+  color: #D8DDD6;
+  font-size: 1.1rem;
+}
+
+body.about-page .hero-photo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.about-page .hero-photo-placeholder {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(135deg, rgba(48, 80, 47, 0.95), rgba(11, 20, 16, 0.98));
+  border-radius: 32px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  position: relative;
+  transform: translateY(0);
+}
+
+body.about-page .hero-photo-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent 60%);
+  pointer-events: none;
+}
+
+body.about-page .placeholder-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8DA38D;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  opacity: 0.32;
+  z-index: 1;
+}
+
+body.about-page .achievements {
+  padding-top: 24px;
+}
+
+body.about-page .achievements h2 {
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  margin-bottom: 28px;
+  text-align: center;
+  color: #F3F7F0;
+}
+
+body.about-page .achievement-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+body.about-page .achievement-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 28px;
+  padding: 24px;
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  min-height: 240px;
+  opacity: 0;
+  transform: translateY(42px);
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+body.about-page .achievement-card.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.about-page .achievement-image {
+  width: 130px;
+  min-width: 130px;
+  aspect-ratio: 4 / 5;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(37, 60, 33, 0.95), rgba(11, 20, 16, 0.97));
+  position: relative;
+  overflow: hidden;
+}
+
+body.about-page .achievement-image::before {
+  content: "Image";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #A5B99B;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.34;
+  font-size: 0.85rem;
+}
+
+body.about-page .achievement-copy h3 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+  color: #F5F8F0;
+}
+
+body.about-page .achievement-copy p {
+  margin: 0;
+  line-height: 1.75;
+  color: #C8D2C4;
+}
+
+body.about-page .achievement-card:nth-child(even) {
+  background: rgba(255,255,255,0.06);
+}
+
+body.about-page .about-hero .hero-copy,
+body.about-page .about-hero .hero-photo {
+  will-change: transform, opacity;
+}
+
+@media (max-width: 960px) {
+  body.about-page .about-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 32px;
+    padding-top: 32px;
+  }
+
+  body.about-page .achievement-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  body.about-page .about-header {
+    padding: 52px 18px 28px;
+  }
+
+  body.about-page h1 {
+    font-size: clamp(3rem, 12vw, 4.5rem);
+  }
+
+  body.about-page .about-main {
+    padding: 28px 18px 64px;
+  }
+
+  body.about-page .achievement-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  body.about-page .achievement-image {
+    width: 100%;
+    max-width: 320px;
+    min-width: auto;
+  }
+
+  body.about-page .achievement-copy {
+    width: 100%;
+  }
 }
 /* ==================================================
    MOBILE GALLERY (Default Hidden)
