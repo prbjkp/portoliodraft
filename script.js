@@ -587,24 +587,15 @@ if (beginButton && welcomeHeader) {
 
             centerSphere.classList.add("expanding");
 
-            // reveal dropdown container immediately so we can apply per-item delays
+            // reveal dropdown container immediately so it animates (expand/outward or drop)
             dropdownMenu.style.display = 'flex';
+            dropdownMenu.classList.add('active');
 
-            // prepare staggered delays for visible .menu-item elements
-            const menuItems = dropdownMenu ? Array.from(dropdownMenu.querySelectorAll('.menu-item')) : [];
-            const initialDelay = 0.12; // seconds before first item animates
-            const stagger = 0.08; // seconds between items
-            menuItems.forEach((it, idx) => {
-                it.style.transitionDelay = `${(initialDelay + idx * stagger).toFixed(2)}s`;
-                // ensure starting state
-                it.style.opacity = '0';
-                it.style.transform = 'translateY(-40px)';
-            });
-
-            // slight pause before starting the drop-in so it feels deliberate
+            // after a very slight pause, reveal items with staggered CSS delays
+            const itemsDelay = 160; // ms before items start dropping in
             setTimeout(() => {
-                dropdownMenu.classList.add("active");
-            }, Math.round(initialDelay * 1000));
+                dropdownMenu.classList.add('items-in');
+            }, itemsDelay);
 
             setTimeout(() => {
                 if (centerSphere) centerSphere.style.display = "none";
@@ -619,13 +610,12 @@ if (beginButton && welcomeHeader) {
 
     if (closeMenuBtn) {
         closeMenuBtn.addEventListener("click", () => {
-            dropdownMenu.classList.remove("active");
-            document.body.classList.remove('menu-open');
-            // clear any inline delays so next open is clean
-            const menuItems = dropdownMenu ? Array.from(dropdownMenu.querySelectorAll('.menu-item')) : [];
-            menuItems.forEach(it => {
-                it.style.transitionDelay = '';
-            });
+            // hide items first, then container
+            dropdownMenu.classList.remove('items-in');
+            setTimeout(() => {
+                dropdownMenu.classList.remove("active");
+                document.body.classList.remove('menu-open');
+            }, 120);
             setTimeout(() => { 
                 dropdownMenu.style.display = "none";
                 if (centerSphere) centerSphere.style.display = "block";
@@ -643,29 +633,37 @@ if (beginButton && welcomeHeader) {
                     '_blank'
                 );
                 if (tab) tab.opener = null;
-                dropdownMenu.classList.remove("active");
-            document.body.classList.remove('menu-open');
-            setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
-            return;
-        }
-
-        if (page === 'home') {
-            contentOverlay.classList.remove("active");
-            clearAboutPageState();
-            setCenterSphereVisible(true);
-        } else {
-            clearAboutPageState();
-            await loadPageContent(page);
-            contentOverlay.classList.add("active");
-            setCenterSphereVisible(false);
-
-            if (page === 'contact') {
-                setupContactForm();
+                // hide items and container cleanly
+                dropdownMenu.classList.remove('items-in');
+                setTimeout(() => {
+                    dropdownMenu.classList.remove("active");
+                    document.body.classList.remove('menu-open');
+                }, 120);
+                setTimeout(() => { dropdownMenu.style.display = "none"; }, 420);
+                return;
             }
-        }
 
-        dropdownMenu.classList.remove("active");
-        document.body.classList.remove('menu-open');
+            if (page === 'home') {
+                contentOverlay.classList.remove("active");
+                clearAboutPageState();
+                setCenterSphereVisible(true);
+            } else {
+                clearAboutPageState();
+                await loadPageContent(page);
+                contentOverlay.classList.add("active");
+                setCenterSphereVisible(false);
+
+                if (page === 'contact') {
+                    setupContactForm();
+                }
+            }
+
+            dropdownMenu.classList.remove('items-in');
+            setTimeout(() => {
+                dropdownMenu.classList.remove("active");
+                document.body.classList.remove('menu-open');
+            }, 120);
+            setTimeout(() => { dropdownMenu.style.display = "none"; }, 420);
         });
     });
 
