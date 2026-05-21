@@ -909,6 +909,11 @@ body.about-page #content-overlay.active {
   opacity: 0;
 }
 
+#content-container.page-swipe-up {
+  transform: translateY(-100px);
+  opacity: 0;
+}
+
 #back-button {
   position: fixed;
   top: 20px;

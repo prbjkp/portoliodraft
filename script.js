@@ -667,11 +667,20 @@ if (beginButton && welcomeHeader) {
         });
     });
 
-    if(backButton) {
-        backButton.addEventListener("click", () => {
-            contentOverlay.classList.remove("active");
+    function closeOverlayWithSwipeUp() {
+        if (!contentOverlay || !contentContainer) return;
+        contentContainer.classList.add('page-swipe-up');
+        setTimeout(() => {
+            contentOverlay.classList.remove('active');
+            contentContainer.classList.remove('page-swipe-up');
             clearAboutPageState();
             setCenterSphereVisible(true);
+        }, 620);
+    }
+
+    if(backButton) {
+        backButton.addEventListener("click", () => {
+            closeOverlayWithSwipeUp();
         });
     }
     
