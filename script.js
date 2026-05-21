@@ -323,8 +323,8 @@ if (beginButton && welcomeHeader) {
         window.addEventListener("mouseleave", () => isDragging = false);
         window.addEventListener("mousemove", e => {
             if (!isDragging) return;
-            targetRotY -= (e.clientX - lastX) * 0.3;
-            targetRotX += (e.clientY - lastY) * 0.3;
+            targetRotY -= (e.clientX - lastX) * 0.5;
+            targetRotX += (e.clientY - lastY) * 0.5;
             lastX = e.clientX;
             lastY = e.clientY;
         });
