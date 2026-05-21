@@ -1046,7 +1046,9 @@ body.about-page #content-overlay.active {
   body.about-page #center-sphere,
   body.about-page #start-text-ring,
   body.content-open #center-sphere,
-  body.content-open #start-text-ring {
+  body.content-open #start-text-ring,
+  body.menu-open #center-sphere,
+  body.menu-open #start-text-ring {
     display: none !important;
     opacity: 0 !important;
     pointer-events: none !important;
@@ -1263,22 +1265,22 @@ body.about-page {
 }
 
 #dropdown-menu {
-  background: radial-gradient(circle at 35% 30%, #6a6f74 25%, #33393f 100%);
+  background: radial-gradient(circle at 35% 30%, #1d2a2f 25%, #132024 100%);
   color: #f3f2ed;
   backdrop-filter: blur(14px);
   border-top: 1px solid rgba(20, 25, 30, 0.18);
 }
 
 .menu-item {
-  background: transparent;
-  border: 1px solid rgba(39, 52, 62, 0.16);
-  color: #14191f;
+  background: rgba(84, 142, 162, 0.18);
+  border: 1px solid rgba(118, 173, 188, 0.35);
+  color: #f3f2ed;
 }
 
 .menu-item:hover {
-  background: #dfe9f0;
-  border-color: rgba(66, 106, 120, 0.24);
-  color: #0f171f;
+  background: rgba(118, 173, 188, 0.42);
+  border-color: rgba(118, 173, 188, 0.75);
+  color: #ffffff;
 }
 
 #close-menu {

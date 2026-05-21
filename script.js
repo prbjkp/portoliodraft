@@ -583,6 +583,7 @@ if (beginButton && welcomeHeader) {
         centerSphere.addEventListener("click", (e) => {
             e.stopPropagation();
             console.log("Menu sphere clicked!");
+            document.body.classList.add('menu-open');
             
             centerSphere.classList.add("expanding");
             
@@ -605,6 +606,7 @@ if (beginButton && welcomeHeader) {
     if (closeMenuBtn) {
         closeMenuBtn.addEventListener("click", () => {
             dropdownMenu.classList.remove("active");
+            document.body.classList.remove('menu-open');
             setTimeout(() => { 
                 dropdownMenu.style.display = "none";
                 if (centerSphere) centerSphere.style.display = "block";
@@ -623,27 +625,28 @@ if (beginButton && welcomeHeader) {
                 );
                 if (tab) tab.opener = null;
                 dropdownMenu.classList.remove("active");
-                setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
-                return;
-            }
-
-            if (page === 'home') {
-                contentOverlay.classList.remove("active");
-                clearAboutPageState();
-                setCenterSphereVisible(true);
-            } else {
-                clearAboutPageState();
-                await loadPageContent(page);
-                contentOverlay.classList.add("active");
-                setCenterSphereVisible(false);
-
-                if (page === 'contact') {
-                    setupContactForm();
-                }
-            }
-
-            dropdownMenu.classList.remove("active");
+            document.body.classList.remove('menu-open');
             setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
+            return;
+        }
+
+        if (page === 'home') {
+            contentOverlay.classList.remove("active");
+            clearAboutPageState();
+            setCenterSphereVisible(true);
+        } else {
+            clearAboutPageState();
+            await loadPageContent(page);
+            contentOverlay.classList.add("active");
+            setCenterSphereVisible(false);
+
+            if (page === 'contact') {
+                setupContactForm();
+            }
+        }
+
+        dropdownMenu.classList.remove("active");
+        document.body.classList.remove('menu-open');
         });
     });
 
