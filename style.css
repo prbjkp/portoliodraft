@@ -179,6 +179,58 @@ body.about-page .about-bg-card.image-8 {
   background-image: url('images/_DSC1013.jpg');
 }
 
+body.about-page .about-bg-scroll {
+  display: none;
+}
+
+body.about-page .about-bg-scroll::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 10, 12, 0.18), rgba(6, 9, 10, 0.85));
+  pointer-events: none;
+  z-index: 15;
+}
+
+body.about-page .about-bg-level {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+  transform: translateY(0);
+}
+
+body.about-page .about-bg-level-1 { background-image: url('images/DSC04338.JPG'); z-index: 20; }
+body.about-page .about-bg-level-2 { background-image: url('images/flowers.jpg'); z-index: 19; }
+body.about-page .about-bg-level-3 { background-image: url('images/acropliswindow.jpg'); z-index: 18; }
+body.about-page .about-bg-level-4 { background-image: url('images/DSC01285.jpg'); z-index: 17; }
+body.about-page .about-bg-level-5 { background-image: url('images/DSC01160.jpg'); z-index: 16; }
+
+body.about-page .about-header,
+body.about-page .about-main {
+  position: relative;
+  z-index: 25;
+}
+
+@media (min-width: 961px) {
+  body.about-page .about-bg-scroll {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 960px) {
+  body.about-page .about-bg-scroll {
+    display: none !important;
+  }
+}
+
 body.about-page .about-hero .hero-copy,
 body.about-page .about-hero .hero-photo,
 body.about-page .hero-photo-placeholder,

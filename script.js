@@ -505,6 +505,24 @@ if (beginButton && welcomeHeader) {
         });
     }
 
+    if (document.body.classList.contains('about-page') && !isMobile) {
+        const aboutBgLayers = document.querySelectorAll('.about-bg-level');
+        if (aboutBgLayers.length) {
+            const maxShift = (aboutBgLayers.length - 1) * 100;
+            const updateAboutBackground = () => {
+                const scrollHeight = document.body.scrollHeight - window.innerHeight;
+                const progress = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0;
+                aboutBgLayers.forEach((layer, index) => {
+                    const offset = index * 100 - progress * maxShift;
+                    layer.style.transform = `translateY(${offset}%)`;
+                });
+            };
+            updateAboutBackground();
+            window.addEventListener('scroll', updateAboutBackground, { passive: true });
+            window.addEventListener('resize', updateAboutBackground);
+        }
+    }
+
     /**********************************************************
      * 5. SHARED FUNCTIONS
      **********************************************************/
