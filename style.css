@@ -1164,11 +1164,11 @@ body.about-page #content-overlay.active {
 ================================================== */
 html, body {
   background: #f5f4ef;
-  color: #233039;
+  color: #1b242d;
 }
 
 h1, h2, h3, h4, h5, h6, p {
-  color: #233039;
+  color: #1b242d;
 }
 
 body.about-page {
@@ -1265,12 +1265,12 @@ body.about-page {
 }
 
 #back-button {
-  background: #4d6b74;
+  background: #3f5057;
   color: #f7f6f2;
 }
 
 #back-button:hover {
-  background: #3f5b64;
+  background: #31434b;
 }
 
 #overlay {
@@ -1286,11 +1286,11 @@ body.about-page {
 }
 
 #center-sphere {
-  background: radial-gradient(circle at 35% 30%, #f4f3ef 35%, #c4c8c5 85%);
+  background: radial-gradient(circle at 35% 30%, #d7d3cc 25%, #8f8b86 90%);
   box-shadow:
-    inset -18px -18px 36px rgba(255,255,255,0.8),
-    inset 10px 10px 20px rgba(255,255,255,0.55),
-    0 16px 40px rgba(35, 41, 47, 0.12);
+    inset -18px -18px 36px rgba(255,255,255,0.15),
+    inset 10px 10px 20px rgba(255,255,255,0.08),
+    0 20px 42px rgba(35, 41, 47, 0.18);
 }
 
 #center-sphere::after {
@@ -1360,12 +1360,12 @@ body.about-page .achievement-image {
 }
 
 #my-form button[type="submit"] {
-  background: #4f6b72;
+  background: #42555b;
   color: #f7f6f2;
 }
 
 #my-form button:hover {
-  background: #3f5b63;
+  background: #2f4349;
   color: #ffffff;
 }
 
@@ -1376,9 +1376,9 @@ body.about-page .achievement-image {
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
-  background: #e7e4dc;
-  color: #233039;
-  border: 3px solid rgba(35, 41, 47, 0.12);
+  background: #b0a78f;
+  color: #f7f6f2;
+  border: 3px solid rgba(35, 41, 47, 0.18);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
@@ -1388,8 +1388,8 @@ body.about-page .achievement-image {
 
 #begin-button:hover,
 #begin-button:active {
-  background: #dcd7cc;
-  color: #233039;
+  background: #908775;
+  color: #f7f6f2;
   transform: scaleX(1.15) scaleY(0.95);
   letter-spacing: 6px;
 }
