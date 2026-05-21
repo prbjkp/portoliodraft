@@ -33,9 +33,10 @@ body.about-page {
 }
 
 body.about-page .about-header {
-  padding: 64px 24px 40px;
-  background: linear-gradient(180deg, rgba(15, 28, 20, 0.96), rgba(11, 20, 16, 0.96));
+  padding: 80px 24px 48px;
+  background: linear-gradient(180deg, rgba(14, 27, 20, 0.98), rgba(8, 14, 10, 0.95));
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.05);
 }
 
 body.about-page .about-header-inner {
@@ -46,53 +47,55 @@ body.about-page .about-header-inner {
 
 body.about-page .about-header .eyebrow {
   display: inline-block;
-  margin-bottom: 18px;
-  letter-spacing: 0.28em;
-  font-size: 0.9rem;
+  margin-bottom: 20px;
+  letter-spacing: 0.32em;
+  font-size: 0.82rem;
   text-transform: uppercase;
-  color: #9DAE9F;
+  color: #9eae9e;
 }
 
 body.about-page h1 {
-  font-size: clamp(4rem, 8vw, 6rem);
+  font-size: clamp(4rem, 8vw, 5.5rem);
   line-height: 0.95;
   letter-spacing: -0.04em;
-  color: #F7FBF5;
+  color: #F8FBF4;
   margin-bottom: 16px;
 }
 
 body.about-page .header-subtitle {
   max-width: 760px;
   margin: 0 auto;
-  color: #B8C5B3;
-  line-height: 1.8;
+  color: #cfd5c8;
+  line-height: 1.85;
   font-size: 1.05rem;
 }
 
 body.about-page .about-main {
-  max-width: 1140px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  padding: 52px 24px 96px;
 }
 
 body.about-page .about-hero {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 48px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px;
   align-items: center;
-  min-height: calc(100vh - 160px);
-  padding: 40px 0 60px;
+  min-height: calc(100vh - 200px);
+  padding: 48px 0 72px;
 }
 
 body.about-page .hero-copy,
-body.about-page .hero-photo-placeholder {
+body.about-page .hero-photo-placeholder,
+body.about-page .achievement-card {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(32px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
 }
 
 body.about-page .hero-copy.active,
-body.about-page .hero-photo-placeholder.active {
+body.about-page .hero-photo-placeholder.active,
+body.about-page .achievement-card.active {
   opacity: 1;
   transform: translateY(0);
 }
@@ -106,9 +109,9 @@ body.about-page .about-hero-title {
 
 body.about-page .hero-intro {
   max-width: 46rem;
-  line-height: 1.8;
-  color: #D8DDD6;
-  font-size: 1.1rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.78);
+  font-size: 1.08rem;
 }
 
 body.about-page .hero-photo {
@@ -119,11 +122,12 @@ body.about-page .hero-photo {
 
 body.about-page .hero-photo-placeholder {
   width: 100%;
-  max-width: 520px;
+  max-width: 560px;
   aspect-ratio: 4 / 5;
-  background: linear-gradient(135deg, rgba(48, 80, 47, 0.95), rgba(11, 20, 16, 0.98));
+  background: linear-gradient(135deg, rgba(34, 56, 42, 0.96), rgba(10, 18, 13, 0.98));
   border-radius: 32px;
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   position: relative;
   transform: translateY(0);
@@ -169,17 +173,25 @@ body.about-page .achievement-list {
 }
 
 body.about-page .achievement-card {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 28px;
-  padding: 24px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 30px;
+  padding: 28px;
   display: flex;
-  gap: 22px;
+  gap: 24px;
   align-items: flex-start;
   min-height: 240px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
   opacity: 0;
   transform: translateY(42px);
-  transition: transform 0.8s ease, opacity 0.8s ease;
+  transition: transform 0.7s ease, opacity 0.7s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.about-page .achievement-card:hover {
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.26);
+  transform: translateY(-2px);
 }
 
 body.about-page .achievement-card.active {
@@ -213,14 +225,14 @@ body.about-page .achievement-image::before {
 
 body.about-page .achievement-copy h3 {
   margin: 0 0 12px;
-  font-size: 1.25rem;
-  color: #F5F8F0;
+  font-size: 1.28rem;
+  color: #F7FAF3;
 }
 
 body.about-page .achievement-copy p {
   margin: 0;
   line-height: 1.75;
-  color: #C8D2C4;
+  color: rgba(255,255,255,0.74);
 }
 
 body.about-page .achievement-card:nth-child(even) {
@@ -862,6 +874,17 @@ body.about-page #content-overlay.active {
 #content-overlay.active {
   opacity: 1;
   pointer-events: auto;
+}
+
+#content-overlay.about-page {
+  background: linear-gradient(180deg, rgba(7, 14, 10, 0.92), rgba(8, 16, 12, 0.98));
+  color: #E6ECE8;
+}
+
+#content-overlay.about-page #content-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 100px 32px 120px;
 }
 
 #content-container {
