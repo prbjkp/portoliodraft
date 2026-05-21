@@ -584,22 +584,36 @@ if (beginButton && welcomeHeader) {
             e.stopPropagation();
             console.log("Menu sphere clicked!");
             document.body.classList.add('menu-open');
-            
+
             centerSphere.classList.add("expanding");
-            
+
+            // reveal dropdown container immediately so we can apply per-item delays
+            dropdownMenu.style.display = 'flex';
+
+            // prepare staggered delays for visible .menu-item elements
+            const menuItems = dropdownMenu ? Array.from(dropdownMenu.querySelectorAll('.menu-item')) : [];
+            const initialDelay = 0.12; // seconds before first item animates
+            const stagger = 0.08; // seconds between items
+            menuItems.forEach((it, idx) => {
+                it.style.transitionDelay = `${(initialDelay + idx * stagger).toFixed(2)}s`;
+                // ensure starting state
+                it.style.opacity = '0';
+                it.style.transform = 'translateY(-40px)';
+            });
+
+            // slight pause before starting the drop-in so it feels deliberate
+            setTimeout(() => {
+                dropdownMenu.classList.add("active");
+            }, Math.round(initialDelay * 1000));
+
             setTimeout(() => {
                 if (centerSphere) centerSphere.style.display = "none";
                 if (textRing) textRing.style.display = "none";
             }, 300);
-            
-            setTimeout(() => {
-                dropdownMenu.classList.add("active");
-                dropdownMenu.style.display = "flex";
-            }, 100);
-            
+
             setTimeout(() => {
                 centerSphere.classList.remove("expanding");
-            }, 600);
+            }, 700);
         });
     }
 
@@ -607,11 +621,16 @@ if (beginButton && welcomeHeader) {
         closeMenuBtn.addEventListener("click", () => {
             dropdownMenu.classList.remove("active");
             document.body.classList.remove('menu-open');
+            // clear any inline delays so next open is clean
+            const menuItems = dropdownMenu ? Array.from(dropdownMenu.querySelectorAll('.menu-item')) : [];
+            menuItems.forEach(it => {
+                it.style.transitionDelay = '';
+            });
             setTimeout(() => { 
                 dropdownMenu.style.display = "none";
                 if (centerSphere) centerSphere.style.display = "block";
                 if (textRing) textRing.style.display = "block";
-            }, 300);
+            }, 420);
         });
     }
     
