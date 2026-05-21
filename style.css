@@ -77,15 +77,78 @@ body.about-page .about-main {
 }
 
 body.about-page .about-hero {
+  position: relative;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 56px;
   align-items: center;
   min-height: calc(100vh - 200px);
   padding: 48px 0 72px;
+  overflow: hidden;
 }
 
-body.about-page .hero-copy,
+body.about-page .about-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+body.about-page .about-hero-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 18, 11, 0.90), rgba(11, 18, 11, 0.40));
+  z-index: 1;
+}
+
+body.about-page .about-bg-layer {
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 28px;
+  box-shadow: 0 38px 110px rgba(0, 0, 0, 0.28);
+  opacity: 0.32;
+  will-change: transform, opacity;
+  transition: opacity 0.3s ease;
+}
+
+body.about-page .about-bg-layer.image-1 {
+  top: 8%;
+  left: 6%;
+  width: 46%;
+  height: 54%;
+  background-image: url('images/DSC04338.JPG');
+}
+
+body.about-page .about-bg-layer.image-2 {
+  top: 22%;
+  right: 6%;
+  width: 42%;
+  height: 48%;
+  background-image: url('images/flowers.jpg');
+}
+
+body.about-page .about-bg-layer.image-3 {
+  bottom: 10%;
+  left: 12%;
+  width: 34%;
+  height: 42%;
+  background-image: url('images/acropliswindow.jpg');
+}
+
+body.about-page .about-bg-layer.image-4 {
+  bottom: 18%;
+  right: 14%;
+  width: 30%;
+  height: 40%;
+  background-image: url('images/DSC01285.jpg');
+}
+
+body.about-page .about-hero .hero-copy,
+body.about-page .about-hero .hero-photo,
 body.about-page .hero-photo-placeholder,
 body.about-page .achievement-card {
   opacity: 0;
@@ -241,6 +304,8 @@ body.about-page .achievement-card:nth-child(even) {
 
 body.about-page .about-hero .hero-copy,
 body.about-page .about-hero .hero-photo {
+  position: relative;
+  z-index: 2;
   will-change: transform, opacity;
 }
 
@@ -299,6 +364,10 @@ body.about-page #content-overlay.active {
     min-height: auto;
     gap: 32px;
     padding-top: 32px;
+  }
+
+  body.about-page .about-hero-media {
+    display: none;
   }
 
   body.about-page .achievement-list {

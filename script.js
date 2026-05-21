@@ -85,10 +85,18 @@ if (beginButton && welcomeHeader) {
 
         const heroCopy = contentContainer.querySelector('.hero-copy');
         const heroPhoto = contentContainer.querySelector('.hero-photo-placeholder');
+        const bgLayers = contentContainer.querySelectorAll('.about-bg-layer');
         const revealItems = contentContainer.querySelectorAll('.reveal-on-scroll');
 
         if (heroCopy) requestAnimationFrame(() => heroCopy.classList.add('active'));
         if (heroPhoto) requestAnimationFrame(() => heroPhoto.classList.add('active'));
+
+        if (bgLayers.length) {
+            bgLayers.forEach((layer, idx) => {
+                layer.style.transform = 'translateY(0px)';
+                layer.style.opacity = '0.35';
+            });
+        }
 
         if ('IntersectionObserver' in window) {
             const revealObserver = new IntersectionObserver((entries) => {
@@ -126,6 +134,12 @@ if (beginButton && welcomeHeader) {
             if (heroCopy) {
                 heroCopy.style.transform = `translateY(${offset * 0.16}px)`;
                 heroCopy.style.opacity = `${Math.max(0.85, 1 - offset / 850)}`;
+            }
+            if (bgLayers && bgLayers.length) {
+                bgLayers.forEach((layer, idx) => {
+                    const factor = 0.08 + idx * 0.06;
+                    layer.style.transform = `translateY(-${offset * factor}px)`;
+                });
             }
         };
 
