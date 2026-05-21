@@ -275,6 +275,12 @@ body.about-page .achievement-copy {
   transform: none !important;
 }
 
+body.about-page #content-overlay.active {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 @media (max-width: 960px) {
   body.about-page .about-hero {
     grid-template-columns: 1fr;

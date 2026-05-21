@@ -45,6 +45,86 @@ if (beginButton && welcomeHeader) {
     const backButton = document.getElementById("back-button");
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
+    let aboutOverlayScrollHandler = null;
+
+    async function fetchPageBody(url) {
+        try {
+            const response = await fetch(url, { cache: 'no-store' });
+            if (!response.ok) return '';
+            const text = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            doc.querySelectorAll('script').forEach(el => el.remove());
+            return doc.body ? doc.body.innerHTML : text;
+        } catch (err) {
+            console.warn('Unable to fetch page body for', url, err);
+            return '';
+        }
+    }
+
+    function clearAboutPageState() {
+        document.body.classList.remove('about-page');
+        if (contentOverlay) contentOverlay.classList.remove('about-page');
+        if (aboutOverlayScrollHandler && contentOverlay) {
+            contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
+            aboutOverlayScrollHandler = null;
+        }
+    }
+
+    function setupOverlayAboutEffects() {
+        if (!contentOverlay || !contentContainer) return;
+
+        const heroCopy = contentContainer.querySelector('.hero-copy');
+        const heroPhoto = contentContainer.querySelector('.hero-photo-placeholder');
+        const revealItems = contentContainer.querySelectorAll('.reveal-on-scroll');
+
+        if (heroCopy) requestAnimationFrame(() => heroCopy.classList.add('active'));
+        if (heroPhoto) requestAnimationFrame(() => heroPhoto.classList.add('active'));
+
+        if ('IntersectionObserver' in window) {
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.2 });
+            revealItems.forEach((item) => revealObserver.observe(item));
+        } else {
+            revealItems.forEach((item) => item.classList.add('active'));
+        }
+
+        if (aboutOverlayScrollHandler && contentOverlay) {
+            contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
+        }
+
+        aboutOverlayScrollHandler = () => {
+            if (!heroPhoto || !contentOverlay) return;
+            const offset = Math.min(contentOverlay.scrollTop, 260);
+            heroPhoto.style.transform = `translateY(${offset * 0.18}px)`;
+            heroPhoto.style.filter = `blur(${Math.min(offset * 0.01, 4)}px)`;
+        };
+
+        if (contentOverlay) {
+            contentOverlay.addEventListener('scroll', aboutOverlayScrollHandler, { passive: true });
+            aboutOverlayScrollHandler();
+        }
+    }
+
+    async function loadPageContent(page) {
+        if (!contentContainer) return;
+
+        if (page === 'about') {
+            const aboutMarkup = await fetchPageBody('about.html');
+            contentContainer.innerHTML = aboutMarkup || getPageContent(page);
+            contentOverlay.classList.add('about-page');
+            document.body.classList.add('about-page');
+            setupOverlayAboutEffects();
+            return;
+        }
+
+        contentContainer.innerHTML = getPageContent(page);
+    }
 
     /**********************************************************
      * Debugging: log input events on photos/images
@@ -118,13 +198,17 @@ if (beginButton && welcomeHeader) {
         console.log("Center Sphere z-index:", window.getComputedStyle(centerSphere).zIndex);
     }
 
-    // Determine if we're on the home page. Index served as '/' or '/index.html'.
     const isHomePage = (location.pathname === '/' || location.pathname.endsWith('/index.html') || document.body.classList.contains('home-page'));
 
-    // Hide the center sphere and text ring on mobile for any non-home page
+    function setCenterSphereVisible(visible) {
+        if (!centerSphere || !textRing) return;
+        const displayValue = visible ? 'block' : 'none';
+        centerSphere.style.display = displayValue;
+        textRing.style.display = displayValue;
+    }
+
     if (isMobile && !isHomePage) {
-        if (centerSphere) centerSphere.style.display = 'none';
-        if (textRing) textRing.style.display = 'none';
+        setCenterSphereVisible(false);
         console.log('Hiding center sphere and text ring on mobile (non-home page)');
     }
 
@@ -460,41 +544,34 @@ if (beginButton && welcomeHeader) {
     }
     
     document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', async () => {
             const page = item.dataset.page;
+            if (page === 'shop') {
+                const tab = window.open(
+                    'https://peterbkopp.darkroom.com',
+                    '_blank'
+                );
+                if (tab) tab.opener = null;
+                dropdownMenu.classList.remove("active");
+                setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
+                return;
+            }
+
             if (page === 'home') {
                 contentOverlay.classList.remove("active");
-                if (centerSphere) centerSphere.style.display = "block";
-                if (textRing) textRing.style.display = "block";
+                clearAboutPageState();
+                setCenterSphereVisible(true);
             } else {
-                contentContainer.innerHTML = getPageContent(page);
+                clearAboutPageState();
+                await loadPageContent(page);
                 contentOverlay.classList.add("active");
-                     // 🔗 SHOP: open external site + return home
-        if (page === 'shop') {
-            const tab = window.open(
-                'https://peterbkopp.darkroom.com',
-                '_blank'
-            );
-            if (tab) tab.opener = null;
-
-            // Close menu
-           // dropdownMenu.classList.remove("active");
-           // setTimeout(() => {
-             //   dropdownMenu.style.display = "none";
-            // }, 300);
-
-            // Return to home state
-            contentOverlay.classList.remove("active");
-            if (centerSphere) centerSphere.style.display = "block";
-            if (textRing) textRing.style.display = "block";
-
-            return; // ⛔ stop here — do not load internal content
-        }
+                setCenterSphereVisible(false);
 
                 if (page === 'contact') {
                     setupContactForm();
                 }
             }
+
             dropdownMenu.classList.remove("active");
             setTimeout(() => { dropdownMenu.style.display = "none"; }, 300);
         });
@@ -503,8 +580,8 @@ if (beginButton && welcomeHeader) {
     if(backButton) {
         backButton.addEventListener("click", () => {
             contentOverlay.classList.remove("active");
-            if (centerSphere) centerSphere.style.display = "block";
-            if (textRing) textRing.style.display = "block";
+            clearAboutPageState();
+            setCenterSphereVisible(true);
         });
     }
     
