@@ -187,23 +187,25 @@ body.about-page .about-bg-grid {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  padding: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 20px 28px;
   box-sizing: border-box;
-  width: calc(100% + 60px);
-  height: 220vh;
+  width: calc(100% + 56px);
+  height: 200vh; /* allow vertical reveal */
   transform: translateY(0);
   will-change: transform;
+  align-content: start;
 }
 
 body.about-page .about-bg-item {
-  min-height: 240px;
+  min-height: 140px;
   background-size: cover;
   background-position: center;
-  border-radius: 18px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
   opacity: 0.96;
+  filter: brightness(0.75);
 }
 
 body.about-page .about-bg-item.image-1 { background-image: url('images/DSC04338.JPG'); }
