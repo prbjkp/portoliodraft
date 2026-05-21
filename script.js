@@ -146,7 +146,7 @@ if (beginButton && welcomeHeader) {
         if (shouldAnimate) {
             contentContainer.classList.remove('page-swipe-in');
             contentContainer.classList.add('page-swipe-out');
-            await new Promise(resolve => setTimeout(resolve, 420));
+            await new Promise(resolve => setTimeout(resolve, 620));
         }
 
         contentContainer.classList.remove('page-swipe-out');
