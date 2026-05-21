@@ -319,10 +319,16 @@ body.about-page #content-overlay.active {
     padding: 28px 18px 64px;
   }
 
+  body.about-page .achievement-list {
+    gap: 32px;
+  }
+
   body.about-page .achievement-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 28px;
+    padding: 32px;
   }
 
   body.about-page .achievement-image {
@@ -333,6 +339,10 @@ body.about-page #content-overlay.active {
 
   body.about-page .achievement-copy {
     width: 100%;
+  }
+
+  body.about-page .achievement-copy h3 {
+    margin-bottom: 16px;
   }
 }
 /* ==================================================
