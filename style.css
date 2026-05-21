@@ -1225,10 +1225,10 @@ body.about-page {
 }
 
 #dropdown-menu {
-  background: rgba(248, 249, 246, 0.98);
-  color: #14191f;
+  background: radial-gradient(circle at 35% 30%, #6a6f74 25%, #33393f 100%);
+  color: #f3f2ed;
   backdrop-filter: blur(14px);
-  border-top: 1px solid rgba(39, 52, 62, 0.08);
+  border-top: 1px solid rgba(20, 25, 30, 0.18);
 }
 
 .menu-item {
