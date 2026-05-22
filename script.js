@@ -67,8 +67,6 @@ if (beginButton && welcomeHeader) {
         document.body.classList.remove('about-page');
         document.body.classList.remove('content-open');
         if (contentOverlay) contentOverlay.classList.remove('about-page');
-        // remove any about-only desktop grid
-        teardownDesktopGrid();
         if (aboutOverlayScrollHandler) {
             if (contentOverlay) {
                 contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
@@ -150,95 +148,6 @@ if (beginButton && welcomeHeader) {
         frameTick();
     }
 
-    function setupAboutScrollGrid() {
-        const scrollGrid = document.getElementById('scrollGrid');
-        const desktopBreakpoint = 960;
-        if (!scrollGrid || window.innerWidth <= desktopBreakpoint) return;
-        if (scrollGrid.dataset.initialized === 'true') return;
-
-        const imageList = [
-            'images/flowers.jpg',
-            'images/bird9.jpg',
-            'images/cat.jpg',
-            'images/dajlkdsajd.jpg',
-            'images/asljdhsalkdjaskl.jpg',
-            'images/landscapeboarder.jpg',
-            'images/landscape2.jpg',
-            'images/ljdalskdjka.jpg',
-            'images/DSC01087.jpg',
-            'images/DSC01160.jpg',
-            'images/DSC01213.jpg',
-            'images/DSC04338.JPG',
-            'images/DSC01285.jpg',
-            'images/_DSC1013.jpg',
-            'images/snake1.jpg',
-            'images/acropliswindow.jpg'
-        ];
-
-        const cells = [];
-        const totalCells = 24;
-
-        for (let i = 0; i < totalCells; i += 1) {
-            const img = document.createElement('img');
-            img.src = imageList[i % imageList.length];
-            img.alt = 'Background gallery image';
-            img.loading = 'lazy';
-            img.decoding = 'async';
-            img.fetchPriority = 'low';
-            img.dataset.cellIndex = String(i);
-            scrollGrid.appendChild(img);
-            cells.push(img);
-        }
-
-        scrollGrid.dataset.initialized = 'true';
-
-        let ticking = false;
-        let lastCycle = -1;
-
-        function updateGridPosition() {
-            const isOverlayScrolling = contentOverlay && contentOverlay.scrollHeight > contentOverlay.clientHeight;
-            const scrollTop = isOverlayScrolling ? contentOverlay.scrollTop : window.scrollY;
-            const scrollHeight = isOverlayScrolling ? contentOverlay.scrollHeight - contentOverlay.clientHeight : document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPercent = scrollTop / (scrollHeight || 1);
-            const translateX = (scrollPercent - 0.5) * -18;
-            const translateY = (scrollPercent - 0.5) * -14;
-            const rotate = (scrollPercent - 0.5) * 6;
-
-            scrollGrid.style.transform = `translate3d(${translateX}%, ${translateY}%, 0) rotate(${rotate}deg)`;
-
-            const cycleStep = Math.floor(scrollPercent * 16);
-            if (cycleStep !== lastCycle) {
-                lastCycle = cycleStep;
-                cells.forEach((img, index) => {
-                    const sourceIndex = (index + cycleStep) % imageList.length;
-                    const newSrc = imageList[sourceIndex];
-                    if (!img.src.endsWith(newSrc)) {
-                        img.src = newSrc;
-                    }
-                    const offset = (index % 6) - 2.5;
-                    const scale = 1 - Math.abs(offset) * 0.02;
-                    img.style.transform = `rotate(${offset * 2.2 + scrollPercent * 4}deg) scale(${scale})`;
-                });
-            }
-
-            ticking = false;
-        }
-
-        const handleScroll = () => {
-            if (!ticking) {
-                window.requestAnimationFrame(updateGridPosition);
-                ticking = true;
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        if (contentOverlay) {
-            contentOverlay.addEventListener('scroll', handleScroll, { passive: true });
-        }
-
-        updateGridPosition();
-    }
-
     async function loadPageContent(page) {
         if (!contentContainer) return;
 
@@ -259,8 +168,6 @@ if (beginButton && welcomeHeader) {
             contentOverlay.classList.add('about-page');
             document.body.classList.add('about-page');
             setupOverlayAboutEffects();
-            setupAboutScrollGrid();
-            if (!isMobile) setupDesktopGrid();
         } else {
             contentOverlay.classList.remove('about-page');
             document.body.classList.remove('about-page');
@@ -565,14 +472,37 @@ if (beginButton && welcomeHeader) {
         animateMobileTextRing();
 
     } else {
-        console.log("💻 Desktop Mode Active (Grid)");
-
-        // Only set up the About-page grid on desktop when the About page is active
-        if (document.body.classList.contains('about-page')) {
-            setupDesktopGrid();
-        }
-
+        console.log("💻 Desktop Mode Active");
+        
+        computePositions();
+        animateSphere();
         showHints();
+        
+        photos.forEach(photo => {
+            const img = photo.querySelector("img");
+            if (img) {
+                addActivationListeners(photo, img.src);
+                addActivationListeners(img, img.src, true);
+            }
+            photo.ondragstart = e => e.preventDefault();
+        });
+        
+        window.addEventListener("resize", computePositions);
+        
+        window.addEventListener("mousedown", e => { 
+            isDragging = true; 
+            lastX = e.clientX; 
+            lastY = e.clientY; 
+        });
+        window.addEventListener("mouseup", () => isDragging = false);
+        window.addEventListener("mouseleave", () => isDragging = false);
+        window.addEventListener("mousemove", e => {
+            if (!isDragging) return;
+            targetRotY -= (e.clientX - lastX) * 0.5;
+            targetRotX += (e.clientY - lastY) * 0.5;
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
     }
 
     // about-page dynamic background removed; no JS modifications for about page
@@ -580,70 +510,6 @@ if (beginButton && welcomeHeader) {
     /**********************************************************
      * 5. SHARED FUNCTIONS
      **********************************************************/
-    
-    function setupDesktopGrid() {
-        const existing = document.getElementById('grid-gallery');
-        if (existing) return;
-
-        // Only run on the About page (safety guard)
-        if (!document.body.classList.contains('about-page')) return;
-
-        // Decide where to insert the grid: prefer contentOverlay for About overlay, otherwise scene
-        const targetContainer = (contentOverlay && contentOverlay.classList.contains('about-page') && contentContainer) ? contentContainer : scene;
-        if (!targetContainer) return;
-
-        // hide legacy sphere visually (scoped by CSS too)
-        if (sphere) sphere.style.display = 'none';
-
-        const grid = document.createElement('div');
-        grid.id = 'grid-gallery';
-        // Use CSS grid by relying on style.css rules
-        targetContainer.appendChild(grid);
-
-        const imgSrcs = [];
-        photos.forEach(photo => {
-            const img = photo.querySelector('img');
-            if (img && img.src) imgSrcs.push(img.src);
-        });
-
-        // Populate grid
-        imgSrcs.forEach(src => {
-            const item = document.createElement('div');
-            item.className = 'grid-item';
-            const im = document.createElement('img');
-            im.src = src;
-            im.alt = 'Gallery image';
-            im.loading = 'lazy';
-            im.decoding = 'async';
-            item.appendChild(im);
-            addActivationListeners(item, src);
-            grid.appendChild(item);
-        });
-
-        // Smooth gentle transform based on page scroll
-        let ticking = false;
-        function onScroll() {
-            if (ticking) return;
-            ticking = true;
-            window.requestAnimationFrame(() => {
-                const scroll = window.scrollY || document.documentElement.scrollTop || 0;
-                const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-                const pct = scroll / max;
-                const translate = (pct - 0.5) * -48; // gentle vertical movement
-                grid.style.transform = `translate3d(0, ${translate}px, 0)`;
-                ticking = false;
-            });
-        }
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-    }
-
-    function teardownDesktopGrid() {
-        const existing = document.getElementById('grid-gallery');
-        if (existing) existing.remove();
-        if (sphere) sphere.style.display = '';
-    }
     function animateSphere() {
         if (isMobile) return; 
 
@@ -942,7 +808,83 @@ if (beginButton && welcomeHeader) {
  **********************************************************/
 const isAboutPageDirect = document.body.classList.contains('about-page');
 if (isAboutPageDirect) {
-    setupAboutScrollGrid();
+    const scrollGrid = document.getElementById('scrollGrid');
+    const desktopBreakpoint = 960;
+
+    if (scrollGrid && window.innerWidth > desktopBreakpoint) {
+        const imageList = [
+            'images/flowers.jpg',
+            'images/bird9.jpg',
+            'images/cat.jpg',
+            'images/dajlkdsajd.jpg',
+            'images/asljdhsalkdjaskl.jpg',
+            'images/landscapeboarder.jpg',
+            'images/landscape2.jpg',
+            'images/ljdalskdjka.jpg',
+            'images/DSC01087.jpg',
+            'images/DSC01160.jpg',
+            'images/DSC01213.jpg',
+            'images/DSC04338.JPG',
+            'images/DSC01285.jpg',
+            'images/_DSC1013.jpg',
+            'images/snake1.jpg',
+            'images/acropliswindow.jpg'
+        ];
+
+        const cells = [];
+        const totalCells = 24;
+
+        for (let i = 0; i < totalCells; i += 1) {
+            const img = document.createElement('img');
+            img.src = imageList[i % imageList.length];
+            img.alt = 'Background gallery image';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.fetchPriority = 'low';
+            img.dataset.cellIndex = String(i);
+            scrollGrid.appendChild(img);
+            cells.push(img);
+        }
+
+        let ticking = false;
+        let lastCycle = -1;
+
+        function updateGridPosition() {
+            const scrollTop = Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight);
+            const scrollPercent = scrollTop / (document.documentElement.scrollHeight - window.innerHeight || 1);
+            const translateX = (scrollPercent - 0.5) * -18;
+            const translateY = (scrollPercent - 0.5) * -14;
+            const rotate = (scrollPercent - 0.5) * 6;
+
+            scrollGrid.style.transform = `translate3d(${translateX}%, ${translateY}%, 0) rotate(${rotate}deg)`;
+
+            const cycleStep = Math.floor(scrollPercent * 16);
+            if (cycleStep !== lastCycle) {
+                lastCycle = cycleStep;
+                cells.forEach((img, index) => {
+                    const sourceIndex = (index + cycleStep) % imageList.length;
+                    const newSrc = imageList[sourceIndex];
+                    if (!img.src.endsWith(newSrc)) {
+                        img.src = newSrc;
+                    }
+                    const offset = (index % 6) - 2.5;
+                    const scale = 1 - Math.abs(offset) * 0.02;
+                    img.style.transform = `rotate(${offset * 2.2 + scrollPercent * 4}deg) scale(${scale})`;
+                });
+            }
+
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateGridPosition);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        updateGridPosition();
+    }
 }
 });
 
