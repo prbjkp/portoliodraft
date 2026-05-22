@@ -999,13 +999,18 @@ body.about-page #content-overlay.active {
   opacity: 0;
 }
 
+#dropdown-menu.active #close-menu,
+#dropdown-menu #close-menu {
+  color: #ffffff !important;
+}
+
 #dropdown-menu.active #close-menu {
   opacity: 1;
   transition-delay: 0.3s;
 }
 
 #close-menu:hover {
-  color: #f5f7f3;
+  color: #f5f7f3 !important;
   transform: rotate(90deg);
 }
 

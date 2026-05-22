@@ -148,6 +148,95 @@ if (beginButton && welcomeHeader) {
         frameTick();
     }
 
+    function setupAboutScrollGrid() {
+        const scrollGrid = document.getElementById('scrollGrid');
+        const desktopBreakpoint = 960;
+        if (!scrollGrid || window.innerWidth <= desktopBreakpoint) return;
+        if (scrollGrid.dataset.initialized === 'true') return;
+
+        const imageList = [
+            'images/flowers.jpg',
+            'images/bird9.jpg',
+            'images/cat.jpg',
+            'images/dajlkdsajd.jpg',
+            'images/asljdhsalkdjaskl.jpg',
+            'images/landscapeboarder.jpg',
+            'images/landscape2.jpg',
+            'images/ljdalskdjka.jpg',
+            'images/DSC01087.jpg',
+            'images/DSC01160.jpg',
+            'images/DSC01213.jpg',
+            'images/DSC04338.JPG',
+            'images/DSC01285.jpg',
+            'images/_DSC1013.jpg',
+            'images/snake1.jpg',
+            'images/acropliswindow.jpg'
+        ];
+
+        const cells = [];
+        const totalCells = 24;
+
+        for (let i = 0; i < totalCells; i += 1) {
+            const img = document.createElement('img');
+            img.src = imageList[i % imageList.length];
+            img.alt = 'Background gallery image';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.fetchPriority = 'low';
+            img.dataset.cellIndex = String(i);
+            scrollGrid.appendChild(img);
+            cells.push(img);
+        }
+
+        scrollGrid.dataset.initialized = 'true';
+
+        let ticking = false;
+        let lastCycle = -1;
+
+        function updateGridPosition() {
+            const isOverlayScrolling = contentOverlay && contentOverlay.scrollHeight > contentOverlay.clientHeight;
+            const scrollTop = isOverlayScrolling ? contentOverlay.scrollTop : window.scrollY;
+            const scrollHeight = isOverlayScrolling ? contentOverlay.scrollHeight - contentOverlay.clientHeight : document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollTop / (scrollHeight || 1);
+            const translateX = (scrollPercent - 0.5) * -18;
+            const translateY = (scrollPercent - 0.5) * -14;
+            const rotate = (scrollPercent - 0.5) * 6;
+
+            scrollGrid.style.transform = `translate3d(${translateX}%, ${translateY}%, 0) rotate(${rotate}deg)`;
+
+            const cycleStep = Math.floor(scrollPercent * 16);
+            if (cycleStep !== lastCycle) {
+                lastCycle = cycleStep;
+                cells.forEach((img, index) => {
+                    const sourceIndex = (index + cycleStep) % imageList.length;
+                    const newSrc = imageList[sourceIndex];
+                    if (!img.src.endsWith(newSrc)) {
+                        img.src = newSrc;
+                    }
+                    const offset = (index % 6) - 2.5;
+                    const scale = 1 - Math.abs(offset) * 0.02;
+                    img.style.transform = `rotate(${offset * 2.2 + scrollPercent * 4}deg) scale(${scale})`;
+                });
+            }
+
+            ticking = false;
+        }
+
+        const handleScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateGridPosition);
+                ticking = true;
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        if (contentOverlay) {
+            contentOverlay.addEventListener('scroll', handleScroll, { passive: true });
+        }
+
+        updateGridPosition();
+    }
+
     async function loadPageContent(page) {
         if (!contentContainer) return;
 
@@ -168,6 +257,7 @@ if (beginButton && welcomeHeader) {
             contentOverlay.classList.add('about-page');
             document.body.classList.add('about-page');
             setupOverlayAboutEffects();
+            setupAboutScrollGrid();
         } else {
             contentOverlay.classList.remove('about-page');
             document.body.classList.remove('about-page');
@@ -808,83 +898,7 @@ if (beginButton && welcomeHeader) {
  **********************************************************/
 const isAboutPageDirect = document.body.classList.contains('about-page');
 if (isAboutPageDirect) {
-    const scrollGrid = document.getElementById('scrollGrid');
-    const desktopBreakpoint = 960;
-
-    if (scrollGrid && window.innerWidth > desktopBreakpoint) {
-        const imageList = [
-            'images/flowers.jpg',
-            'images/bird9.jpg',
-            'images/cat.jpg',
-            'images/dajlkdsajd.jpg',
-            'images/asljdhsalkdjaskl.jpg',
-            'images/landscapeboarder.jpg',
-            'images/landscape2.jpg',
-            'images/ljdalskdjka.jpg',
-            'images/DSC01087.jpg',
-            'images/DSC01160.jpg',
-            'images/DSC01213.jpg',
-            'images/DSC04338.JPG',
-            'images/DSC01285.jpg',
-            'images/_DSC1013.jpg',
-            'images/snake1.jpg',
-            'images/acropliswindow.jpg'
-        ];
-
-        const cells = [];
-        const totalCells = 24;
-
-        for (let i = 0; i < totalCells; i += 1) {
-            const img = document.createElement('img');
-            img.src = imageList[i % imageList.length];
-            img.alt = 'Background gallery image';
-            img.loading = 'lazy';
-            img.decoding = 'async';
-            img.fetchPriority = 'low';
-            img.dataset.cellIndex = String(i);
-            scrollGrid.appendChild(img);
-            cells.push(img);
-        }
-
-        let ticking = false;
-        let lastCycle = -1;
-
-        function updateGridPosition() {
-            const scrollTop = Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight);
-            const scrollPercent = scrollTop / (document.documentElement.scrollHeight - window.innerHeight || 1);
-            const translateX = (scrollPercent - 0.5) * -18;
-            const translateY = (scrollPercent - 0.5) * -14;
-            const rotate = (scrollPercent - 0.5) * 6;
-
-            scrollGrid.style.transform = `translate3d(${translateX}%, ${translateY}%, 0) rotate(${rotate}deg)`;
-
-            const cycleStep = Math.floor(scrollPercent * 16);
-            if (cycleStep !== lastCycle) {
-                lastCycle = cycleStep;
-                cells.forEach((img, index) => {
-                    const sourceIndex = (index + cycleStep) % imageList.length;
-                    const newSrc = imageList[sourceIndex];
-                    if (!img.src.endsWith(newSrc)) {
-                        img.src = newSrc;
-                    }
-                    const offset = (index % 6) - 2.5;
-                    const scale = 1 - Math.abs(offset) * 0.02;
-                    img.style.transform = `rotate(${offset * 2.2 + scrollPercent * 4}deg) scale(${scale})`;
-                });
-            }
-
-            ticking = false;
-        }
-
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(updateGridPosition);
-                ticking = true;
-            }
-        }, { passive: true });
-
-        updateGridPosition();
-    }
+    setupAboutScrollGrid();
 }
 });
 
