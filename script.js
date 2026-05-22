@@ -813,46 +813,16 @@ if (isAboutPageDirect) {
     if (scrollGrid) {
         // Image catalog from home page
         const imageList = [
-            'images/snake1.jpg',
-            'images/_DSC1013.jpg',
-            'images/dklajdklsajd.jpg',
-            'images/DSC01087.jpg',
-            'images/DSC01091.jpg',
-            'images/DSC01098.jpg',
-            'images/DSC01102.jpg',
-            'images/DSC01107.jpg',
-            'images/DSC01111.jpg',
-            'images/DSC01115.jpg',
-            'images/DSC01127.jpg',
-            'images/DSC01132.jpg',
-            'images/DSC01136.jpg',
-            'images/aabcaisdjapjd.jpg',
-            'images/_DSC1001.jpg',
-            'images/hsdbasdjabjbad.jpg',
-            'images/barderporites.jpg',
-            'images/_DSC1048.jpg',
-            'images/ndsakldakldnm.jpg',
-            'images/dasdnkat.jpg',
-            'images/ljdalskdjka.jpg',
-            'images/_DSC1023.jpg',
             'images/cat.jpg',
-            'images/dfkhslkfjs.jpg',
-            'images/DSC01150.jpg',
-            'images/DSC01158.jpg',
-            'images/DSC01160.jpg',
-            'images/DSC01170.jpg',
-            'images/DSC01175.jpg',
-            'images/DSC01181.jpg',
-            'images/DSC01201.jpg',
-            'images/DSC01209.jpg',
-            'images/DSC01213.jpg',
-            'images/DSC01224.jpg',
-            'images/landscapeboarder(1).jpg',
-            'images/DSC04338.JPG',
-            'images/_DSC1003.jpg',
-            'images/bird9.jpg',
             'images/flowers.jpg',
-            'images/acropliswindow.jpg'
+            'images/bird9.jpg',
+            'images/landscapeboarder.jpg',
+            'images/landscape2.jpg',
+            'images/ljdalskdjka.jpg',
+            'images/dajlkdsajd.jpg',
+            'images/dklajdklsajd.jpg',
+            'images/asljdhsalkdjaskl.jpg',
+            'images/dasdnkat.jpg'
         ];
         
         // Populate grid with images
@@ -860,6 +830,9 @@ if (isAboutPageDirect) {
             const img = document.createElement('img');
             img.src = src;
             img.alt = 'Background gallery image';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.fetchPriority = 'low';
             scrollGrid.appendChild(img);
         });
         
