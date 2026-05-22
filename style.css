@@ -400,12 +400,16 @@ body.about-page .hero-photo,
 body.about-page .hero-copy,
 body.about-page .hero-photo-placeholder,
 body.about-page .achievement-list,
-body.about-page .achievement-card,
 body.about-page .achievement-copy {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   transform: none !important;
+}
+
+body.about-page .achievement-card {
+  display: flex !important;
+  flex-direction: row !important;
 }
 
 body.about-page #content-overlay.active {
