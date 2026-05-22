@@ -67,6 +67,8 @@ if (beginButton && welcomeHeader) {
         document.body.classList.remove('about-page');
         document.body.classList.remove('content-open');
         if (contentOverlay) contentOverlay.classList.remove('about-page');
+        // remove any about-only desktop grid
+        teardownDesktopGrid();
         if (aboutOverlayScrollHandler) {
             if (contentOverlay) {
                 contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
@@ -258,6 +260,7 @@ if (beginButton && welcomeHeader) {
             document.body.classList.add('about-page');
             setupOverlayAboutEffects();
             setupAboutScrollGrid();
+            if (!isMobile) setupDesktopGrid();
         } else {
             contentOverlay.classList.remove('about-page');
             document.body.classList.remove('about-page');
@@ -562,37 +565,14 @@ if (beginButton && welcomeHeader) {
         animateMobileTextRing();
 
     } else {
-        console.log("💻 Desktop Mode Active");
-        
-        computePositions();
-        animateSphere();
+        console.log("💻 Desktop Mode Active (Grid)");
+
+        // Only set up the About-page grid on desktop when the About page is active
+        if (document.body.classList.contains('about-page')) {
+            setupDesktopGrid();
+        }
+
         showHints();
-        
-        photos.forEach(photo => {
-            const img = photo.querySelector("img");
-            if (img) {
-                addActivationListeners(photo, img.src);
-                addActivationListeners(img, img.src, true);
-            }
-            photo.ondragstart = e => e.preventDefault();
-        });
-        
-        window.addEventListener("resize", computePositions);
-        
-        window.addEventListener("mousedown", e => { 
-            isDragging = true; 
-            lastX = e.clientX; 
-            lastY = e.clientY; 
-        });
-        window.addEventListener("mouseup", () => isDragging = false);
-        window.addEventListener("mouseleave", () => isDragging = false);
-        window.addEventListener("mousemove", e => {
-            if (!isDragging) return;
-            targetRotY -= (e.clientX - lastX) * 0.5;
-            targetRotX += (e.clientY - lastY) * 0.5;
-            lastX = e.clientX;
-            lastY = e.clientY;
-        });
     }
 
     // about-page dynamic background removed; no JS modifications for about page
@@ -600,6 +580,70 @@ if (beginButton && welcomeHeader) {
     /**********************************************************
      * 5. SHARED FUNCTIONS
      **********************************************************/
+    
+    function setupDesktopGrid() {
+        const existing = document.getElementById('grid-gallery');
+        if (existing) return;
+
+        // Only run on the About page (safety guard)
+        if (!document.body.classList.contains('about-page')) return;
+
+        // Decide where to insert the grid: prefer contentOverlay for About overlay, otherwise scene
+        const targetContainer = (contentOverlay && contentOverlay.classList.contains('about-page') && contentContainer) ? contentContainer : scene;
+        if (!targetContainer) return;
+
+        // hide legacy sphere visually (scoped by CSS too)
+        if (sphere) sphere.style.display = 'none';
+
+        const grid = document.createElement('div');
+        grid.id = 'grid-gallery';
+        // Use CSS grid by relying on style.css rules
+        targetContainer.appendChild(grid);
+
+        const imgSrcs = [];
+        photos.forEach(photo => {
+            const img = photo.querySelector('img');
+            if (img && img.src) imgSrcs.push(img.src);
+        });
+
+        // Populate grid
+        imgSrcs.forEach(src => {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            const im = document.createElement('img');
+            im.src = src;
+            im.alt = 'Gallery image';
+            im.loading = 'lazy';
+            im.decoding = 'async';
+            item.appendChild(im);
+            addActivationListeners(item, src);
+            grid.appendChild(item);
+        });
+
+        // Smooth gentle transform based on page scroll
+        let ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            window.requestAnimationFrame(() => {
+                const scroll = window.scrollY || document.documentElement.scrollTop || 0;
+                const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+                const pct = scroll / max;
+                const translate = (pct - 0.5) * -48; // gentle vertical movement
+                grid.style.transform = `translate3d(0, ${translate}px, 0)`;
+                ticking = false;
+            });
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    }
+
+    function teardownDesktopGrid() {
+        const existing = document.getElementById('grid-gallery');
+        if (existing) existing.remove();
+        if (sphere) sphere.style.display = '';
+    }
     function animateSphere() {
         if (isMobile) return; 
 
