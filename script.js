@@ -809,53 +809,80 @@ if (beginButton && welcomeHeader) {
 const isAboutPageDirect = document.body.classList.contains('about-page');
 if (isAboutPageDirect) {
     const scrollGrid = document.getElementById('scrollGrid');
-    
-    if (scrollGrid) {
-        // Image catalog from home page
+    const desktopBreakpoint = 960;
+
+    if (scrollGrid && window.innerWidth > desktopBreakpoint) {
         const imageList = [
-            'images/cat.jpg',
             'images/flowers.jpg',
             'images/bird9.jpg',
+            'images/cat.jpg',
+            'images/dajlkdsajd.jpg',
+            'images/asljdhsalkdjaskl.jpg',
             'images/landscapeboarder.jpg',
             'images/landscape2.jpg',
             'images/ljdalskdjka.jpg',
-            'images/dajlkdsajd.jpg',
-            'images/dklajdklsajd.jpg',
-            'images/asljdhsalkdjaskl.jpg',
-            'images/dasdnkat.jpg'
+            'images/DSC01087.jpg',
+            'images/DSC01160.jpg',
+            'images/DSC01213.jpg',
+            'images/DSC04338.JPG',
+            'images/DSC01285.jpg',
+            'images/_DSC1013.jpg',
+            'images/snake1.jpg',
+            'images/acropliswindow.jpg'
         ];
-        
-        // Populate grid with images
-        imageList.forEach(src => {
+
+        const cells = [];
+        const totalCells = 24;
+
+        for (let i = 0; i < totalCells; i += 1) {
             const img = document.createElement('img');
-            img.src = src;
+            img.src = imageList[i % imageList.length];
             img.alt = 'Background gallery image';
             img.loading = 'lazy';
             img.decoding = 'async';
             img.fetchPriority = 'low';
+            img.dataset.cellIndex = String(i);
             scrollGrid.appendChild(img);
-        });
-        
-        // Scroll-based horizontal translation
+            cells.push(img);
+        }
+
         let ticking = false;
-        
+        let lastCycle = -1;
+
         function updateGridPosition() {
-            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-            const maxTranslate = -50; // Move 50% left at full scroll
-            const translateX = scrollPercent * maxTranslate;
-            
-            scrollGrid.style.transform = `translateX(${translateX}%)`;
+            const scrollTop = Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight);
+            const scrollPercent = scrollTop / (document.documentElement.scrollHeight - window.innerHeight || 1);
+            const translateX = (scrollPercent - 0.5) * -18;
+            const translateY = (scrollPercent - 0.5) * -14;
+            const rotate = (scrollPercent - 0.5) * 6;
+
+            scrollGrid.style.transform = `translate3d(${translateX}%, ${translateY}%, 0) rotate(${rotate}deg)`;
+
+            const cycleStep = Math.floor(scrollPercent * 16);
+            if (cycleStep !== lastCycle) {
+                lastCycle = cycleStep;
+                cells.forEach((img, index) => {
+                    const sourceIndex = (index + cycleStep) % imageList.length;
+                    const newSrc = imageList[sourceIndex];
+                    if (!img.src.endsWith(newSrc)) {
+                        img.src = newSrc;
+                    }
+                    const offset = (index % 6) - 2.5;
+                    const scale = 1 - Math.abs(offset) * 0.02;
+                    img.style.transform = `rotate(${offset * 2.2 + scrollPercent * 4}deg) scale(${scale})`;
+                });
+            }
+
             ticking = false;
         }
-        
+
         window.addEventListener('scroll', () => {
             if (!ticking) {
                 window.requestAnimationFrame(updateGridPosition);
                 ticking = true;
             }
         }, { passive: true });
-        
-        // Initial position
+
         updateGridPosition();
     }
 }
