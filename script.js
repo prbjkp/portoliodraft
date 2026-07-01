@@ -46,6 +46,7 @@ if (beginButton && welcomeHeader) {
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
     let aboutOverlayScrollHandler = null;
+    renderCarsGallery();
     let aboutOverlayAnimationId = null;
 
     async function fetchPageBody(url) {
@@ -82,6 +83,42 @@ if (beginButton && welcomeHeader) {
             cancelAnimationFrame(aboutOverlayAnimationId);
             aboutOverlayAnimationId = null;
         }
+    }
+
+    function renderCarsGallery() {
+        const gallery = document.getElementById('cars-grid');
+        if (!gallery) return;
+
+        const imagePaths = [
+            'images/DSC04338.JPG',
+            'images/flowers.jpg',
+            'images/acropliswindow.jpg',
+            'images/DSC01285.jpg',
+            'images/DSC01160.jpg',
+            'images/DSC01213.jpg',
+            'images/snake1.jpg',
+            'images/_DSC1013.jpg',
+            'images/DSC01229.jpg',
+            'images/DSC01232_1.JPG',
+            'images/DSC01340.jpg',
+            'images/DSC01897.jpg'
+        ];
+
+        gallery.innerHTML = '';
+
+        imagePaths.forEach((src) => {
+            const card = document.createElement('article');
+            card.className = 'cars-card';
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+
+            card.appendChild(img);
+            gallery.appendChild(card);
+        });
     }
 
     function setupOverlayAboutEffects() {
@@ -177,6 +214,7 @@ if (beginButton && welcomeHeader) {
             contentContainer.innerHTML = carsMarkup || getPageContent(page);
             contentOverlay.classList.add('cars-page');
             document.body.classList.add('cars-page');
+            renderCarsGallery();
         } else {
             contentOverlay.classList.remove('about-page');
             contentOverlay.classList.remove('cars-page');

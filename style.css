@@ -1098,7 +1098,7 @@ body.cars-page .cars-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
-  align-items: stretch;
+  align-items: start;
 }
 
 body.cars-page .cars-card {
@@ -1112,8 +1112,7 @@ body.cars-page .cars-card {
 body.cars-page .cars-card img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
+  height: auto;
   background: #e4dfd1;
 }
 
