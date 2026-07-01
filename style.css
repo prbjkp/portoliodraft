@@ -9,8 +9,8 @@ html, body {
   overflow-x: hidden;
   overflow-y: auto;
   font-family: Inter, sans-serif;
-  background: #0B1410;
-  color: rgb(0, 0, 0);
+  background: #f1efe8;
+  color: #14191f;
   -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
   -webkit-touch-callout: none; /* Disable callout on long press */
   user-select: none; /* Prevent text selection */
@@ -1021,7 +1021,7 @@ body.about-page #content-overlay.active {
 #content-overlay {
   position: fixed;
   inset: 0;
-  background: #030806;
+  background: #f1efe8;
   z-index: 150;
   opacity: 0;
   pointer-events: none;
@@ -1036,8 +1036,8 @@ body.about-page #content-overlay.active {
 }
 
 #content-overlay.about-page {
-  background: linear-gradient(180deg, rgba(2, 6, 4, 0.98), rgba(4, 8, 6, 1));
-  color: #E6ECE8;
+  background: linear-gradient(180deg, rgba(245, 242, 233, 0.98), rgba(241, 239, 232, 1));
+  color: #14191f;
 }
 
 #content-overlay.about-page #content-container {
@@ -1047,8 +1047,8 @@ body.about-page #content-overlay.active {
 }
 
 #content-overlay.cars-page {
-  background: linear-gradient(180deg, rgba(2, 6, 4, 0.98), rgba(4, 8, 6, 1));
-  color: #E6ECE8;
+  background: linear-gradient(180deg, rgba(245, 242, 233, 0.98), rgba(241, 239, 232, 1));
+  color: #14191f;
 }
 
 #content-overlay.cars-page #content-container {
