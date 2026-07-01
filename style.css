@@ -32,6 +32,11 @@ body.about-page {
   color: #E6ECE8;
 }
 
+body.cars-page {
+  background: #0B1410;
+  color: #E6ECE8;
+}
+
 body.about-page .about-header {
   padding: 80px 24px 48px;
   background: linear-gradient(180deg, rgba(14, 27, 20, 0.98), rgba(8, 14, 10, 0.95));
@@ -1038,6 +1043,93 @@ body.about-page #content-overlay.active {
   max-width: 1180px;
   margin: 0 auto;
   padding: 100px 32px 120px;
+}
+
+#content-overlay.cars-page {
+  background: linear-gradient(180deg, rgba(7, 14, 10, 0.92), rgba(8, 16, 12, 0.98));
+  color: #E6ECE8;
+}
+
+#content-overlay.cars-page #content-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 96px 24px 120px;
+}
+
+body.cars-page .cars-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+body.cars-page .cars-header {
+  text-align: center;
+  padding: 12px 0 8px;
+}
+
+body.cars-page .cars-header .eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  letter-spacing: 0.32em;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  color: #9eae9e;
+}
+
+body.cars-page .cars-header h1 {
+  font-size: clamp(2.4rem, 4.8vw, 3.2rem);
+  margin-bottom: 12px;
+  color: #F8FBF4;
+}
+
+body.cars-page .cars-header p {
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.75);
+}
+
+body.cars-page .cars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+body.cars-page .cars-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+body.cars-page .cars-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #2f3b33;
+}
+
+body.cars-page .cars-card-copy {
+  padding: 20px 22px 24px;
+}
+
+body.cars-page .cars-card-copy h2 {
+  margin-bottom: 8px;
+  color: #F8FBF4;
+  font-size: 1.2rem;
+}
+
+body.cars-page .cars-card-copy p {
+  line-height: 1.7;
+  color: rgba(255,255,255,0.72);
+}
+
+@media (max-width: 768px) {
+  body.cars-page .cars-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 #content-container {

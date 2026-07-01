@@ -65,8 +65,12 @@ if (beginButton && welcomeHeader) {
 
     function clearAboutPageState() {
         document.body.classList.remove('about-page');
+        document.body.classList.remove('cars-page');
         document.body.classList.remove('content-open');
-        if (contentOverlay) contentOverlay.classList.remove('about-page');
+        if (contentOverlay) {
+            contentOverlay.classList.remove('about-page');
+            contentOverlay.classList.remove('cars-page');
+        }
         if (aboutOverlayScrollHandler) {
             if (contentOverlay) {
                 contentOverlay.removeEventListener('scroll', aboutOverlayScrollHandler);
@@ -168,9 +172,16 @@ if (beginButton && welcomeHeader) {
             contentOverlay.classList.add('about-page');
             document.body.classList.add('about-page');
             setupOverlayAboutEffects();
+        } else if (page === 'cars') {
+            const carsMarkup = await fetchPageBody('cars.html');
+            contentContainer.innerHTML = carsMarkup || getPageContent(page);
+            contentOverlay.classList.add('cars-page');
+            document.body.classList.add('cars-page');
         } else {
             contentOverlay.classList.remove('about-page');
+            contentOverlay.classList.remove('cars-page');
             document.body.classList.remove('about-page');
+            document.body.classList.remove('cars-page');
             contentContainer.innerHTML = getPageContent(page);
         }
 
