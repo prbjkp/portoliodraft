@@ -505,24 +505,24 @@ body.about-page #content-overlay.active {
 }
 
 #welcome-header h1 {
-  font-size: 5rem;
+  font-size: clamp(3rem, 5.5vw, 4.2rem);
   margin: 0;
-  letter-spacing: 15px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  font-weight: 900;
-  color: #E6ECE8;
+  font-weight: 700;
+  color: #233039;
   text-align: center;
   opacity: 0;
   animation: fadeInText 1s ease forwards 0.3s;
 }
 
 #welcome-header h2 {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
   margin: 10px 0 0 0;
-  letter-spacing: 8px;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  font-weight: 300;
-  color: #d8ddd9;
+  font-weight: 500;
+  color: #536a7a;
   opacity: 0;
   animation: fadeInText 1s ease forwards 0.6s;
 }
@@ -657,12 +657,12 @@ body.about-page #content-overlay.active {
 }
 
 #text-ring-svg text {
-  fill: rgba(255, 255, 255, 0.85);
-  font-size: 14px;
-  letter-spacing: 0.35em;
+  fill: rgba(35, 48, 57, 0.9);
+  font-size: 12px;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   dominant-baseline: middle;
-  filter: drop-shadow(0 0 6px rgba(0,0,0,0.25));
+  filter: drop-shadow(0 0 4px rgba(0,0,0,0.08));
 }
 
 /* ==================================================
@@ -753,8 +753,8 @@ body.about-page #content-overlay.active {
 
 #sphere {
   position: relative;
-  width: 800px;
-  height: 800px;
+  width: 740px;
+  height: 740px;
   transform-style: preserve-3d;
   cursor: grab;
   transform: rotateX(0deg) rotateY(0deg);
@@ -780,14 +780,14 @@ body.about-page #content-overlay.active {
   transform-origin: 0 0;
 }
 
-.photo.landscape { 
-  width: 200px; 
-  height: 130px; 
+.photo.landscape {
+  width: 170px;
+  height: 112px;
 }
 
-.photo.portrait { 
-  width: 200px;
-  height: 360px;
+.photo.portrait {
+  width: 170px;
+  height: 300px;
 }
 
 .photo img {
