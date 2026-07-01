@@ -722,6 +722,7 @@ if (beginButton && welcomeHeader) {
                 setCenterSphereVisible(true);
             } else {
                 clearAboutPageState();
+                document.body.classList.add('content-open');
                 await loadPageContent(page);
                 contentOverlay.classList.add("active");
                 setCenterSphereVisible(false);

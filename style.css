@@ -399,6 +399,26 @@ body.about-page #content-overlay {
   pointer-events: none !important;
 }
 
+body.content-open #scene-wrapper,
+body.content-open #center-sphere,
+body.content-open #start-text-ring,
+body.content-open #dropdown-menu,
+body.content-open #hud-hints,
+body.content-open #mobile-gallery,
+body.content-open #overlay {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.content-open #content-overlay.active,
+body.about-page #content-overlay.active,
+body.cars-page #content-overlay.active {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 body.about-page .about-header,
 body.about-page .about-main,
 body.about-page .about-hero,
