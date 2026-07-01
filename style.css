@@ -1021,11 +1021,11 @@ body.about-page #content-overlay.active {
 #content-overlay {
   position: fixed;
   inset: 0;
-  background: #f1efe8;
+  background: transparent;
   z-index: 150;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.2s ease;
   overflow-y: auto;
   color: #000;
 }
@@ -1036,7 +1036,7 @@ body.about-page #content-overlay.active {
 }
 
 #content-overlay.about-page {
-  background: linear-gradient(180deg, rgba(245, 242, 233, 0.98), rgba(241, 239, 232, 1));
+  background: transparent;
   color: #14191f;
 }
 
@@ -1047,7 +1047,7 @@ body.about-page #content-overlay.active {
 }
 
 #content-overlay.cars-page {
-  background: linear-gradient(180deg, rgba(245, 242, 233, 0.98), rgba(241, 239, 232, 1));
+  background: transparent;
   color: #14191f;
 }
 
@@ -1064,6 +1064,7 @@ body.cars-page .cars-shell {
   max-width: 1480px;
   margin: 0 auto;
   padding: 56px 24px 88px;
+  background: transparent;
 }
 
 body.cars-page .cars-header {
