@@ -1102,7 +1102,7 @@ body.cars-page .cars-grid {
 }
 
 body.cars-page .cars-card {
-  background: #f7f6f2;
+  background: #f1efe8;
   border: 1px solid rgba(35, 48, 57, 0.12);
   border-radius: 20px;
   overflow: hidden;
@@ -1113,7 +1113,7 @@ body.cars-page .cars-card img {
   display: block;
   width: 100%;
   height: auto;
-  background: #e4dfd1;
+  background: #e8e3d5;
 }
 
 @media (max-width: 1024px) {
