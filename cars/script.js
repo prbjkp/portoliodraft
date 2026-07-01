@@ -90,8 +90,31 @@ if (beginButton && welcomeHeader) {
         if (!gallery) return;
 
         const imagePaths = [
-            'cars/DSC04338.JPG',
-           
+            'cars/DSC00998.JPG',
+           'cars/DSC01002.JPG',
+'cars/DSC01014.JPG',
+'cars/DSC01016.JPG',
+'cars/DSC01027.JPG',
+'cars/DSC01036.JPG',
+'cars/DSC01066.JPG',
+'cars/DSC01093.JPG',
+'cars/DSC01096.JPG',
+'cars/DSC01098.JPG',
+'cars/DSC01103.JPG',
+'cars/DSC01120.JPG',
+'cars/DSC01127.JPG',
+'cars/DSC01136.JPG',
+'cars/DSC01142.JPG',
+'cars/DSC01147-1.JPG',
+'cars/DSC01153.JPG',
+'cars/DSC01157.JPG',
+'cars/DSC01159.JPG',
+'cars/DSC01248.JPG',
+'cars/DSC01256.JPG',
+'cars/DSC01296.JPG',
+'cars/DSC01324.JPG',
+'cars/DSC01325.JPG',
+'cars/DSC01339.JPG',
         ];
 
         gallery.innerHTML = '';
