@@ -112,7 +112,7 @@ if (beginButton && welcomeHeader) {
         img.src = img.dataset.src;
     }
 
-    function renderCarsGallery() {
+    async function renderCarsGallery() {
         const gallery = document.getElementById('cars-grid');
         if (!gallery) return;
 
@@ -145,18 +145,48 @@ if (beginButton && welcomeHeader) {
         ];
 
         gallery.innerHTML = '';
+
+        const imageMeta = await Promise.all(imagePaths.map((src) => new Promise((resolve) => {
+            const probe = new Image();
+            probe.decoding = 'async';
+            probe.onload = () => resolve({ src, landscape: probe.naturalWidth > probe.naturalHeight });
+            probe.onerror = () => resolve({ src, landscape: false });
+            probe.src = src;
+        })));
+
         const imageElements = [];
 
-        imagePaths.forEach((src) => {
+        for (let index = 0; index < imageMeta.length; index += 1) {
+            const current = imageMeta[index];
+            const next = imageMeta[index + 1];
+
+            if (current.landscape && next && next.landscape) {
+                const card = document.createElement('article');
+                card.className = 'cars-card cars-card--paired';
+
+                const stack = document.createElement('div');
+                stack.className = 'cars-card__stack';
+
+                const firstImg = createLazyImage(current.src);
+                const secondImg = createLazyImage(next.src);
+                stack.appendChild(firstImg);
+                stack.appendChild(secondImg);
+                card.appendChild(stack);
+                gallery.appendChild(card);
+                imageElements.push(firstImg, secondImg);
+                index += 1;
+                continue;
+            }
+
             const card = document.createElement('article');
             card.className = 'cars-card';
 
-            const img = createLazyImage(src);
+            const img = createLazyImage(current.src);
             imageElements.push(img);
 
             card.appendChild(img);
             gallery.appendChild(card);
-        });
+        }
 
         const initialBatch = Math.min(imageElements.length, window.innerWidth < 768 ? 6 : 8);
         imageElements.slice(0, initialBatch).forEach(loadGalleryImage);
