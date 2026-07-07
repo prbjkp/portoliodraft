@@ -1128,13 +1128,17 @@ body.cars-page .cars-card {
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 12px 32px rgba(35, 48, 57, 0.08);
+  content-visibility: auto;
+  contain-intrinsic-size: 320px 240px;
 }
 
 body.cars-page .cars-card img {
   display: block;
   width: 100%;
-  height: auto;
-  background: #e8e3d5;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: linear-gradient(135deg, #e8e3d5, #d8d0bc);
+  min-height: 220px;
 }
 
 @media (max-width: 1024px) {

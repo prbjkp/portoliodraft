@@ -85,6 +85,33 @@ if (beginButton && welcomeHeader) {
         }
     }
 
+    function getLazyImagePlaceholder() {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+            <rect width="800" height="600" fill="#e8e3d5"/>
+            <rect x="40" y="40" width="720" height="520" rx="24" fill="#f4efe1"/>
+            <path d="M170 430c56-112 110-172 167-172 56 0 112 58 167 172" fill="none" stroke="#d4cab0" stroke-width="24" stroke-linecap="round"/>
+            <circle cx="260" cy="230" r="56" fill="#d4cab0"/>
+        </svg>`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    }
+
+    function createLazyImage(src, alt = '') {
+        const img = document.createElement('img');
+        img.alt = alt;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.className = 'cars-image';
+        img.dataset.src = src;
+        img.src = getLazyImagePlaceholder();
+        return img;
+    }
+
+    function loadGalleryImage(img) {
+        if (!img || img.dataset.loaded === 'true') return;
+        img.dataset.loaded = 'true';
+        img.src = img.dataset.src;
+    }
+
     function renderCarsGallery() {
         const gallery = document.getElementById('cars-grid');
         if (!gallery) return;
@@ -118,20 +145,35 @@ if (beginButton && welcomeHeader) {
         ];
 
         gallery.innerHTML = '';
+        const imageElements = [];
 
         imagePaths.forEach((src) => {
             const card = document.createElement('article');
             card.className = 'cars-card';
 
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = '';
-            img.loading = 'lazy';
-            img.decoding = 'async';
+            const img = createLazyImage(src);
+            imageElements.push(img);
 
             card.appendChild(img);
             gallery.appendChild(card);
         });
+
+        const initialBatch = Math.min(imageElements.length, window.innerWidth < 768 ? 6 : 8);
+        imageElements.slice(0, initialBatch).forEach(loadGalleryImage);
+
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    loadGalleryImage(entry.target);
+                    obs.unobserve(entry.target);
+                });
+            }, { rootMargin: '220px 0px 220px 0px', threshold: 0.01 });
+
+            imageElements.slice(initialBatch).forEach((img) => observer.observe(img));
+        } else {
+            imageElements.slice(initialBatch).forEach(loadGalleryImage);
+        }
     }
 
     function setupOverlayAboutEffects() {
