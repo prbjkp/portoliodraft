@@ -399,13 +399,13 @@ body.about-page #content-overlay {
   pointer-events: none !important;
 }
 
-body.content-open #scene-wrapper,
-body.content-open #center-sphere,
-body.content-open #start-text-ring,
-body.content-open #dropdown-menu,
-body.content-open #hud-hints,
-body.content-open #mobile-gallery,
-body.content-open #overlay {
+body.gallery-hidden #scene-wrapper,
+body.gallery-hidden #center-sphere,
+body.gallery-hidden #start-text-ring,
+body.gallery-hidden #dropdown-menu,
+body.gallery-hidden #hud-hints,
+body.gallery-hidden #mobile-gallery,
+body.gallery-hidden #overlay {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;

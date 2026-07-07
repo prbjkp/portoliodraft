@@ -74,6 +74,7 @@ if (beginButton && welcomeHeader) {
         document.body.classList.remove('about-page');
         document.body.classList.remove('cars-page');
         document.body.classList.remove('content-open');
+        document.body.classList.remove('gallery-hidden');
         if (contentOverlay) {
             contentOverlay.classList.remove('about-page');
             contentOverlay.classList.remove('cars-page');
@@ -89,6 +90,10 @@ if (beginButton && welcomeHeader) {
             cancelAnimationFrame(aboutOverlayAnimationId);
             aboutOverlayAnimationId = null;
         }
+    }
+
+    function setGalleryVisibility(visible) {
+        document.body.classList.toggle('gallery-hidden', !visible);
     }
 
     function getLazyImagePlaceholder() {
@@ -393,6 +398,8 @@ if (beginButton && welcomeHeader) {
     }
 
     const isHomePage = (location.pathname === '/' || location.pathname.endsWith('/index.html') || document.body.classList.contains('home-page'));
+
+    setGalleryVisibility(true);
 
     function setCenterSphereVisible(visible) {
         if (!centerSphere || !textRing) return;
@@ -797,10 +804,12 @@ if (beginButton && welcomeHeader) {
             if (page === 'home') {
                 contentOverlay.classList.remove("active");
                 clearAboutPageState();
+                setGalleryVisibility(true);
                 setCenterSphereVisible(true);
             } else {
                 clearAboutPageState();
                 document.body.classList.add('content-open');
+                setGalleryVisibility(false);
                 await loadPageContent(page);
                 contentOverlay.classList.add("active");
                 setCenterSphereVisible(false);
