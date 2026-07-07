@@ -1118,7 +1118,7 @@ body.cars-page .cars-header p {
 body.cars-page .cars-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  gap: 10px;
   align-items: start;
   grid-auto-flow: dense;
 }
@@ -1126,11 +1126,11 @@ body.cars-page .cars-grid {
 body.cars-page .cars-card {
   background: #f1efe8;
   border: 1px solid rgba(35, 48, 57, 0.12);
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(35, 48, 57, 0.08);
+  box-shadow: 0 8px 22px rgba(35, 48, 57, 0.06);
   content-visibility: auto;
-  contain-intrinsic-size: 320px 240px;
+  contain-intrinsic-size: auto;
 }
 
 body.cars-page .cars-card--paired {
@@ -1147,15 +1147,14 @@ body.cars-page .cars-card img,
 body.cars-page .cars-card__stack img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   background: linear-gradient(135deg, #e8e3d5, #d8d0bc);
-  min-height: 220px;
+  min-height: 0;
 }
 
 body.cars-page .cars-card--paired .cars-card__stack img {
-  min-height: 160px;
-  aspect-ratio: 4 / 3;
+  min-height: 0;
 }
 
 @media (max-width: 1024px) {
