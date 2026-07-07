@@ -45,9 +45,15 @@ if (beginButton && welcomeHeader) {
     const backButton = document.getElementById("back-button");
     const hudHints = document.querySelectorAll(".hud-hint");
     const mobileGallery = document.getElementById('mobile-gallery');
+    const carsGallery = document.getElementById('cars-grid');
     let aboutOverlayScrollHandler = null;
-    renderCarsGallery();
     let aboutOverlayAnimationId = null;
+
+    if (carsGallery) {
+        requestAnimationFrame(() => {
+            renderCarsGallery();
+        });
+    }
 
     async function fetchPageBody(url) {
         try {
