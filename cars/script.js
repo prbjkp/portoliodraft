@@ -90,31 +90,31 @@ if (beginButton && welcomeHeader) {
         if (!gallery) return;
 
         const imagePaths = [
-            'cars/DSC00998.JPG',
-           'cars/DSC01002.JPG',
-'cars/DSC01014.JPG',
-'cars/DSC01016.JPG',
-'cars/DSC01027.JPG',
-'cars/DSC01036.JPG',
-'cars/DSC01066.JPG',
-'cars/DSC01093.JPG',
-'cars/DSC01096.JPG',
-'cars/DSC01098.JPG',
-'cars/DSC01103.JPG',
-'cars/DSC01120.JPG',
-'cars/DSC01127.JPG',
-'cars/DSC01136.JPG',
-'cars/DSC01142.JPG',
-'cars/DSC01147-1.JPG',
-'cars/DSC01153.JPG',
-'cars/DSC01157.JPG',
-'cars/DSC01159.JPG',
-'cars/DSC01248.JPG',
-'cars/DSC01256.JPG',
-'cars/DSC01296.JPG',
-'cars/DSC01324.JPG',
-'cars/DSC01325.JPG',
-'cars/DSC01339.JPG',
+            'cars/DSC00998.jpg',
+            'cars/DSC01002.jpg',
+            'cars/DSC01014.jpg',
+            'cars/DSC01016.jpg',
+            'cars/DSC01027.jpg',
+            'cars/DSC01036.jpg',
+            'cars/DSC01066.jpg',
+            'cars/DSC01093.jpg',
+            'cars/DSC01096.jpg',
+            'cars/DSC01098.jpg',
+            'cars/DSC01103.jpg',
+            'cars/DSC01120.jpg',
+            'cars/DSC01127.jpg',
+            'cars/DSC01136.jpg',
+            'cars/DSC01142.jpg',
+            'cars/DSC01147-1.jpg',
+            'cars/DSC01153.jpg',
+            'cars/DSC01157.jpg',
+            'cars/DSC01159.jpg',
+            'cars/DSC01248.jpg',
+            'cars/DSC01256.jpg',
+            'cars/DSC01296.jpg',
+            'cars/DSC01324.jpg',
+            'cars/DSC01325.jpg',
+            'cars/DSC01339.jpg'
         ];
 
         gallery.innerHTML = '';
@@ -125,9 +125,12 @@ if (beginButton && welcomeHeader) {
 
             const img = document.createElement('img');
             img.src = src;
-            img.alt = '';
+            img.alt = 'Cars gallery image';
             img.loading = 'lazy';
             img.decoding = 'async';
+            img.onerror = () => {
+                img.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="#e8e3d5"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="28" fill="#6b6b6b">Image unavailable</text></svg>');
+            };
 
             card.appendChild(img);
             gallery.appendChild(card);
