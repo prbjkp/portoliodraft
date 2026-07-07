@@ -310,7 +310,7 @@ if (beginButton && welcomeHeader) {
             contentContainer.innerHTML = carsMarkup || getPageContent(page);
             contentOverlay.classList.add('cars-page');
             document.body.classList.add('cars-page');
-            renderCarsGallery();
+            requestAnimationFrame(() => renderCarsGallery());
         } else {
             contentOverlay.classList.remove('about-page');
             contentOverlay.classList.remove('cars-page');
@@ -898,6 +898,16 @@ if (beginButton && welcomeHeader) {
     function getPageContent(page) {
         const contents = {
             about: `<h1>Hello fellow photo enjoyers!</h1><p>Welcome to my photography portfolio. I specialize in nature, wildlife, and landscape photography.</p>`,
+            cars: `
+                <div class="cars-shell">
+                    <header class="cars-header">
+                        <span class="eyebrow">Cars</span>
+                        <h1>Automotive Moments in Motion</h1>
+                        <p>A curated set of images for the new Cars section, styled to blend with the existing photography portfolio aesthetic.</p>
+                    </header>
+                    <section id="cars-grid" class="cars-grid" aria-label="Cars gallery"></section>
+                </div>
+            `,
             contact: `
                 <h1>Contact Me</h1>
                 <form id="my-form" action="https://formspree.io/f/mgvkgkny" method="POST">
